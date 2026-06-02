@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perspective Text 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 10px 18px;
+            backdrop-filter: blur(8px);
+        }
+
+        #controls label {
+            color: rgba(255, 255, 255, 0.55);
+            font: 13px/1 sans-serif;
+        }
+
+        #wordInput {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+            padding: 6px 10px;
+            outline: none;
+            width: 180px;
+        }
+
+        #wordInput:focus {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        #updateBtn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+            padding: 6px 14px;
+            cursor: pointer;
+        }
+
+        #updateBtn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        #sliderRow {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 8px 18px;
+        }
+
+        #sliderRow label {
+            color: rgba(255, 255, 255, 0.45);
+            font: 12px/1 sans-serif;
+            white-space: nowrap;
+        }
+
+        #sliderRow input[type=range] {
+            width: 110px;
+            accent-color: #fff;
+        }
+
+        #infoBox {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            border-radius: 14px;
+            padding: 16px 20px;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+        }
+
+        #infoBox .info-title {
+            color: rgba(255, 255, 255, 0.35);
+            font: 10px/1 sans-serif;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 10px;
+        }
+
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.4);
+            font: 12px/1 sans-serif;
+        }
+
+        .info-value {
+            color: #fff;
+            font: 600 15px/1 monospace;
+        }
+
+        .info-badge {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font: 11px/1.4 sans-serif;
+            letter-spacing: 0.04em;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .badge-front {
+            background: rgba(100, 200, 255, 0.15);
+            color: #7dd4f8;
+            border: 1px solid rgba(100, 200, 255, 0.25);
+        }
+
+        .badge-left {
+            background: rgba(180, 140, 255, 0.15);
+            color: #c4a8ff;
+            border: 1px solid rgba(180, 140, 255, 0.25);
+        }
+
+        .badge-right {
+            background: rgba(255, 180, 100, 0.15);
+            color: #ffc875;
+            border: 1px solid rgba(255, 180, 100, 0.25);
+        }
+
+        .badge-oblique {
+            background: rgba(100, 255, 180, 0.15);
+            color: #6effc2;
+            border: 1px solid rgba(100, 255, 180, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="infoBox">
+        <div class="info-title">Perspective Info</div>
+        <div class="info-row">
+            <span class="info-label">Y-axis rotation</span>
+            <span class="info-value" id="infoDeg">55°</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Visible width</span>
+            <span class="info-value" id="infoWidth">—</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Extrude depth</span>
+            <span class="info-value" id="infoDepth">—</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">View type</span>
+            <span class="info-value" id="infoType">—</span>
+        </div>
+        <div id="infoBadge" class="info-badge badge-oblique">—</div>
+    </div>
+
+    <div id="sliderRow">
+        <label>Angle</label>
+        <input type="range" id="angleSlider" min="-80" max="80" value="55" step="1">
+        <label>Depth</label>
+        <input type="range" id="depthSlider" min="1" max="60" value="14" step="1">
+    </div>
+
+    <div id="controls">
+        <label for="wordInput">Text</label>
+        <input id="wordInput" type="text" value="Word" maxlength="24" spellcheck="false">
+        <button id="updateBtn">Update</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://threejs.org/examples/js/geometries/TextGeometry.js"></script>
+    <script>
+        (function () {
+
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(devicePixelRatio);
+            renderer.setSize(innerWidth, innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+            camera.position.set(0, 0.3, 7);
+            camera.lookAt(0, 0, 0);
+
+            // Lighting
+            const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambient);
+            const keyLight = new THREE.DirectionalLight(0xffffff, 1.0);
+            keyLight.position.set(4, 6, 5);
+            scene.add(keyLight);
+            const fillLight = new THREE.DirectionalLight(0x8888ff, 0.35);
+            fillLight.position.set(-5, 2, 2);
+            scene.add(fillLight);
+            const rimLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            rimLight.position.set(0, -4, -5);
+            scene.add(rimLight);
+
+            let currentGroup = new THREE.Group();
+            scene.add(currentGroup);
+
+            let font = null;
+            const fontLoader = new THREE.FontLoader();
+            fontLoader.load('https://threejs.org/examples/fonts/gentilis_regular.typeface.json', loadedFont => {
+                font = loadedFont;
+                buildMesh(word, angleDeg, depthVal);
+                updateInfo(angleDeg, depthVal);
+            });
+
+            function createTextGeometry(word, size, height) {
+                const geo = new THREE.TextGeometry(word, {
+                    font: font,
+                    size: size,
+                    height: height,
+                    curveSegments: 24,
+                    bevelEnabled: false,
+                });
+                geo.center();
+                return geo;
+            }
+
+            function buildMesh(word, angleDeg, depthVal) {
+                // Clear
+                while (currentGroup.children.length) {
+                    const c = currentGroup.children[0];
+                    if (c.geometry) c.geometry.dispose();
+                    if (c.material) {
+                        [].concat(c.material).forEach(m => { m.map && m.map.dispose(); m.dispose(); });
+                    }
+                    currentGroup.remove(c);
+                }
+
+                if (!font) return;
+
+                const depth = depthVal * 0.018;
+                const H = 2.2;
+
+                const textGeo = createTextGeometry(word, H, depth);
+                const textMat = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    roughness: 0.25,
+                    metalness: 0.1,
+                    side: THREE.DoubleSide,
+                });
+                const textMesh = new THREE.Mesh(textGeo, textMat);
+                currentGroup.add(textMesh);
+
+                currentGroup.rotation.y = THREE.MathUtils.degToRad(angleDeg);
+            }
+
+            let word = 'Word';
+            let angleDeg = 55;
+            let depthVal = 14;
+
+            function updateInfo(deg, dval) {
+                const abs = Math.abs(deg);
+                const visW = Math.round(Math.cos(THREE.MathUtils.degToRad(abs)) * 100);
+                document.getElementById('infoDeg').textContent = deg + '°';
+                document.getElementById('infoWidth').textContent = visW + '%';
+                document.getElementById('infoDepth').textContent = (dval * 0.018).toFixed(2) + ' u';
+
+                let type, badgeText, badgeClass;
+                if (abs <= 5) { type = 'Front-on'; badgeText = 'Facing viewer directly'; badgeClass = 'badge-front'; }
+                else if (abs <= 30) { type = 'Slight angle'; badgeText = deg < 0 ? 'Mild left-side view' : 'Mild right-side view'; badgeClass = 'badge-oblique'; }
+                else if (abs <= 60) { type = 'Oblique'; badgeText = deg < 0 ? 'Left-side wall view' : 'Right-side wall view'; badgeClass = 'badge-oblique'; }
+                else if (abs <= 80) { type = 'Steep angle'; badgeText = deg < 0 ? 'Sharp left perspective' : 'Sharp right perspective'; badgeClass = deg < 0 ? 'badge-left' : 'badge-right'; }
+                else { type = 'Edge-on'; badgeText = 'Nearly invisible'; badgeClass = 'badge-front'; }
+
+                document.getElementById('infoType').textContent = type;
+                const badge = document.getElementById('infoBadge');
+                badge.textContent = badgeText;
+                badge.className = 'info-badge ' + badgeClass;
+            }
+
+            buildMesh(word, angleDeg, depthVal);
+            updateInfo(angleDeg, depthVal);
+
+            document.getElementById('angleSlider').value = angleDeg;
+            document.getElementById('depthSlider').value = depthVal;
+
+            // Angle slider — just rotate the group, no rebuild needed
+            document.getElementById('angleSlider').addEventListener('input', e => {
+                angleDeg = parseInt(e.target.value);
+                currentGroup.rotation.y = THREE.MathUtils.degToRad(angleDeg);
+                updateInfo(angleDeg, depthVal);
+            });
+
+            // Depth slider — needs rebuild
+            document.getElementById('depthSlider').addEventListener('input', e => {
+                depthVal = parseInt(e.target.value);
+                buildMesh(word, angleDeg, depthVal);
+                updateInfo(angleDeg, depthVal);
+            });
+
+            document.getElementById('updateBtn').addEventListener('click', () => {
+                const v = document.getElementById('wordInput').value.trim();
+                if (v) { word = v; buildMesh(word, angleDeg, depthVal); updateInfo(angleDeg, depthVal); }
+            });
+            document.getElementById('wordInput').addEventListener('keydown', e => {
+                if (e.key === 'Enter') document.getElementById('updateBtn').click();
+            });
+
+            window.addEventListener('resize', () => {
+                camera.aspect = innerWidth / innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(innerWidth, innerHeight);
+            });
+
+            (function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            })();
+
+        })();
+    </script>
+</body>
+
+</html>
