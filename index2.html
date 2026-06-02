@@ -173,6 +173,24 @@
             color: #6effc2;
             border: 1px solid rgba(100, 255, 180, 0.25);
         }
+
+        :root {
+            --ui-font-size: 15px;
+            --ui-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+        }
+
+        #controls label,
+        #wordInput,
+        #updateBtn,
+        #sliderRow label,
+        #infoBox,
+        #infoBox .info-title,
+        .info-label,
+        .info-value,
+        .info-badge {
+            font-size: var(--ui-font-size) !important;
+            font-family: var(--ui-font-family) !important;
+        }
     </style>
 </head>
 
@@ -193,8 +211,24 @@
             <span class="info-value" id="infoDepth">—</span>
         </div>
         <div class="info-row">
+            <span class="info-label">Cutout size</span>
+            <span class="info-value" id="infoSize">1.80</span>
+        </div>
+        <div class="info-row">
             <span class="info-label">View type</span>
             <span class="info-value" id="infoType">—</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Camera position</span>
+            <span class="info-value" id="infoCamPos">—</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Camera POV</span>
+            <span class="info-value" id="infoCamPov">—</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Looking at</span>
+            <span class="info-value" id="infoCamTarget">0.00, 0.00, 0.00</span>
         </div>
         <div id="infoBadge" class="info-badge badge-oblique">—</div>
     </div>
@@ -204,12 +238,24 @@
         <input type="range" id="angleSlider" min="-80" max="80" value="-45" step="1">
         <label>Depth</label>
         <input type="range" id="depthSlider" min="1" max="60" value="24" step="1">
+        <label>Size</label>
+        <input type="range" id="sizeSlider" min="0.5" max="6" value="1.8" step="0.1">
     </div>
 
     <div id="controls">
         <label for="wordInput">Text</label>
         <input id="wordInput" type="text" value="BINTANG" maxlength="24" spellcheck="false">
         <button id="updateBtn">Update</button>
+        <label for="uiFontSelect" style="margin-left:8px;color:rgba(255,255,255,0.55);font:13px/1 sans-serif;">UI
+            Font</label>
+        <select id="uiFontSelect"
+            style="background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:6px 8px;margin-left:6px;outline:none;">
+            <option value="">Default</option>
+            <option value="Fonts/polea-extra-bold-demo/Polea Extra Bold DEMO.otf">Polea Extra Bold DEMO</option>
+            <option
+                value="Fonts/Giulia_B_Order_2293504461341364748/Giulia B Order 2293504461341364748/Fonts/Galgo/Galgo-Bold.woff2">
+                Galgo Bold</option>
+        </select>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -228,7 +274,7 @@
             document.body.appendChild(renderer.domElement);
 
             const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
-            camera.position.set(0, 1.2, 8);
+            camera.position.set(0.4, 0.1, 8);
             camera.lookAt(0, 0, 0);
             window.camera = camera;
             window._zoom = camera.position.z;
@@ -259,10 +305,10 @@
 
             let font = null;
             const fontLoader = new THREE.FontLoader();
-            fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', loadedFont => {
+            fontLoader.load('Fonts/Galgo_Bold (1).json', loadedFont => {
                 font = loadedFont;
                 window._font = font;
-                buildMesh(word, angleDeg, depthVal);
+                buildMesh(word, angleDeg, depthVal, textSize);
                 updateInfo(angleDeg, depthVal);
             });
 
@@ -336,7 +382,7 @@
                 return { frontGeometry, backGeometry, wallHeight, textTargetY, textWidth, bottomPadding };
             }
 
-            function buildMesh(word, angleDeg, depthVal) {
+            function buildMesh(word, angleDeg, depthVal, textSize) {
                 while (currentGroup.children.length) {
                     const child = currentGroup.children[0];
                     if (child.geometry) child.geometry.dispose();
@@ -349,9 +395,8 @@
                 if (!font) return;
 
                 const wallDepth = Math.max(depthVal * 0.03, 0.4);
-                const textSize = 1.8;
                 const { frontGeometry, backGeometry, wallHeight, textTargetY, textWidth, bottomPadding } = createWallWithTextHole(word || 'BINTANG', textSize, wallDepth);
-                
+
                 const wallMaterial = new THREE.MeshStandardMaterial({
                     color: 0x000000,
                     roughness: 0.58,
@@ -360,7 +405,7 @@
                 });
 
                 const backMaterial = new THREE.MeshBasicMaterial({
-                    color: 0xffffff,
+                    color: 0xfcb32d,
                     side: THREE.FrontSide,
                 });
 
@@ -372,9 +417,9 @@
 
                 // Position the wall so the bottom of the text cutout touches the floor.
                 // This buries the bottom padding of the wall below the floor.
-                const meshY = floorMesh.position.y - bottomPadding;
+                const meshY = floorMesh.position.y - bottomPadding - 0.0425;
                 frontMesh.position.set(0, meshY, 0);
-                
+
                 // Add a tiny offset of -0.002 in Z to prevent z-fighting between
                 // the back face of the front mesh and the front face of the back mesh.
                 backMesh.position.set(0, meshY, -0.002);
@@ -385,8 +430,8 @@
                 // Create a shadow-casting spotlight behind the wall
                 // to project the shape of the text cutout onto the floor.
                 const projectionDistance = Math.max(textWidth * 0.9 + 2.0, 4.0);
-                const projectionLight = new THREE.SpotLight(0xffffff, 100.0, 25, Math.PI / 3, 0.4, 1.0);
-                
+                const projectionLight = new THREE.SpotLight(0xfcb32d, 100.0, 25, Math.PI / 3, 0.4, 1.0);
+
                 // Align light Y with the actual text center height in the group space
                 const lightY = meshY + textTargetY;
                 projectionLight.position.set(0, lightY, -projectionDistance);
@@ -411,8 +456,9 @@
             }
 
             let word = 'BINTANG';
-            let angleDeg = -45;
+            let angleDeg = -38;
             let depthVal = 24;
+            let textSize = 1.8;
 
             function updateInfo(deg, dval) {
                 const abs = Math.abs(deg);
@@ -420,6 +466,7 @@
                 document.getElementById('infoDeg').textContent = deg + '°';
                 document.getElementById('infoWidth').textContent = visW + '%';
                 document.getElementById('infoDepth').textContent = (dval * 0.03).toFixed(2) + ' u';
+                document.getElementById('infoSize').textContent = textSize.toFixed(2);
 
                 let type, badgeText, badgeClass;
                 if (abs <= 5) {
@@ -445,18 +492,24 @@
                 }
 
                 document.getElementById('infoType').textContent = type;
+                const camPos = camera.position;
+                document.getElementById('infoCamPos').textContent = `${camPos.x.toFixed(2)}, ${camPos.y.toFixed(2)}, ${camPos.z.toFixed(2)}`;
+                const camDir = new THREE.Vector3();
+                camera.getWorldDirection(camDir);
+                document.getElementById('infoCamPov').textContent = `${camDir.x.toFixed(2)}, ${camDir.y.toFixed(2)}, ${camDir.z.toFixed(2)}`;
+                document.getElementById('infoCamTarget').textContent = '0.00, 0.00, 0.00';
                 const badge = document.getElementById('infoBadge');
                 badge.textContent = badgeText;
                 badge.className = 'info-badge ' + badgeClass;
             }
 
-            buildMesh(word, angleDeg, depthVal);
+            buildMesh(word, angleDeg, depthVal, textSize);
             updateInfo(angleDeg, depthVal);
 
             document.getElementById('angleSlider').value = angleDeg;
             document.getElementById('depthSlider').value = depthVal;
 
-             document.getElementById('angleSlider').addEventListener('input', e => {
+            document.getElementById('angleSlider').addEventListener('input', e => {
                 angleDeg = parseInt(e.target.value, 10);
                 currentGroup.rotation.y = THREE.MathUtils.degToRad(angleDeg);
                 updateInfo(angleDeg, depthVal);
@@ -464,7 +517,7 @@
 
             document.getElementById('depthSlider').addEventListener('input', e => {
                 depthVal = parseInt(e.target.value, 10);
-                buildMesh(word, angleDeg, depthVal);
+                buildMesh(word, angleDeg, depthVal, textSize);
                 updateInfo(angleDeg, depthVal);
             });
 
@@ -472,10 +525,74 @@
                 const v = document.getElementById('wordInput').value.trim();
                 if (v) {
                     word = v;
-                    buildMesh(word, angleDeg, depthVal);
+                    buildMesh(word, angleDeg, depthVal, textSize);
                     updateInfo(angleDeg, depthVal);
                 }
             });
+
+            // Size slider updates the text cutout scale
+            const sizeSlider = document.getElementById('sizeSlider');
+            if (sizeSlider) {
+                sizeSlider.addEventListener('input', e => {
+                    textSize = parseFloat(e.target.value);
+                    buildMesh(word, angleDeg, depthVal, textSize);
+                    updateInfo(angleDeg, depthVal);
+                });
+                sizeSlider.value = textSize;
+            }
+
+            // UI font selector: load and apply fonts for the UI only
+            const uiFonts = [
+                { name: 'Default', url: '' },
+                { name: 'Polea Extra Bold DEMO', url: 'Fonts/polea-extra-bold-demo/Polea Extra Bold DEMO.otf' },
+                { name: 'Galgo Bold', url: 'Fonts/Giulia_B_Order_2293504461341364748/Giulia B Order 2293504461341364748/Fonts/Galgo/Galgo-Bold.woff2' }
+            ];
+
+            const uiSelect = document.getElementById('uiFontSelect');
+            function applyUIFont(url) {
+                const fallback = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial";
+                if (!url) {
+                    document.documentElement.style.setProperty('--ui-font-family', fallback);
+                    return;
+                }
+                const base = url.split('/').pop().replace(/\.[^.]+$/, '');
+                const fontFamily = base;
+                const encoded = encodeURI(url);
+                const face = new FontFace(fontFamily, `url(${encoded})`);
+                face.load().then(loaded => {
+                    document.fonts.add(loaded);
+                    document.documentElement.style.setProperty('--ui-font-family', `"${fontFamily}", ${fallback}`);
+                }).catch(err => {
+                    console.warn('Failed to load UI font', err);
+                    document.documentElement.style.setProperty('--ui-font-family', fallback);
+                });
+            }
+
+            if (uiSelect) {
+                // populate any additional fonts (if later extended)
+                uiFonts.forEach(f => {
+                    if (!f.url) return; // default already present
+                    const exists = Array.from(uiSelect.options).some(o => o.value === f.url);
+                    if (!exists) {
+                        const opt = document.createElement('option');
+                        opt.value = f.url;
+                        opt.textContent = f.name;
+                        uiSelect.appendChild(opt);
+                    }
+                });
+
+                const saved = localStorage.getItem('uiFont') || '';
+                if (saved) {
+                    uiSelect.value = saved;
+                    applyUIFont(saved);
+                }
+
+                uiSelect.addEventListener('change', e => {
+                    const url = e.target.value;
+                    localStorage.setItem('uiFont', url);
+                    applyUIFont(url);
+                });
+            }
 
             document.getElementById('wordInput').addEventListener('keydown', e => {
                 if (e.key === 'Enter') document.getElementById('updateBtn').click();
@@ -495,6 +612,7 @@
                 const delta = e.deltaY * 0.02; // scale scroll sensitivity
                 camera.position.z = THREE.MathUtils.clamp(camera.position.z + delta, minZoom, maxZoom);
                 window._zoom = camera.position.z;
+                updateInfo(angleDeg, depthVal);
             }, { passive: false });
 
             (function animate() {
