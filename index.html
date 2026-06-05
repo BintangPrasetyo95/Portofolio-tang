@@ -4,26 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perspective Text 3D</title>
+    <title>Bintang Prastyo — Portfolio</title>
+    <meta name="description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing projects and skills.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
-        body {
-            background: var(--color-bg);
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        canvas {
-            display: block;
-        }
-
-
 
         :root {
             --ui-font-size: 15px;
@@ -32,6 +23,8 @@
             /* Colors */
             --color-bg: #000000;
             --color-white: #ffffff;
+            --accent: #fcb32d;
+            --accent-glow: rgba(252, 179, 45, 0.35);
             --ui-overlay: rgba(255, 255, 255, 0.08);
             --ui-overlay-strong: rgba(255, 255, 255, 0.15);
             --ui-overlay-medium: rgba(255, 255, 255, 0.12);
@@ -57,583 +50,1109 @@
             --badge-oblique-color: #6effc2;
             --badge-oblique-border: rgba(100, 255, 180, 0.25);
         }
+
+        body {
+            background: var(--color-bg);
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--color-white);
+            font-family: 'Outfit', 'Space Grotesk', system-ui, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Once loading is done we allow scrolling */
+        body.scrollable {
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: auto;
+        }
+
+        /* Section layout */
+        .section {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #section-1 {
+            background: transparent;
+            pointer-events: none;
+        }
+
+        #section-2 {
+            background: var(--color-bg);
+            z-index: 2;
+        }
+
+        canvas#mainCanvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* ─── REVEAL SECTION: image + worms + text ─── */
+
+        /* Background image layer */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4) saturate(1.15);
+            transform: scale(1.12);
+            transition: transform 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .hero-bg.revealed img {
+            transform: scale(1.0);
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.1) 35%,
+                rgba(0, 0, 0, 0.1) 65%,
+                rgba(0, 0, 0, 0.8) 100%
+            );
+            z-index: 1;
+        }
+
+        /* Worm canvas overlay — between image and text */
+        #wormCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Overlay text layer */
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 3rem;
+            pointer-events: none;
+        }
+
+        /* Title */
+        .hero-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.5rem, 8vw, 6.5rem);
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            text-transform: uppercase;
+            color: var(--color-white);
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title .line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-title .line span {
+            display: inline-block;
+            transform: translateY(115%);
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-title.animate .line span {
+            transform: translateY(0);
+        }
+
+        .hero-title .line:nth-child(2) span {
+            transition-delay: 0.14s;
+        }
+
+        /* Corner label */
+        .corner-label {
+            position: absolute;
+            bottom: 3rem;
+            right: 3rem;
+            z-index: 11;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 400;
+            font-size: 0.8rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.9s ease 0.5s, transform 0.9s ease 0.5s;
+            pointer-events: none;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+
+        .corner-label.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .corner-label::before {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 40px;
+            background: var(--accent);
+            margin: 0 auto 12px auto;
+            opacity: 0.5;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 11;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .scroll-indicator.show {
+            opacity: 0.7;
+        }
+
+        .scroll-indicator.hidden {
+            opacity: 0 !important;
+        }
+
+        .scroll-indicator span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .scroll-indicator .mouse {
+            width: 20px;
+            height: 32px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .scroll-indicator .mouse::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            width: 3px;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 2px;
+            transform: translateX(-50%);
+            animation: scrollPulse 1.6s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            50% { transform: translateX(-50%) translateY(7px); opacity: 0.15; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-overlay {
+                padding: 1.5rem;
+            }
+            .corner-label {
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+        }
     </style>
 </head>
 
 <body>
 
+    <!-- Section 1: 3D Cutout -->
+    <section class="section" id="section-1">
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator" id="scrollIndicator">
+            <div class="mouse"></div>
+            <span>Scroll</span>
+        </div>
+    </section>
 
+    <!-- Section 2: Reveal Section -->
+    <section class="section" id="section-2">
+        <!-- Background image (revealed on scroll) -->
+        <div class="hero-bg" id="heroBg">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80" alt="Hero background">
+        </div>
 
+        <!-- Worm animation canvas -->
+        <canvas id="wormCanvas"></canvas>
+
+        <!-- Overlay text -->
+        <div class="hero-overlay" id="heroOverlay">
+            <h1 class="hero-title" id="heroTitle">
+                <span class="line"><span>Bintang</span></span>
+                <span class="line"><span>Prastyo</span></span>
+            </h1>
+        </div>
+
+        <!-- Corner label -->
+        <div class="corner-label" id="cornerLabel">IT Enthusiast</div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- THREE.JS: Original 3D cutout hero + scroll     -->
+    <!-- ═══════════════════════════════════════════════ -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
     <script>
-        (function () {
+    (function () {
+        'use strict';
 
-            // Centralized theme colors for JS (hex numbers for Three.js)
-            const THEME = {
-                bg: 0x000000,
-                ambient: 0xffffff,
-                fillLight: 0xa3c8ff,
-                headLight: 0xe3f1ff,
-                orangeOn: 0xfcb32d,
-                orangeOff: 0x000000,
-                floor: 0x000000,
+        // ════════════════════════════════════════════
+        // THEME
+        // ════════════════════════════════════════════
+        const THEME = {
+            bg: 0x000000,
+            ambient: 0xffffff,
+            fillLight: 0xa3c8ff,
+            headLight: 0xe3f1ff,
+            orangeOn: 0xfcb32d,
+            orangeOff: 0x000000,
+            floor: 0x000000,
+        };
+
+        // ════════════════════════════════════════════
+        // RENDERER + SCENE + CAMERA
+        // ════════════════════════════════════════════
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(THEME.bg);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setSize(innerWidth, innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.domElement.id = 'mainCanvas';
+        document.body.prepend(renderer.domElement);
+
+        const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+        camera.position.set(0.4, 10, 12);
+        camera.lookAt(0, 1, 0);
+
+        // ════════════════════════════════════════════
+        // LIGHTS
+        // ════════════════════════════════════════════
+        const ambient = new THREE.AmbientLight(THEME.ambient, 0.28);
+        scene.add(ambient);
+
+        const fillLight = new THREE.DirectionalLight(THEME.fillLight, 0.24);
+        fillLight.position.set(-6, 4, 4);
+        fillLight.castShadow = false;
+        scene.add(fillLight);
+
+        const headLight = new THREE.DirectionalLight(THEME.headLight, 0.22);
+        headLight.position.set(0, 2.5, 6);
+        scene.add(headLight);
+
+        let orangeProjectionLight = null;
+        const orangeOnColor = THEME.orangeOn;
+        const orangeOffColor = THEME.orangeOff;
+
+        const lightFlicker = {
+            onIntensity: 0.28,
+            offIntensity: 0.28,
+            period: 5.6,
+            pattern: [
+                { end: 0.1, on: true },
+                { end: 0.2, on: false },
+                { end: 0.3, on: true },
+                { end: 0.4, on: false },
+                { end: 0.7, on: true },
+                { end: 5.6, on: true },
+            ],
+        };
+        let lastBlinkIndex = -1;
+
+        // ════════════════════════════════════════════
+        // FLOOR
+        // ════════════════════════════════════════════
+        const floorMaterial = new THREE.MeshStandardMaterial({ color: THEME.floor, roughness: 0.85, metalness: 0.05 });
+        const floorGeometry = new THREE.PlaneGeometry(18, 18);
+        const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
+        floorMesh.rotation.x = -Math.PI / 2;
+        floorMesh.position.set(0, -1.1, 1.5);
+        floorMesh.receiveShadow = true;
+        scene.add(floorMesh);
+
+        // ════════════════════════════════════════════
+        // MAIN TEXT GROUP
+        // ════════════════════════════════════════════
+        let currentGroup = new THREE.Group();
+        scene.add(currentGroup);
+
+        let font = null;
+        const fontLoader = new THREE.FontLoader();
+        fontLoader.load('Fonts/Galgo_Bold (1).json', loadedFont => {
+            font = loadedFont;
+            buildLoadingScreen();
+        });
+
+        // ════════════════════════════════════════════
+        // LOADING SCREEN
+        // ════════════════════════════════════════════
+        let isLoading = true;
+        let loadingGroup = new THREE.Group();
+        scene.add(loadingGroup);
+
+        let loadingStartTime = null;
+        const dropDuration = 0.6;
+        const dropDelay = 0.08;
+        const holdDuration = 1.2;
+        const fadeDuration = 0.8;
+        const loadingWord = 'LOADING';
+        const loadingTextSize = 0.45;
+        const loadingTextDepth = 0.08;
+
+        let transitionTriggered = false;
+        let transitionStartTime = null;
+        const transitionDuration = 1.8;
+
+        function endLoadingScreen() {
+            if (!transitionTriggered) {
+                transitionTriggered = true;
+                transitionStartTime = performance.now() / 1000;
+            }
+        }
+
+        let baselineMaterial, targetMaterial, panelMaterial, boxOutlineMaterial;
+        let targetMeshes = [];
+        let baselineMeshes = [];
+        let boxOutline;
+        let loadingLight;
+        let mainMeshBuilt = false;
+        let mainBackMesh = null;
+
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+
+        function easeInOutCubic(t) {
+            return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        }
+
+        function smoothstep(edge0, edge1, x) {
+            const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+            return t * t * (3 - 2 * t);
+        }
+
+        function buildLoadingScreen() {
+            if (!font) return;
+
+            renderer.localClippingEnabled = true;
+
+            const loadingExtrudeSettings = {
+                depth: loadingTextDepth,
+                bevelEnabled: true,
+                bevelThickness: 0.04,
+                bevelSize: 0.02,
+                bevelOffset: 0,
+                bevelSegments: 3,
+                curveSegments: 12,
+                steps: 1
             };
 
-            const scene = new THREE.Scene();
-            scene.background = new THREE.Color(THEME.bg);
+            const baselineExtrudeSettings = {
+                depth: 0.05,
+                bevelEnabled: false,
+                curveSegments: 12,
+                steps: 1
+            };
 
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setPixelRatio(devicePixelRatio);
+            baselineMaterial = new THREE.MeshStandardMaterial({
+                color: 0x222222,
+                roughness: 0.8,
+                metalness: 0.1,
+                transparent: true,
+                opacity: 0.4
+            });
+
+            const groupY = 0.5;
+            loadingGroup.position.set(0, groupY, 0);
+
+            const boxHeight = loadingTextSize * 2.0;
+            const Y_top = loadingTextSize / 2 + boxHeight / 2;
+            const Y_bottom = loadingTextSize / 2 - boxHeight / 2;
+
+            const worldY_top = groupY + Y_top;
+            const worldY_bottom = groupY + Y_bottom;
+
+            const topClipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), worldY_top);
+            const bottomClipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -worldY_bottom);
+
+            targetMaterial = new THREE.MeshStandardMaterial({
+                color: THEME.orangeOn,
+                roughness: 0.3,
+                metalness: 0.1,
+                transparent: true,
+                opacity: 1.0,
+                clippingPlanes: [topClipPlane, bottomClipPlane]
+            });
+
+            const chars = loadingWord.split('');
+            const letterSpacing = 0.12;
+            const letterGeometries = [];
+            const baselineGeometries = [];
+
+            for (let i = 0; i < chars.length; i++) {
+                const char = chars[i];
+                const charShapes = font.generateShapes(char, loadingTextSize);
+
+                const targetGeom = new THREE.ExtrudeGeometry(charShapes, loadingExtrudeSettings);
+                targetGeom.computeBoundingBox();
+                targetGeom.translate(-targetGeom.boundingBox.min.x, 0, 0);
+                letterGeometries.push(targetGeom);
+
+                const baseGeom = new THREE.ExtrudeGeometry(charShapes, baselineExtrudeSettings);
+                baseGeom.computeBoundingBox();
+                baseGeom.translate(-baseGeom.boundingBox.min.x, 0, 0);
+                baselineGeometries.push(baseGeom);
+            }
+
+            const xPositions = [];
+            let currentX = 0;
+            for (let i = 0; i < chars.length; i++) {
+                xPositions.push(currentX);
+                const width = letterGeometries[i].boundingBox.max.x - letterGeometries[i].boundingBox.min.x;
+                currentX += width + letterSpacing;
+            }
+            const totalWidth = currentX - letterSpacing;
+
+            for (let i = 0; i < chars.length; i++) {
+                const shiftX = xPositions[i] - totalWidth / 2;
+                letterGeometries[i].translate(shiftX, 0, 0);
+                baselineGeometries[i].translate(shiftX, 0, 0);
+            }
+
+            for (let i = 0; i < chars.length; i++) {
+                const baseMesh = new THREE.Mesh(baselineGeometries[i], baselineMaterial);
+                baseMesh.position.set(0, 0, 0);
+                baseMesh.receiveShadow = true;
+                loadingGroup.add(baseMesh);
+                baselineMeshes.push(baseMesh);
+
+                const targetMesh = new THREE.Mesh(letterGeometries[i], targetMaterial);
+                targetMesh.position.set(0, 2.5, 0.03);
+                targetMesh.castShadow = true;
+                targetMesh.receiveShadow = true;
+                targetMesh.visible = false;
+                loadingGroup.add(targetMesh);
+                targetMeshes.push(targetMesh);
+            }
+
+            const boxWidth = totalWidth + loadingTextSize * 1.0;
+            const boxDepth = loadingTextDepth * 3.0;
+
+            const boxGeom = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+            const edges = new THREE.EdgesGeometry(boxGeom);
+            boxOutlineMaterial = new THREE.LineBasicMaterial({
+                color: 0x333333,
+                transparent: true,
+                opacity: 0.8
+            });
+            boxOutline = new THREE.LineSegments(edges, boxOutlineMaterial);
+            boxOutline.position.set(0, loadingTextSize / 2, 0);
+            loadingGroup.add(boxOutline);
+
+            const panelGeom = new THREE.PlaneGeometry(boxWidth, boxHeight);
+            panelMaterial = new THREE.MeshStandardMaterial({
+                color: 0x050505,
+                roughness: 0.8,
+                metalness: 0.2,
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide
+            });
+            const panelMesh = new THREE.Mesh(panelGeom, panelMaterial);
+            panelMesh.position.set(0, loadingTextSize / 2, -boxDepth / 2 + 0.01);
+            panelMesh.receiveShadow = true;
+            loadingGroup.add(panelMesh);
+
+            loadingLight = new THREE.SpotLight(0xffffff, 5.0, 25, Math.PI / 4, 0.3, 1.0);
+            loadingLight.position.set(2, 4, 5);
+            loadingLight.castShadow = true;
+            loadingLight.shadow.mapSize.width = 1024;
+            loadingLight.shadow.mapSize.height = 1024;
+            loadingLight.shadow.camera.near = 0.5;
+            loadingLight.shadow.camera.far = 15;
+            loadingLight.shadow.bias = -0.001;
+
+            const loadingLightTarget = new THREE.Object3D();
+            loadingLightTarget.position.set(0, loadingTextSize / 2, 0);
+            loadingGroup.add(loadingLightTarget);
+            loadingLight.target = loadingLightTarget;
+            loadingGroup.add(loadingLight);
+        }
+
+        // ════════════════════════════════════════════
+        // WALL WITH TEXT HOLE
+        // ════════════════════════════════════════════
+        function createWallWithTextHole(word, size, thickness) {
+            const rawShapes = font.generateShapes(word, size, 10);
+
+            const textGeometry = new THREE.ShapeGeometry(rawShapes);
+            const textBounds = new THREE.Box3().setFromObject(new THREE.Mesh(textGeometry));
+            const textWidth = textBounds.max.x - textBounds.min.x;
+            const textHeight = textBounds.max.y - textBounds.min.y;
+            const textCenterX = (textBounds.min.x + textBounds.max.x) / 2;
+
+            const margin = 20;
+            const wallWidth = Math.max(textWidth + margin, 6);
+            const wallHeight = Math.max(textHeight + margin, 3.5);
+            const bottomPadding = 0.35;
+
+            const minX = textCenterX - wallWidth / 2;
+            const maxX = textCenterX + wallWidth / 2;
+            const minY = textBounds.min.y - bottomPadding;
+            const maxY = minY + wallHeight;
+
+            const wallShape = new THREE.Shape();
+            wallShape.moveTo(minX, minY);
+            wallShape.lineTo(maxX, minY);
+            wallShape.lineTo(maxX, maxY);
+            wallShape.lineTo(minX, maxY);
+            wallShape.lineTo(minX, minY);
+            wallShape.holes.push(...rawShapes);
+
+            const backShape = new THREE.Shape();
+            backShape.moveTo(minX, minY);
+            backShape.lineTo(maxX, minY);
+            backShape.lineTo(maxX, maxY);
+            backShape.lineTo(minX, maxY);
+            backShape.lineTo(minX, minY);
+
+            const halfThickness = thickness / 2;
+
+            const frontExtrudeSettings = {
+                depth: halfThickness,
+                bevelEnabled: false,
+                curveSegments: 12,
+                steps: 1,
+            };
+
+            const backExtrudeSettings = {
+                depth: halfThickness,
+                bevelEnabled: false,
+                curveSegments: 12,
+                steps: 1,
+            };
+
+            const frontGeometry = new THREE.ExtrudeGeometry(wallShape, frontExtrudeSettings);
+            frontGeometry.computeBoundingBox();
+            const frontCenterX = (frontGeometry.boundingBox.min.x + frontGeometry.boundingBox.max.x) / 2;
+            const frontBottomY = frontGeometry.boundingBox.min.y;
+            frontGeometry.translate(-frontCenterX, -frontBottomY, 0);
+
+            const backGeometry = new THREE.ExtrudeGeometry(backShape, backExtrudeSettings);
+            backGeometry.computeBoundingBox();
+            const backCenterX = (backGeometry.boundingBox.min.x + backGeometry.boundingBox.max.x) / 2;
+            const backBottomY = backGeometry.boundingBox.min.y;
+            backGeometry.translate(-backCenterX, -backBottomY, -halfThickness);
+
+            const textCenterY = (textBounds.min.y + textBounds.max.y) / 2;
+            const textTargetY = textCenterY - minY;
+
+            return { frontGeometry, backGeometry, wallHeight, textTargetY, textWidth, bottomPadding };
+        }
+
+        function buildMesh(word, angleDeg, depthVal, textSize) {
+            while (currentGroup.children.length) {
+                const child = currentGroup.children[0];
+                if (child.geometry) child.geometry.dispose();
+                if (child.material) {
+                    [].concat(child.material).forEach(mat => { mat.map && mat.map.dispose(); mat.dispose(); });
+                }
+                currentGroup.remove(child);
+            }
+
+            if (!font) return;
+
+            const wallDepth = Math.max(depthVal * 0.03, 0.4);
+            const { frontGeometry, backGeometry, wallHeight, textTargetY, textWidth, bottomPadding } = createWallWithTextHole(word || 'BINTANG', textSize, wallDepth);
+
+            const wallMaterial = new THREE.MeshStandardMaterial({
+                color: 0x000000,
+                roughness: 0.58,
+                metalness: 0.06,
+                side: THREE.DoubleSide,
+            });
+
+            const backMaterial = new THREE.MeshBasicMaterial({
+                color: 0xfcb32d,
+                side: THREE.FrontSide,
+                transparent: isLoading,
+                opacity: isLoading ? 0.0 : 1.0
+            });
+
+            const frontMesh = new THREE.Mesh(frontGeometry, wallMaterial);
+            frontMesh.castShadow = true;
+            frontMesh.receiveShadow = true;
+
+            const backMesh = new THREE.Mesh(backGeometry, backMaterial);
+            mainBackMesh = backMesh;
+
+            const meshY = floorMesh.position.y - bottomPadding - 0.0425;
+            frontMesh.position.set(0, meshY, 0);
+            backMesh.position.set(0, meshY, -0.002);
+
+            currentGroup.add(frontMesh);
+            currentGroup.add(backMesh);
+
+            const projectionDistance = Math.max(textWidth * 0.9 + 2.0, 4.0);
+            const projectionLight = new THREE.SpotLight(0xfcb32d, isLoading ? 0.0 : 100.0, 25, Math.PI / 3, 0.4, 1.0);
+            orangeProjectionLight = projectionLight;
+
+            const lightY = meshY + textTargetY;
+            projectionLight.position.set(0, lightY, -projectionDistance);
+            projectionLight.castShadow = true;
+
+            projectionLight.shadow.mapSize.width = 2048;
+            projectionLight.shadow.mapSize.height = 2048;
+            projectionLight.shadow.camera.near = 1.0;
+            projectionLight.shadow.camera.far = 30;
+            projectionLight.shadow.bias = -0.0005;
+
+            const lightTarget = new THREE.Object3D();
+            lightTarget.position.set(0, lightY, 10.0);
+            currentGroup.add(lightTarget);
+            projectionLight.target = lightTarget;
+
+            currentGroup.add(projectionLight);
+
+            currentGroup.rotation.y = THREE.MathUtils.degToRad(angleDeg);
+        }
+
+        let word = 'BINTANG';
+        let angleDeg = -48;
+        let depthVal = 32;
+        let textSize = 6.0;
+
+        // ════════════════════════════════════════════
+        // SCROLL STATE
+        // ════════════════════════════════════════════
+        let scrollProgress = 0;
+        let loadingDone = false; // true once loading+transition completes
+
+        const heroBg = document.getElementById('heroBg');
+        const heroOverlay = document.getElementById('heroOverlay');
+        const heroTitle = document.getElementById('heroTitle');
+        const cornerLabel = document.getElementById('cornerLabel');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+
+        let titleAnimated = false;
+
+        function onScroll() {
+            if (!loadingDone) return;
+            const scrollY = window.scrollY;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            scrollProgress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        // ════════════════════════════════════════════
+        // RESIZE
+        // ════════════════════════════════════════════
+        window.addEventListener('resize', () => {
+            camera.aspect = innerWidth / innerHeight;
+            camera.updateProjectionMatrix();
             renderer.setSize(innerWidth, innerHeight);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            document.body.appendChild(renderer.domElement);
+        });
 
-            const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
-            camera.position.set(0.4, 0.1, 12);
-            camera.lookAt(0, 1, 0);
-            window.camera = camera;
-            window._zoom = camera.position.z;
+        // ════════════════════════════════════════════
+        // MAIN CAMERA POSITIONS (post-loading)
+        // ════════════════════════════════════════════
+        // Normal/resting main scene camera:
+        const MAIN_CAM = { x: 0.4, y: 0.1, z: 12 };
+        const MAIN_LOOK = { x: 0, y: 1, z: 0 };
 
-            const ambient = new THREE.AmbientLight(THEME.ambient, 0.28);
-            scene.add(ambient);
+        // Scrolled-down camera (below the floor, looking down):
+        const SCROLL_CAM = { x: 0.4, y: -12, z: 12 };
+        const SCROLL_LOOK = { x: 0, y: -10, z: 0 };
 
-            const fillLight = new THREE.DirectionalLight(THEME.fillLight, 0.24);
-            fillLight.position.set(-6, 4, 4);
-            fillLight.castShadow = false;
-            scene.add(fillLight);
+        // ════════════════════════════════════════════
+        // ANIMATION LOOP
+        // ════════════════════════════════════════════
+        (function animate() {
+            requestAnimationFrame(animate);
 
-            const headLight = new THREE.DirectionalLight(THEME.headLight, 0.22);
-            headLight.position.set(0, 2.5, 6);
-            scene.add(headLight);
+            const now = performance.now() / 1000;
 
-            let orangeProjectionLight = null;
-            const orangeOnColor = THEME.orangeOn;
-            const orangeOffColor = THEME.orangeOff;
-
-            const lightFlicker = {
-                onIntensity: 0.28,
-                offIntensity: 0.28,
-                period: 5.6,
-                pattern: [
-                    { end: 0.1, on: true },
-                    { end: 0.2, on: false },
-                    { end: 0.3, on: true },
-                    { end: 0.4, on: false },
-                    { end: 0.7, on: true },
-                    { end: 5.6, on: true },
-                ],
-            };
-            let lastBlinkIndex = -1;
-
-            const floorMaterial = new THREE.MeshStandardMaterial({ color: THEME.floor, roughness: 0.85, metalness: 0.05 });
-            const floorGeometry = new THREE.PlaneGeometry(18, 18);
-            const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
-            floorMesh.rotation.x = -Math.PI / 2;
-            floorMesh.position.set(0, -1.1, 1.5);
-            floorMesh.receiveShadow = true;
-            scene.add(floorMesh);
-
-            let currentGroup = new THREE.Group();
-            scene.add(currentGroup);
-            window.currentGroup = currentGroup;
-
-            let font = null;
-            const fontLoader = new THREE.FontLoader();
-            fontLoader.load('Fonts/Galgo_Bold (1).json', loadedFont => {
-                font = loadedFont;
-                window._font = font;
-                buildLoadingScreen();
-            });
-
-            // --- Loading Screen State & Setup ---
-            let isLoading = true;
-            let loadingGroup = new THREE.Group();
-            scene.add(loadingGroup);
-
-            let loadingStartTime = null;
-            const dropDuration = 0.6;
-            const dropDelay = 0.08;
-            const holdDuration = 1.2;
-            const fadeDuration = 0.8;
-            const loadingWord = 'LOADING';
-            const loadingTextSize = 0.45;
-            const loadingTextDepth = 0.08;
-
-            let baselineMaterial, targetMaterial, panelMaterial, boxOutlineMaterial;
-            let targetMeshes = [];
-            let baselineMeshes = [];
-            let boxOutline;
-            let loadingLight;
-            let mainMeshBuilt = false;
-            let mainBackMesh = null;
-
-            function easeOutCubic(t) {
-                return 1 - Math.pow(1 - t, 3);
+            // Flicker state
+            const total = now % lightFlicker.period;
+            let on = false;
+            let blinkIndex = 0;
+            for (let i = 0; i < lightFlicker.pattern.length; i++) {
+                if (total <= lightFlicker.pattern[i].end) {
+                    on = lightFlicker.pattern[i].on;
+                    blinkIndex = i;
+                    break;
+                }
+            }
+            if (total > lightFlicker.pattern[lightFlicker.pattern.length - 1].end) {
+                blinkIndex = lightFlicker.pattern.length - 1;
+                on = lightFlicker.pattern[blinkIndex].on;
             }
 
-            function buildLoadingScreen() {
-                if (!font) return;
-
-                // Enable local clipping in WebGLRenderer
-                renderer.localClippingEnabled = true;
-
-                const loadingExtrudeSettings = {
-                    depth: loadingTextDepth,
-                    bevelEnabled: true,
-                    bevelThickness: 0.04,
-                    bevelSize: 0.02,
-                    bevelOffset: 0,
-                    bevelSegments: 3,
-                    curveSegments: 12,
-                    steps: 1
-                };
-
-                const baselineExtrudeSettings = {
-                    depth: 0.05,
-                    bevelEnabled: false,
-                    curveSegments: 12,
-                    steps: 1
-                };
-
-                baselineMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x222222,
-                    roughness: 0.8,
-                    metalness: 0.1,
-                    transparent: true,
-                    opacity: 0.4
-                });
-
-                // Top clipping plane: clips (hides) everything above Y = worldY_top
-                // Bottom clipping plane: clips (hides) everything below Y = worldY_bottom
-                const groupY = 0.5;
-                loadingGroup.position.set(0, groupY, 0);
-
-                const boxHeight = loadingTextSize * 2.0;
-                const Y_top = loadingTextSize / 2 + boxHeight / 2;     // local top of the box
-                const Y_bottom = loadingTextSize / 2 - boxHeight / 2;  // local bottom of the box
-                
-                const worldY_top = groupY + Y_top;
-                const worldY_bottom = groupY + Y_bottom;
-
-                const topClipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), worldY_top);
-                const bottomClipPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -worldY_bottom);
-
-                targetMaterial = new THREE.MeshStandardMaterial({
-                    color: THEME.orangeOn,
-                    roughness: 0.3,
-                    metalness: 0.1,
-                    transparent: true,
-                    opacity: 1.0,
-                    clippingPlanes: [topClipPlane, bottomClipPlane]
-                });
-
-                const chars = loadingWord.split('');
-                const letterSpacing = 0.12;
-                const letterGeometries = [];
-                const baselineGeometries = [];
-
-                // 1. Generate geometries and align left edges to X = 0
-                for (let i = 0; i < chars.length; i++) {
-                    const char = chars[i];
-                    const charShapes = font.generateShapes(char, loadingTextSize);
-                    
-                    const targetGeom = new THREE.ExtrudeGeometry(charShapes, loadingExtrudeSettings);
-                    targetGeom.computeBoundingBox();
-                    targetGeom.translate(-targetGeom.boundingBox.min.x, 0, 0);
-                    letterGeometries.push(targetGeom);
-
-                    const baseGeom = new THREE.ExtrudeGeometry(charShapes, baselineExtrudeSettings);
-                    baseGeom.computeBoundingBox();
-                    baseGeom.translate(-baseGeom.boundingBox.min.x, 0, 0);
-                    baselineGeometries.push(baseGeom);
-                }
-
-                // 2. Calculate horizontal positioning
-                const xPositions = [];
-                let currentX = 0;
-                for (let i = 0; i < chars.length; i++) {
-                    xPositions.push(currentX);
-                    const width = letterGeometries[i].boundingBox.max.x - letterGeometries[i].boundingBox.min.x;
-                    currentX += width + letterSpacing;
-                }
-                const totalWidth = currentX - letterSpacing;
-
-                // 3. Center geometries horizontally
-                for (let i = 0; i < chars.length; i++) {
-                    const shiftX = xPositions[i] - totalWidth / 2;
-                    letterGeometries[i].translate(shiftX, 0, 0);
-                    baselineGeometries[i].translate(shiftX, 0, 0);
-                }
-
-                // 4. Create meshes
-                for (let i = 0; i < chars.length; i++) {
-                    const baseMesh = new THREE.Mesh(baselineGeometries[i], baselineMaterial);
-                    baseMesh.position.set(0, 0, 0);
-                    baseMesh.receiveShadow = true;
-                    loadingGroup.add(baseMesh);
-                    baselineMeshes.push(baseMesh);
-
-                    const targetMesh = new THREE.Mesh(letterGeometries[i], targetMaterial);
-                    // Start position is above the box
-                    targetMesh.position.set(0, 2.5, 0.03);
-                    targetMesh.castShadow = true;
-                    targetMesh.receiveShadow = true;
-                    targetMesh.visible = false;
-                    loadingGroup.add(targetMesh);
-                    targetMeshes.push(targetMesh);
-                }
-
-                // 5. Create loading box outline
-                const boxWidth = totalWidth + loadingTextSize * 1.0;
-                const boxDepth = loadingTextDepth * 3.0;
-
-                const boxGeom = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-                const edges = new THREE.EdgesGeometry(boxGeom);
-                boxOutlineMaterial = new THREE.LineBasicMaterial({
-                    color: 0x333333,
-                    transparent: true,
-                    opacity: 0.8
-                });
-                boxOutline = new THREE.LineSegments(edges, boxOutlineMaterial);
-                boxOutline.position.set(0, loadingTextSize / 2, 0);
-                loadingGroup.add(boxOutline);
-
-                // 6. Create semi-transparent panel background
-                const panelGeom = new THREE.PlaneGeometry(boxWidth, boxHeight);
-                panelMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x050505,
-                    roughness: 0.8,
-                    metalness: 0.2,
-                    transparent: true,
-                    opacity: 0.8,
-                    side: THREE.DoubleSide
-                });
-                const panelMesh = new THREE.Mesh(panelGeom, panelMaterial);
-                panelMesh.position.set(0, loadingTextSize / 2, -boxDepth / 2 + 0.01);
-                panelMesh.receiveShadow = true;
-                loadingGroup.add(panelMesh);
-
-                // 7. Add loading-specific light inside loadingGroup
-                loadingLight = new THREE.SpotLight(0xffffff, 5.0, 25, Math.PI / 4, 0.3, 1.0);
-                loadingLight.position.set(2, 4, 5);
-                loadingLight.castShadow = true;
-                loadingLight.shadow.mapSize.width = 1024;
-                loadingLight.shadow.mapSize.height = 1024;
-                loadingLight.shadow.camera.near = 0.5;
-                loadingLight.shadow.camera.far = 15;
-                loadingLight.shadow.bias = -0.001;
-
-                const loadingLightTarget = new THREE.Object3D();
-                loadingLightTarget.position.set(0, loadingTextSize / 2, 0);
-                loadingGroup.add(loadingLightTarget);
-                loadingLight.target = loadingLightTarget;
-                loadingGroup.add(loadingLight);
-            }
-
-            function createWallWithTextHole(word, size, thickness) {
-                const rawShapes = font.generateShapes(word, size, 10);
-
-                const textGeometry = new THREE.ShapeGeometry(rawShapes);
-                const textBounds = new THREE.Box3().setFromObject(new THREE.Mesh(textGeometry));
-                const textWidth = textBounds.max.x - textBounds.min.x;
-                const textHeight = textBounds.max.y - textBounds.min.y;
-                const textCenterX = (textBounds.min.x + textBounds.max.x) / 2;
-
-                const margin = 20;
-                const wallWidth = Math.max(textWidth + margin, 6);
-                const wallHeight = Math.max(textHeight + margin, 3.5);
-                const bottomPadding = 0.35;
-
-                const minX = textCenterX - wallWidth / 2;
-                const maxX = textCenterX + wallWidth / 2;
-                const minY = textBounds.min.y - bottomPadding;
-                const maxY = minY + wallHeight;
-
-                // 1. Front Wall Shape (with cutout holes)
-                const wallShape = new THREE.Shape();
-                wallShape.moveTo(minX, minY);
-                wallShape.lineTo(maxX, minY);
-                wallShape.lineTo(maxX, maxY);
-                wallShape.lineTo(minX, maxY);
-                wallShape.lineTo(minX, minY);
-                wallShape.holes.push(...rawShapes);
-
-                // 2. Back Wall Shape (solid, no holes!)
-                const backShape = new THREE.Shape();
-                backShape.moveTo(minX, minY);
-                backShape.lineTo(maxX, minY);
-                backShape.lineTo(maxX, maxY);
-                backShape.lineTo(minX, maxY);
-                backShape.lineTo(minX, minY);
-
-                const halfThickness = thickness / 2;
-
-                const frontExtrudeSettings = {
-                    depth: halfThickness,
-                    bevelEnabled: false,
-                    curveSegments: 12,
-                    steps: 1,
-                };
-
-                const backExtrudeSettings = {
-                    depth: halfThickness,
-                    bevelEnabled: false,
-                    curveSegments: 12,
-                    steps: 1,
-                };
-
-                const frontGeometry = new THREE.ExtrudeGeometry(wallShape, frontExtrudeSettings);
-                frontGeometry.computeBoundingBox();
-                const frontCenterX = (frontGeometry.boundingBox.min.x + frontGeometry.boundingBox.max.x) / 2;
-                const frontBottomY = frontGeometry.boundingBox.min.y;
-                frontGeometry.translate(-frontCenterX, -frontBottomY, 0);
-
-                const backGeometry = new THREE.ExtrudeGeometry(backShape, backExtrudeSettings);
-                backGeometry.computeBoundingBox();
-                const backCenterX = (backGeometry.boundingBox.min.x + backGeometry.boundingBox.max.x) / 2;
-                const backBottomY = backGeometry.boundingBox.min.y;
-                backGeometry.translate(-backCenterX, -backBottomY, -halfThickness);
-
-                const textCenterY = (textBounds.min.y + textBounds.max.y) / 2;
-                const textTargetY = textCenterY - minY;
-
-                return { frontGeometry, backGeometry, wallHeight, textTargetY, textWidth, bottomPadding };
-            }
-
-            function buildMesh(word, angleDeg, depthVal, textSize) {
-                while (currentGroup.children.length) {
-                    const child = currentGroup.children[0];
-                    if (child.geometry) child.geometry.dispose();
-                    if (child.material) {
-                        [].concat(child.material).forEach(mat => { mat.map && mat.map.dispose(); mat.dispose(); });
+            // ── LOADING PHASE ──
+            if (isLoading) {
+                if (font) {
+                    if (loadingStartTime === null) {
+                        loadingStartTime = now;
                     }
-                    currentGroup.remove(child);
-                }
 
-                if (!font) return;
+                    const elapsed = now - loadingStartTime;
+                    const lastCharIdx = loadingWord.length - 1;
+                    const dropEndTime = lastCharIdx * dropDelay + dropDuration;
 
-                const wallDepth = Math.max(depthVal * 0.03, 0.4);
-                const { frontGeometry, backGeometry, wallHeight, textTargetY, textWidth, bottomPadding } = createWallWithTextHole(word || 'BINTANG', textSize, wallDepth);
-
-                const wallMaterial = new THREE.MeshStandardMaterial({
-                    color: 0x000000,
-                    roughness: 0.58,
-                    metalness: 0.06,
-                    side: THREE.DoubleSide,
-                });
-
-                const backMaterial = new THREE.MeshBasicMaterial({
-                    color: 0xfcb32d,
-                    side: THREE.FrontSide,
-                    transparent: isLoading,
-                    opacity: isLoading ? 0.0 : 1.0
-                });
-
-                const frontMesh = new THREE.Mesh(frontGeometry, wallMaterial);
-                frontMesh.castShadow = true;
-                frontMesh.receiveShadow = true;
-
-                const backMesh = new THREE.Mesh(backGeometry, backMaterial);
-                mainBackMesh = backMesh;
-
-                // Position the wall so the bottom of the text cutout touches the floor.
-                // This buries the bottom padding of the wall below the floor.
-                const meshY = floorMesh.position.y - bottomPadding - 0.0425;
-                frontMesh.position.set(0, meshY, 0);
-
-                // Add a tiny offset of -0.002 in Z to prevent z-fighting between
-                // the back face of the front mesh and the front face of the back mesh.
-                backMesh.position.set(0, meshY, -0.002);
-
-                currentGroup.add(frontMesh);
-                currentGroup.add(backMesh);
-
-                // Create a shadow-casting spotlight behind the wall
-                // to project the shape of the text cutout onto the floor.
-                const projectionDistance = Math.max(textWidth * 0.9 + 2.0, 4.0);
-                const projectionLight = new THREE.SpotLight(0xfcb32d, isLoading ? 0.0 : 100.0, 25, Math.PI / 3, 0.4, 1.0);
-                orangeProjectionLight = projectionLight;
-
-                // Align light Y with the actual text center height in the group space
-                const lightY = meshY + textTargetY;
-                projectionLight.position.set(0, lightY, -projectionDistance);
-                projectionLight.castShadow = true;
-
-                // Setup high-quality shadows for sharp letter projections
-                projectionLight.shadow.mapSize.width = 2048;
-                projectionLight.shadow.mapSize.height = 2048;
-                projectionLight.shadow.camera.near = 1.0;
-                projectionLight.shadow.camera.far = 30;
-                projectionLight.shadow.bias = -0.0005;
-
-                // Position the spotlight target in front of the wall
-                const lightTarget = new THREE.Object3D();
-                lightTarget.position.set(0, lightY, 10.0);
-                currentGroup.add(lightTarget);
-                projectionLight.target = lightTarget;
-
-                currentGroup.add(projectionLight);
-
-                currentGroup.rotation.y = THREE.MathUtils.degToRad(angleDeg);
-            }
-
-            let word = 'BINTANG';
-            let angleDeg = -48;
-            let depthVal = 32;
-            let textSize = 6.0;
-
-            window.addEventListener('resize', () => {
-                camera.aspect = innerWidth / innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(innerWidth, innerHeight);
-            });
-
-            // Wheel zoom disabled intentionally
-
-            (function animate() {
-                requestAnimationFrame(animate);
-
-                const now = performance.now() / 1000;
-
-                // Determine flicker state (for main scene)
-                const total = now % lightFlicker.period;
-                let on = false;
-                let blinkIndex = 0;
-                for (let i = 0; i < lightFlicker.pattern.length; i++) {
-                    if (total <= lightFlicker.pattern[i].end) {
-                        on = lightFlicker.pattern[i].on;
-                        blinkIndex = i;
-                        break;
+                    // Animate dropping letters
+                    for (let i = 0; i < targetMeshes.length; i++) {
+                        const startDropTime = i * dropDelay;
+                        if (elapsed >= startDropTime) {
+                            targetMeshes[i].visible = true;
+                            const p = Math.min((elapsed - startDropTime) / dropDuration, 1.0);
+                            const eased = easeOutCubic(p);
+                            const Y_start = 1.5;
+                            targetMeshes[i].position.y = Y_start * (1.0 - eased);
+                        }
                     }
-                }
-                if (total > lightFlicker.pattern[lightFlicker.pattern.length - 1].end) {
-                    blinkIndex = lightFlicker.pattern.length - 1;
-                    on = lightFlicker.pattern[blinkIndex].on;
-                }
-                if (blinkIndex !== lastBlinkIndex) {
-                    lastBlinkIndex = blinkIndex;
-                    console.log(`blink ${blinkIndex}: total=${total.toFixed(3)}, on=${on}, end=${lightFlicker.pattern[blinkIndex].end}`);
-                }
 
-                if (isLoading) {
-                    if (font) {
-                        if (loadingStartTime === null) {
-                            loadingStartTime = now;
+                    // Glow effect for box outline
+                    if (elapsed >= dropEndTime) {
+                        const glowProgress = Math.min((elapsed - dropEndTime) / 0.4, 1.0);
+                        boxOutlineMaterial.color.lerpColors(new THREE.Color(0x333333), new THREE.Color(0xfcb32d), glowProgress);
+                    }
+
+                    // Hold & fade
+                    if (elapsed >= dropEndTime + holdDuration) {
+                        endLoadingScreen();
+                    }
+
+                    if (transitionTriggered) {
+                        const fadeElapsed = now - transitionStartTime;
+                        const fadeProgress = Math.min(fadeElapsed / transitionDuration, 1.0);
+
+                        // Fade out loading elements
+                        baselineMaterial.opacity = 0.4 * (1.0 - fadeProgress);
+                        targetMaterial.opacity = 1.0 * (1.0 - fadeProgress);
+                        panelMaterial.opacity = 0.8 * (1.0 - fadeProgress);
+                        boxOutlineMaterial.opacity = 0.8 * (1.0 - fadeProgress);
+                        if (loadingLight) {
+                            loadingLight.intensity = 5.0 * (1.0 - fadeProgress);
                         }
 
-                        const elapsed = now - loadingStartTime;
-                        const lastCharIdx = loadingWord.length - 1;
-                        const dropEndTime = lastCharIdx * dropDelay + dropDuration;
+                        // Camera swoop
+                        const t = easeInOutCubic(fadeProgress);
+                        camera.position.set(0.4, THREE.MathUtils.lerp(10.0, MAIN_CAM.y, t), 12.0);
+                        camera.lookAt(MAIN_LOOK.x, MAIN_LOOK.y, MAIN_LOOK.z);
 
-                        // 1. Animate dropping letters
-                        for (let i = 0; i < targetMeshes.length; i++) {
-                            const startDropTime = i * dropDelay;
-                            if (elapsed >= startDropTime) {
-                                targetMeshes[i].visible = true;
-                                const p = Math.min((elapsed - startDropTime) / dropDuration, 1.0);
-                                const eased = easeOutCubic(p);
-                                const Y_start = 1.5;
-                                targetMeshes[i].position.y = Y_start * (1.0 - eased);
-                            }
+                        // Build main mesh
+                        if (!mainMeshBuilt) {
+                            buildMesh(word, angleDeg, depthVal, textSize);
+                            mainMeshBuilt = true;
                         }
 
-                        // 2. Glow effect for the box outline when done dropping
-                        if (elapsed >= dropEndTime) {
-                            const glowProgress = Math.min((elapsed - dropEndTime) / 0.4, 1.0);
-                            boxOutlineMaterial.color.lerpColors(new THREE.Color(0x333333), new THREE.Color(0xfcb32d), glowProgress);
+                        if (mainBackMesh) {
+                            mainBackMesh.material.opacity = fadeProgress;
                         }
 
-                        // 3. Handle transition (hold & fade out)
-                        if (elapsed >= dropEndTime + holdDuration) {
-                            const fadeElapsed = elapsed - (dropEndTime + holdDuration);
-                            const fadeProgress = Math.min(fadeElapsed / fadeDuration, 1.0);
+                        // Scale light intensities
+                        headLight.intensity = fadeProgress * (on ? lightFlicker.onIntensity : lightFlicker.offIntensity);
+                        fillLight.intensity = fadeProgress * (on ? 0.24 : 0.0);
+                        if (orangeProjectionLight) {
+                            orangeProjectionLight.intensity = fadeProgress * 100.0;
+                        }
 
-                            // Fade out loading screen elements
-                            baselineMaterial.opacity = 0.4 * (1.0 - fadeProgress);
-                            targetMaterial.opacity = 1.0 * (1.0 - fadeProgress);
-                            panelMaterial.opacity = 0.8 * (1.0 - fadeProgress);
-                            boxOutlineMaterial.opacity = 0.8 * (1.0 - fadeProgress);
-                            if (loadingLight) {
-                                loadingLight.intensity = 5.0 * (1.0 - fadeProgress);
-                            }
+                        // Done loading
+                        if (fadeProgress >= 1.0) {
+                            isLoading = false;
+                            loadingDone = true;
+                            scene.remove(loadingGroup);
 
-                            // Camera swoop transition
-                            camera.position.x = THREE.MathUtils.lerp(0.0, 0.4, fadeProgress);
-                            camera.position.y = THREE.MathUtils.lerp(0.7, 0.1, fadeProgress);
-                            camera.position.z = THREE.MathUtils.lerp(5.0, 12.0, fadeProgress);
-                            
-                            const lookAtY = THREE.MathUtils.lerp(0.7, 1.0, fadeProgress);
-                            camera.lookAt(0, lookAtY, 0);
-
-                            // Lazily build the main mesh and fade it in
-                            if (!mainMeshBuilt) {
-                                buildMesh(word, angleDeg, depthVal, textSize);
-                                mainMeshBuilt = true;
-                            }
-
-                            if (mainBackMesh) {
-                                mainBackMesh.material.opacity = fadeProgress;
-                            }
-
-                            // Scale main light intensities during fade-in
-                            headLight.intensity = fadeProgress * (on ? lightFlicker.onIntensity : lightFlicker.offIntensity);
-                            fillLight.intensity = fadeProgress * (on ? 0.24 : 0.0);
-                            if (orangeProjectionLight) {
-                                orangeProjectionLight.intensity = fadeProgress * 100.0;
-                            }
-
-                            if (fadeProgress >= 1.0) {
-                                isLoading = false;
-                                scene.remove(loadingGroup);
-                                
-                                // Clean up loading geometries/materials to free memory
-                                loadingGroup.traverse(child => {
-                                    if (child.geometry) child.geometry.dispose();
-                                    if (child.material) {
-                                        [].concat(child.material).forEach(mat => mat.dispose());
-                                    }
-                                });
-                                
-                                // Restore original headlight/filllight intensities
-                                headLight.intensity = on ? lightFlicker.onIntensity : lightFlicker.offIntensity;
-                                fillLight.intensity = on ? 0.24 : 0.0;
-                                if (orangeProjectionLight) {
-                                    orangeProjectionLight.intensity = 100.0;
+                            loadingGroup.traverse(child => {
+                                if (child.geometry) child.geometry.dispose();
+                                if (child.material) {
+                                    [].concat(child.material).forEach(mat => mat.dispose());
                                 }
-                            }
-                        } else {
-                            // During loading (before fade out), keep camera static at loading position
-                            camera.position.set(0, 0.7, 5.0);
-                            camera.lookAt(0, 0.7, 0);
+                            });
 
-                            // Main lights are off during loading
-                            headLight.intensity = 0;
-                            fillLight.intensity = 0;
+                            headLight.intensity = on ? lightFlicker.onIntensity : lightFlicker.offIntensity;
+                            fillLight.intensity = on ? 0.24 : 0.0;
+                            if (orangeProjectionLight) {
+                                orangeProjectionLight.intensity = 100.0;
+                            }
+
+                            // Enable scrolling now
+                            document.body.classList.add('scrollable');
+                            scrollIndicator.classList.add('show');
                         }
+                    } else {
+                        camera.position.set(0.4, 10, 12);
+                        camera.lookAt(0, 1, 0);
+                        headLight.intensity = 0;
+                        fillLight.intensity = 0;
+                    }
+                }
+            }
+            // ── MAIN SCENE (post-loading) ──
+            else {
+                // Flicker
+                headLight.intensity = on ? lightFlicker.onIntensity : lightFlicker.offIntensity;
+                fillLight.intensity = on ? 0.24 : 0.0;
+
+                const orangeColor = on ? orangeOnColor : orangeOffColor;
+                if (orangeProjectionLight) {
+                    orangeProjectionLight.intensity = 100.0;
+                    orangeProjectionLight.color.setHex(orangeColor);
+                }
+
+                // ── SCROLL-DRIVEN CAMERA ──
+                // scrollProgress 0 → 1 maps camera from MAIN to SCROLL
+                const sp = easeInOutCubic(scrollProgress);
+
+                const camY = THREE.MathUtils.lerp(MAIN_CAM.y, SCROLL_CAM.y, sp);
+                const camX = THREE.MathUtils.lerp(MAIN_CAM.x, SCROLL_CAM.x, sp);
+                const camZ = THREE.MathUtils.lerp(MAIN_CAM.z, SCROLL_CAM.z, sp);
+
+                camera.position.set(camX, camY, camZ);
+
+                const lookY = THREE.MathUtils.lerp(MAIN_LOOK.y, SCROLL_LOOK.y, sp);
+                camera.lookAt(MAIN_LOOK.x, lookY, MAIN_LOOK.z);
+
+                // ── REVEAL LAYERS ──
+                // Trigger title animation and reveal image zoom when scrolling down to Section 2
+                if (scrollProgress > 0.4) {
+                    heroBg.classList.add('revealed');
+                    if (!titleAnimated) {
+                        titleAnimated = true;
+                        heroTitle.classList.add('animate');
+                        cornerLabel.classList.add('visible');
                     }
                 } else {
-                    // Normal main scene rendering loop behavior
-                    headLight.intensity = on ? lightFlicker.onIntensity : lightFlicker.offIntensity;
-                    fillLight.intensity = on ? 0.24 : 0.0;
-
-                    const orangeColor = on ? orangeOnColor : orangeOffColor;
-                    if (orangeProjectionLight) {
-                        orangeProjectionLight.intensity = 100.0;
-                        orangeProjectionLight.color.setHex(orangeColor);
+                    heroBg.classList.remove('revealed');
+                    if (titleAnimated) {
+                        titleAnimated = false;
+                        heroTitle.classList.remove('animate');
+                        cornerLabel.classList.remove('visible');
                     }
-
-                    // Ensure camera remains static at main position
-                    camera.position.set(0.4, 0.1, 12);
-                    camera.lookAt(0, 1, 0);
                 }
 
-                renderer.render(scene, camera);
-            })();
+                // Hide scroll indicator when scrolled
+                if (scrollProgress > 0.05) {
+                    scrollIndicator.classList.add('hidden');
+                } else {
+                    scrollIndicator.classList.remove('hidden');
+                }
+            }
 
+            renderer.render(scene, camera);
         })();
-    </script>
-</body>
 
+    })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- 2D WORM OVERLAY: organic line animations       -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <script>
+    (function () {
+        'use strict';
+
+        const canvas = document.getElementById('wormCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+
+        const WORM_COUNT = 22;
+        const worms = [];
+
+        class Worm {
+            constructor() {
+                this.segCount = 50 + Math.floor(Math.random() * 40);
+                this.segments = [];
+
+                // Start position
+                let x = Math.random() * canvas.width;
+                let y = Math.random() * canvas.height;
+
+                for (let i = 0; i < this.segCount; i++) {
+                    this.segments.push({ x, y });
+                }
+
+                // Movement params — sinusoidal oscillation
+                this.headSpeed = 0.3 + Math.random() * 0.7;
+                this.turnSpeed = 0.002 + Math.random() * 0.004;
+                this.angle = Math.random() * Math.PI * 2;
+                this.waveFreq1 = 0.02 + Math.random() * 0.03;
+                this.waveAmp1 = 1.5 + Math.random() * 3;
+                this.waveFreq2 = 0.008 + Math.random() * 0.015;
+                this.waveAmp2 = 2 + Math.random() * 4;
+                this.phase = Math.random() * Math.PI * 2;
+
+                // Visual
+                this.hue = 25 + Math.random() * 30; // warm golden
+                this.saturation = 40 + Math.random() * 30;
+                this.lightness = 45 + Math.random() * 20;
+                this.alpha = 0.04 + Math.random() * 0.10;
+                this.width = 1 + Math.random() * 2.5;
+                this.segSpacing = 2 + Math.random() * 3;
+
+                this.time = Math.random() * 1000;
+            }
+
+            update(dt) {
+                this.time += dt;
+
+                // Move head in organic curves
+                this.angle += Math.sin(this.time * this.waveFreq1 + this.phase) * this.turnSpeed * 3;
+                this.angle += Math.cos(this.time * this.waveFreq2 + this.phase * 0.7) * this.turnSpeed * 2;
+
+                const head = this.segments[0];
+                head.x += Math.cos(this.angle) * this.headSpeed;
+                head.y += Math.sin(this.angle) * this.headSpeed;
+
+                // Sinusoidal lateral offset for organic wriggle
+                const lateralAngle = this.angle + Math.PI / 2;
+                const wriggle = Math.sin(this.time * 0.08 + this.phase) * this.waveAmp1
+                              + Math.sin(this.time * 0.035 + this.phase * 1.3) * this.waveAmp2 * 0.3;
+                head.x += Math.cos(lateralAngle) * wriggle * 0.02;
+                head.y += Math.sin(lateralAngle) * wriggle * 0.02;
+
+                // Wrap around screen edges with margin
+                const margin = 80;
+                if (head.x < -margin) head.x = canvas.width + margin;
+                if (head.x > canvas.width + margin) head.x = -margin;
+                if (head.y < -margin) head.y = canvas.height + margin;
+                if (head.y > canvas.height + margin) head.y = -margin;
+
+                // Each segment follows the one ahead (smooth chain)
+                for (let i = 1; i < this.segCount; i++) {
+                    const prev = this.segments[i - 1];
+                    const curr = this.segments[i];
+                    const dx = prev.x - curr.x;
+                    const dy = prev.y - curr.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist > this.segSpacing) {
+                        const ratio = this.segSpacing / dist;
+                        curr.x = prev.x - dx * ratio;
+                        curr.y = prev.y - dy * ratio;
+                    }
+                }
+            }
+
+            draw(ctx) {
+                if (this.segments.length < 3) return;
+
+                ctx.beginPath();
+                ctx.strokeStyle = `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha})`;
+                ctx.lineWidth = this.width;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                ctx.moveTo(this.segments[0].x, this.segments[0].y);
+
+                // Smooth curve through segments
+                for (let i = 1; i < this.segments.length - 1; i++) {
+                    const curr = this.segments[i];
+                    const next = this.segments[i + 1];
+                    const midX = (curr.x + next.x) / 2;
+                    const midY = (curr.y + next.y) / 2;
+                    ctx.quadraticCurveTo(curr.x, curr.y, midX, midY);
+                }
+
+                const last = this.segments[this.segments.length - 1];
+                ctx.lineTo(last.x, last.y);
+
+                ctx.stroke();
+
+                // Subtle glow at head
+                const headGradient = ctx.createRadialGradient(
+                    this.segments[0].x, this.segments[0].y, 0,
+                    this.segments[0].x, this.segments[0].y, 8
+                );
+                headGradient.addColorStop(0, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness + 10}%, ${this.alpha * 2})`);
+                headGradient.addColorStop(1, `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 0)`);
+                ctx.fillStyle = headGradient;
+                ctx.beginPath();
+                ctx.arc(this.segments[0].x, this.segments[0].y, 8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < WORM_COUNT; i++) {
+            worms.push(new Worm());
+        }
+
+        let lastTimestamp = 0;
+
+        function animateWorms(timestamp) {
+            requestAnimationFrame(animateWorms);
+
+            const dt = timestamp - lastTimestamp;
+            lastTimestamp = timestamp;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (const worm of worms) {
+                worm.update(dt);
+                worm.draw(ctx);
+            }
+        }
+
+        requestAnimationFrame(animateWorms);
+
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+        });
+    })();
+    </script>
+
+</body>
 </html>
