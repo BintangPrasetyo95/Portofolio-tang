@@ -89,6 +89,65 @@
             z-index: 2;
         }
 
+        /* Glowing golden borders for Section 2 */
+        .border-glow {
+            position: absolute;
+            inset: 0;
+            z-index: 12;
+            pointer-events: none;
+            box-shadow: 
+                inset 0 0 60px rgba(252, 179, 45, 0.45), 
+                inset 0 0 20px rgba(252, 179, 45, 0.25);
+            border: 2px solid rgba(252, 179, 45, 0.3);
+            border-image: linear-gradient(to bottom, rgba(252, 179, 45, 0.6), rgba(252, 179, 45, 0.1) 50%, rgba(252, 179, 45, 0.6)) 1;
+            opacity: 0;
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Trigger border glow on reveal */
+        #section-2.revealed .border-glow {
+            opacity: 1;
+        }
+
+        /* Decorative 3D Elements */
+        .decor-element {
+            position: absolute;
+            z-index: 4;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            filter: contrast(1.25) brightness(0.85); /* Erases any faint border outline from the dark image background */
+        }
+
+        .decor-capsule {
+            top: -12%;
+            left: -12%;
+            width: clamp(200px, 30vw, 400px);
+            transform: rotate(20deg);
+            opacity: 0.85;
+        }
+
+        .decor-pentagon {
+            top: -12%;
+            right: -12%;
+            width: clamp(200px, 30vw, 400px);
+            transform: rotate(-15deg);
+            opacity: 0.85;
+        }
+
+        .decor-left {
+            top: 30%;
+            left: -8%;
+            width: clamp(180px, 25vw, 320px);
+            opacity: 0.8;
+        }
+
+        .decor-right {
+            top: 25%;
+            right: -8%;
+            width: clamp(180px, 25vw, 320px);
+            opacity: 0.8;
+        }
+
         canvas#mainCanvas {
             display: block;
             position: fixed;
@@ -174,7 +233,8 @@
             letter-spacing: -0.03em;
             line-height: 0.95;
             text-transform: uppercase;
-            color: var(--color-white);
+            color: #fcb32d; /* Fallback golden accent color */
+            text-shadow: 0 0 35px rgba(252, 179, 45, 0.22);
             text-align: left;
             position: relative;
             z-index: 2;
@@ -189,6 +249,9 @@
             display: inline-block;
             transform: translateY(115%);
             transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+            background: linear-gradient(135deg, #ffe596 0%, #fcb32d 55%, #b67500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-title.animate .line span {
@@ -300,6 +363,12 @@
                 bottom: 1.5rem;
                 right: 1.5rem;
             }
+            .decor-element {
+                opacity: 0.45 !important;
+            }
+            .intro-container {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -317,6 +386,17 @@
 
     <!-- Section 2: Reveal Section -->
     <section class="section" id="section-2">
+        <!-- Glowing golden border frame -->
+        <div class="border-glow"></div>
+
+        <!-- 3D Claymorphic Background Elements -->
+        <img src="images/capsule_shape.png" alt="" class="decor-element decor-capsule">
+        <img src="images/rounded_pentagon.png" alt="" class="decor-element decor-pentagon">
+        <img src="images/spheres_left.png" alt="" class="decor-element decor-left">
+        <img src="images/spheres_right.png" alt="" class="decor-element decor-right">
+
+
+
         <!-- Background image (revealed on scroll) -->
         <div class="hero-bg" id="heroBg">
             <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80" alt="Hero background">
@@ -791,8 +871,8 @@
         function onScroll() {
             if (!loadingDone) return;
             const scrollY = window.scrollY;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            scrollProgress = maxScroll > 0 ? Math.min(scrollY / maxScroll, 1) : 0;
+            const targetMaxScroll = window.innerHeight;
+            scrollProgress = targetMaxScroll > 0 ? Math.min(scrollY / targetMaxScroll, 1) : 0;
         }
         window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -967,8 +1047,10 @@
 
                 // ── REVEAL LAYERS ──
                 // Trigger title animation and reveal image zoom when scrolling down to Section 2
+                const section2 = document.getElementById('section-2');
                 if (scrollProgress > 0.4) {
                     heroBg.classList.add('revealed');
+                    section2.classList.add('revealed');
                     if (!titleAnimated) {
                         titleAnimated = true;
                         heroTitle.classList.add('animate');
@@ -976,6 +1058,7 @@
                     }
                 } else {
                     heroBg.classList.remove('revealed');
+                    section2.classList.remove('revealed');
                     if (titleAnimated) {
                         titleAnimated = false;
                         heroTitle.classList.remove('animate');
@@ -1150,6 +1233,41 @@
         window.addEventListener('resize', () => {
             canvas.width = innerWidth;
             canvas.height = innerHeight;
+        });
+    })();
+    </script>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- GSAP SCROLLTRIGGER: Glowing Golden Weaving Line -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <script>
+    (function () {
+        'use strict';
+
+        const paths = document.querySelectorAll('.scroll-path, .scroll-path-glow');
+        if (paths.length === 0) return;
+
+        paths.forEach(path => {
+            // Get path length (SVG coordinate space, constant across resizing)
+            const length = path.getTotalLength();
+
+            // Initialize dasharray and hide path offset
+            gsap.set(path, {
+                strokeDasharray: length,
+                strokeDashoffset: length
+            });
+
+            // Link drawing progress to Section 2 scroll entry
+            gsap.to(path, {
+                strokeDashoffset: 0,
+                ease: "power1.inOut",
+                scrollTrigger: {
+                    trigger: "#section-2",
+                    start: "top bottom",
+                    end: "top top",
+                    scrub: 0.6
+                }
+            });
         });
     })();
     </script>
