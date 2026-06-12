@@ -389,12 +389,6 @@
         <!-- Glowing golden border frame -->
         <div class="border-glow"></div>
 
-        <!-- 3D Claymorphic Background Elements -->
-        <img src="images/capsule_shape.png" alt="" class="decor-element decor-capsule">
-        <img src="images/rounded_pentagon.png" alt="" class="decor-element decor-pentagon">
-        <img src="images/spheres_left.png" alt="" class="decor-element decor-left">
-        <img src="images/spheres_right.png" alt="" class="decor-element decor-right">
-
 
 
         <!-- Background image (revealed on scroll) -->
@@ -417,18 +411,14 @@
         <div class="corner-label" id="cornerLabel">IT Enthusiast</div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- THREE.JS: Original 3D cutout hero + scroll     -->
-    <!-- ═══════════════════════════════════════════════ -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
     <script>
     (function () {
         'use strict';
 
-        // ════════════════════════════════════════════
         // THEME
-        // ════════════════════════════════════════════
         const THEME = {
             bg: 0x000000,
             ambient: 0xffffff,
@@ -439,9 +429,7 @@
             floor: 0x000000,
         };
 
-        // ════════════════════════════════════════════
         // RENDERER + SCENE + CAMERA
-        // ════════════════════════════════════════════
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(THEME.bg);
 
@@ -457,9 +445,7 @@
         camera.position.set(0.4, 10, 12);
         camera.lookAt(0, 1, 0);
 
-        // ════════════════════════════════════════════
         // LIGHTS
-        // ════════════════════════════════════════════
         const ambient = new THREE.AmbientLight(THEME.ambient, 0.28);
         scene.add(ambient);
 
@@ -491,9 +477,7 @@
         };
         let lastBlinkIndex = -1;
 
-        // ════════════════════════════════════════════
         // FLOOR
-        // ════════════════════════════════════════════
         const floorMaterial = new THREE.MeshStandardMaterial({ color: THEME.floor, roughness: 0.85, metalness: 0.05 });
         const floorGeometry = new THREE.PlaneGeometry(18, 18);
         const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -502,9 +486,7 @@
         floorMesh.receiveShadow = true;
         scene.add(floorMesh);
 
-        // ════════════════════════════════════════════
         // MAIN TEXT GROUP
-        // ════════════════════════════════════════════
         let currentGroup = new THREE.Group();
         scene.add(currentGroup);
 
@@ -515,9 +497,7 @@
             buildLoadingScreen();
         });
 
-        // ════════════════════════════════════════════
         // LOADING SCREEN
-        // ════════════════════════════════════════════
         let isLoading = true;
         let loadingGroup = new THREE.Group();
         scene.add(loadingGroup);
@@ -711,9 +691,7 @@
             loadingGroup.add(loadingLight);
         }
 
-        // ════════════════════════════════════════════
         // WALL WITH TEXT HOLE
-        // ════════════════════════════════════════════
         function createWallWithTextHole(word, size, thickness) {
             const rawShapes = font.generateShapes(word, size, 10);
 
@@ -854,9 +832,7 @@
         let depthVal = 32;
         let textSize = 6.0;
 
-        // ════════════════════════════════════════════
         // SCROLL STATE
-        // ════════════════════════════════════════════
         let scrollProgress = 0;
         let loadingDone = false; // true once loading+transition completes
 
@@ -876,18 +852,14 @@
         }
         window.addEventListener('scroll', onScroll, { passive: true });
 
-        // ════════════════════════════════════════════
         // RESIZE
-        // ════════════════════════════════════════════
         window.addEventListener('resize', () => {
             camera.aspect = innerWidth / innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(innerWidth, innerHeight);
         });
 
-        // ════════════════════════════════════════════
         // MAIN CAMERA POSITIONS (post-loading)
-        // ════════════════════════════════════════════
         // Normal/resting main scene camera:
         const MAIN_CAM = { x: 0.4, y: 0.1, z: 12 };
         const MAIN_LOOK = { x: 0, y: 1, z: 0 };
@@ -896,9 +868,7 @@
         const SCROLL_CAM = { x: 0.4, y: -12, z: 12 };
         const SCROLL_LOOK = { x: 0, y: -10, z: 0 };
 
-        // ════════════════════════════════════════════
         // ANIMATION LOOP
-        // ════════════════════════════════════════════
         (function animate() {
             requestAnimationFrame(animate);
 
@@ -1080,9 +1050,7 @@
     })();
     </script>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- 2D WORM OVERLAY: organic line animations       -->
-    <!-- ═══════════════════════════════════════════════ -->
+
     <script>
     (function () {
         'use strict';
@@ -1237,40 +1205,7 @@
     })();
     </script>
 
-    <!-- ═══════════════════════════════════════════════ -->
-    <!-- GSAP SCROLLTRIGGER: Glowing Golden Weaving Line -->
-    <!-- ═══════════════════════════════════════════════ -->
-    <script>
-    (function () {
-        'use strict';
 
-        const paths = document.querySelectorAll('.scroll-path, .scroll-path-glow');
-        if (paths.length === 0) return;
-
-        paths.forEach(path => {
-            // Get path length (SVG coordinate space, constant across resizing)
-            const length = path.getTotalLength();
-
-            // Initialize dasharray and hide path offset
-            gsap.set(path, {
-                strokeDasharray: length,
-                strokeDashoffset: length
-            });
-
-            // Link drawing progress to Section 2 scroll entry
-            gsap.to(path, {
-                strokeDashoffset: 0,
-                ease: "power1.inOut",
-                scrollTrigger: {
-                    trigger: "#section-2",
-                    start: "top bottom",
-                    end: "top top",
-                    scrub: 0.6
-                }
-            });
-        });
-    })();
-    </script>
 
 </body>
 </html>
