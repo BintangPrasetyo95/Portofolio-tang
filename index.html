@@ -155,7 +155,17 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 1;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #bubbleCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
         }
 
         /* ─── REVEAL SECTION: image + worms + text ─── */
@@ -311,8 +321,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(252, 179, 45, 0.18);
+            border: 1px solid rgba(252, 179, 45, 0.45);
             color: var(--color-white);
             transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
             text-decoration: none;
@@ -322,8 +332,8 @@
         .social-link:hover,
         .social-link:focus-visible {
             transform: translateX(4px);
-            background: rgba(252, 179, 45, 0.18);
-            border-color: rgba(252, 179, 45, 0.45);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.14);
         }
 
         .social-link svg {
@@ -430,10 +440,13 @@
                 padding: 1.5rem;
             }
         }
+        
     </style>
 </head>
 
 <body>
+
+    <canvas id="bubbleCanvas"></canvas>
 
     <!-- Section 1: 3D Cutout -->
     <section class="section" id="section-1">
@@ -448,7 +461,6 @@
     <section class="section" id="section-2">
         <!-- Glowing golden border frame -->
         <div class="border-glow"></div>
-
 
 
         <!-- Background image (revealed on scroll) -->
@@ -489,6 +501,11 @@
         <div class="corner-label" id="cornerLabel">IT Enthusiast</div>
     </section>
 
+    <!-- Section 3: Works & Details -->
+    <section class="section" id="section-3" style="background: #000000; display: flex; align-items: center; justify-content: center; z-index: 2; position: relative;">
+        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 4rem); color: var(--accent); text-transform: uppercase; text-shadow: 0 0 20px rgba(252, 179, 45, 0.25);">Works & Projects</h2>
+    </section>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
@@ -519,6 +536,15 @@
         renderer.domElement.id = 'mainCanvas';
         document.body.prepend(renderer.domElement);
 
+        const bubbleCanvas = document.getElementById('bubbleCanvas');
+        const bubbleRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: bubbleCanvas });
+        bubbleRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        bubbleRenderer.setSize(innerWidth, innerHeight);
+        bubbleRenderer.setClearColor(0x000000, 0);
+        bubbleRenderer.domElement.style.position = 'fixed';
+        bubbleRenderer.domElement.style.inset = '0';
+        bubbleRenderer.domElement.style.pointerEvents = 'none';
+
         const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
         camera.position.set(0.4, 10, 12);
         camera.lookAt(0, 1, 0);
@@ -535,6 +561,27 @@
         const headLight = new THREE.DirectionalLight(THEME.headLight, 0.22);
         headLight.position.set(0, 2.5, 6);
         scene.add(headLight);
+
+        const bubbleScene = new THREE.Scene();
+        const bubbleCamera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+        bubbleCamera.position.set(0, 0, 15);
+        bubbleCamera.lookAt(0, 0, 0);
+
+        // Lights for bubbleScene to shade the clay and glass materials properly
+        const bubbleAmbient = new THREE.AmbientLight(0xffffff, 0.6);
+        bubbleScene.add(bubbleAmbient);
+
+        const bubbleDirLight1 = new THREE.DirectionalLight(0xfff5eb, 1.6);
+        bubbleDirLight1.position.set(5, 8, 8);
+        bubbleScene.add(bubbleDirLight1);
+
+        const bubbleDirLight2 = new THREE.DirectionalLight(0xdbe9ff, 0.9);
+        bubbleDirLight2.position.set(-6, -4, 4);
+        bubbleScene.add(bubbleDirLight2);
+
+        const bubblePointLight = new THREE.PointLight(0xffffff, 0.4, 30);
+        bubblePointLight.position.set(0, 2, 5);
+        bubbleScene.add(bubblePointLight);
 
         let orangeProjectionLight = null;
         const orangeOnColor = THEME.orangeOn;
@@ -607,6 +654,486 @@
         let loadingLight;
         let mainMeshBuilt = false;
         let mainBackMesh = null;
+
+        /* --------------------
+           3D Glass Shapes (matching image.png)
+           -------------------- */
+        const shapesList = [];
+        let plusGroup;
+        let ribbon1, ribbon2;
+
+        // Canvas helper to generate radial gradient textures for frosted glass edges
+        function createRadialGlassTexture(centerColor, midColor, edgeColor) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            const grad = ctx.createRadialGradient(256, 256, 0, 256, 256, 256);
+            grad.addColorStop(0, centerColor);
+            grad.addColorStop(0.7, midColor);
+            grad.addColorStop(1.0, edgeColor);
+            
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 512, 512);
+            
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.colorSpace = THREE.SRGBColorSpace || THREE.sRGBEncoding;
+            return tex;
+        }
+
+        // Texture gradients (center transparent -> mid shade -> glowing orange edge)
+        const clearTex = createRadialGlassTexture('rgba(255, 255, 255, 0.05)', 'rgba(255, 125, 40, 0.22)', 'rgba(255, 90, 0, 0.8)');
+        const peachTex = createRadialGlassTexture('rgba(255, 245, 240, 0.05)', 'rgba(255, 145, 80, 0.25)', 'rgba(255, 90, 0, 0.82)');
+        const lavenderTex = createRadialGlassTexture('rgba(245, 240, 255, 0.05)', 'rgba(200, 120, 255, 0.22)', 'rgba(255, 90, 0, 0.82)');
+        const blueTex = createRadialGlassTexture('rgba(240, 245, 255, 0.05)', 'rgba(35, 90, 255, 0.35)', 'rgba(255, 90, 0, 0.85)');
+
+        // Premium Glassmorphism Materials with Soft Blur (Roughness) and Radial Edge shading
+        const clearGlassMaterial = new THREE.MeshPhysicalMaterial({
+            map: clearTex,
+            metalness: 0,
+            roughness: 0.28,      // Soft Edges Blur (frosted look behind shape)
+            transmission: 0.9,    // Glassmorphism transmission
+            transparent: true,
+            opacity: 0.95,
+            ior: 1.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            reflectivity: 0.8,
+            side: THREE.DoubleSide
+        });
+
+        const peachGlassMaterial = new THREE.MeshPhysicalMaterial({
+            map: peachTex,
+            metalness: 0,
+            roughness: 0.32,      // Soft Edges Blur
+            transmission: 0.88,   // Glassmorphism transmission
+            transparent: true,
+            opacity: 0.95,
+            ior: 1.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            reflectivity: 0.7,
+            side: THREE.DoubleSide
+        });
+
+        const lavenderGlassMaterial = new THREE.MeshPhysicalMaterial({
+            map: lavenderTex,
+            metalness: 0,
+            roughness: 0.32,      // Soft Edges Blur
+            transmission: 0.88,   // Glassmorphism transmission
+            transparent: true,
+            opacity: 0.95,
+            ior: 1.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            reflectivity: 0.7,
+            side: THREE.DoubleSide
+        });
+
+        const blueGlassMaterial = new THREE.MeshPhysicalMaterial({
+            map: blueTex,
+            metalness: 0.1,
+            roughness: 0.25,      // Soft Edges Blur
+            transmission: 0.82,   // Glassmorphism transmission
+            transparent: true,
+            opacity: 0.9,
+            ior: 1.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            reflectivity: 0.9,
+            side: THREE.DoubleSide
+        });
+
+        // Wavy ribbon material
+        const ribbonMaterial = new THREE.MeshStandardMaterial({
+            color: 0x422b01,
+            roughness: 0.6,
+            metalness: 0.05,
+            side: THREE.DoubleSide
+        });
+
+        // Helper to create rounded polygon shape
+        function createRoundedPolygonShape(radius, sides, cornerRadius) {
+            const shape = new THREE.Shape();
+            const points = [];
+            for (let i = 0; i < sides; i++) {
+                const angle = (i / sides) * Math.PI * 2 - Math.PI / 2;
+                points.push(new THREE.Vector2(Math.cos(angle) * radius, Math.sin(angle) * radius));
+            }
+            for (let i = 0; i < sides; i++) {
+                const p1 = points[i];
+                const p2 = points[(i + 1) % sides];
+                const p0 = points[(i - 1 + sides) % sides];
+                const dir1 = new THREE.Vector2().subVectors(p1, p0).normalize();
+                const dir2 = new THREE.Vector2().subVectors(p2, p1).normalize();
+                const start = new THREE.Vector2().addScaledVector(dir1, -cornerRadius).add(p1);
+                const end = new THREE.Vector2().addScaledVector(dir2, cornerRadius).add(p1);
+                if (i === 0) shape.moveTo(start.x, start.y);
+                else shape.lineTo(start.x, start.y);
+                shape.quadraticCurveTo(p1.x, p1.y, end.x, end.y);
+            }
+            shape.closePath();
+            return shape;
+        }
+
+        // Helper to create rounded rectangle shape
+        function createRoundedRectShape(width, height, radius) {
+            const shape = new THREE.Shape();
+            const x = -width / 2;
+            const y = -height / 2;
+            shape.moveTo(x, y + radius);
+            shape.lineTo(x, y + height - radius);
+            shape.quadraticCurveTo(x, y + height, x + radius, y + height);
+            shape.lineTo(x + width - radius, y + height);
+            shape.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+            shape.lineTo(x + width, y + radius);
+            shape.quadraticCurveTo(x + width, y, x + width - radius, y);
+            shape.lineTo(x + radius, y);
+            shape.quadraticCurveTo(x, y, x, y + radius);
+            return shape;
+        }
+
+        // helper: convert screen % to world position at given distance from camera
+        function screenPercentToWorld(xPerc, yPerc, distance) {
+            const x = xPerc * innerWidth;
+            const y = yPerc * innerHeight;
+            const ndc = new THREE.Vector3((x / innerWidth) * 2 - 1, -(y / innerHeight) * 2 + 1, 0.5);
+            ndc.unproject(bubbleCamera);
+            const dir = ndc.sub(bubbleCamera.position).normalize();
+            return bubbleCamera.position.clone().add(dir.multiplyScalar(distance));
+        }
+
+        // Helper to create capsule group (cylinder + sphere caps) for compatibility with Three.js < r139
+        function createCapsuleGroup(radius, length, material) {
+            const group = new THREE.Group();
+            const cylHeight = Math.max(0.01, length - 2 * radius);
+            const cylGeom = new THREE.CylinderGeometry(radius, radius, cylHeight, 32, 1, true);
+            const cylMesh = new THREE.Mesh(cylGeom, material);
+            group.add(cylMesh);
+            const sphereGeom = new THREE.SphereGeometry(radius, 32, 16);
+            const topSphere = new THREE.Mesh(sphereGeom, material);
+            topSphere.position.y = cylHeight / 2;
+            group.add(topSphere);
+            const bottomSphere = new THREE.Mesh(sphereGeom, material);
+            bottomSphere.position.y = -cylHeight / 2;
+            group.add(bottomSphere);
+            return group;
+        }
+
+        // 1. Far Left Giant Sphere
+        const leftGiantGeom = new THREE.SphereGeometry(3.0, 64, 64);
+        const leftGiantSphere = new THREE.Mesh(leftGiantGeom, clearGlassMaterial);
+        
+        // 2. Left Capsule (oblong shape)
+        const leftCapsule = createCapsuleGroup(1.0, 2.2, peachGlassMaterial);
+        leftCapsule.rotation.z = Math.PI / 4.5;
+        
+        // 3. Center Sphere
+        const centerSphereGeom = new THREE.SphereGeometry(2.5, 64, 64);
+        const centerSphere = new THREE.Mesh(centerSphereGeom, clearGlassMaterial);
+        
+        // 4. Right Blob (Rounded Pentagon extruded)
+        const rightBlobShape = createRoundedPolygonShape(2.1, 5, 0.4);
+        const rightBlobGeom = new THREE.ExtrudeGeometry(rightBlobShape, {
+            depth: 0.9,
+            bevelEnabled: true,
+            bevelThickness: 0.25,
+            bevelSize: 0.15,
+            bevelSegments: 8,
+            curveSegments: 24
+        });
+        rightBlobGeom.center();
+        const rightBlob = new THREE.Mesh(rightBlobGeom, lavenderGlassMaterial);
+        rightBlob.rotation.z = -Math.PI / 10;
+
+        // 5. Bottom Left Card (Rounded Rect extruded)
+        const bottomLeftCardShape = createRoundedRectShape(2.2, 1.6, 0.25);
+        const bottomLeftCardGeom = new THREE.ExtrudeGeometry(bottomLeftCardShape, {
+            depth: 0.2,
+            bevelEnabled: true,
+            bevelThickness: 0.1,
+            bevelSize: 0.08,
+            bevelSegments: 6,
+            curveSegments: 16
+        });
+        bottomLeftCardGeom.center();
+        const cardGlassMaterial = new THREE.MeshPhysicalMaterial({
+            map: clearTex,
+            metalness: 0,
+            roughness: 0.28,      // Soft Edges Blur
+            transmission: 0.9,    // Glassmorphism
+            transparent: true,
+            opacity: 0.95,
+            ior: 1.5,
+            clearcoat: 0.4,
+            side: THREE.DoubleSide
+        });
+        const bottomLeftCard = new THREE.Mesh(bottomLeftCardGeom, cardGlassMaterial);
+        bottomLeftCard.rotation.x = -Math.PI / 12;
+        bottomLeftCard.rotation.y = Math.PI / 14;
+
+        // Inside the Card: Arrow mesh
+        const arrowShape = new THREE.Shape();
+        arrowShape.moveTo(-0.35, -0.05);
+        arrowShape.lineTo(0.1, -0.05);
+        arrowShape.lineTo(0.1, -0.2);
+        arrowShape.lineTo(0.4, 0);
+        arrowShape.lineTo(0.1, 0.2);
+        arrowShape.lineTo(0.1, 0.05);
+        arrowShape.lineTo(-0.35, 0.05);
+        arrowShape.closePath();
+        const arrowGeom = new THREE.ExtrudeGeometry(arrowShape, { depth: 0.06, bevelEnabled: false });
+        arrowGeom.center();
+        const arrowMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+        const arrowMesh = new THREE.Mesh(arrowGeom, arrowMat);
+        arrowMesh.position.z = 0.22;
+        bottomLeftCard.add(arrowMesh);
+
+        // 6. Bottom Right Glass Sphere
+        const bottomRightSphereGeom = new THREE.SphereGeometry(1.5, 64, 64);
+        const sphereGlassMaterial = new THREE.MeshPhysicalMaterial({
+            map: clearTex,
+            metalness: 0,
+            roughness: 0.25,      // Soft Edges Blur
+            transmission: 0.9,    // Glassmorphism
+            transparent: true,
+            opacity: 0.95,
+            ior: 1.5,
+            clearcoat: 0.7
+        });
+        const bottomRightGlassSphere = new THREE.Mesh(bottomRightSphereGeom, sphereGlassMaterial);
+
+        // Inside the Glass Sphere: White '+' sign
+        plusGroup = new THREE.Group();
+        const plusMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.9 });
+        const plusHorizGeom = new THREE.BoxGeometry(0.7, 0.14, 0.14);
+        const plusVertGeom = new THREE.BoxGeometry(0.14, 0.7, 0.14);
+        plusGroup.add(new THREE.Mesh(plusHorizGeom, plusMat));
+        plusGroup.add(new THREE.Mesh(plusVertGeom, plusMat));
+        bottomRightGlassSphere.add(plusGroup);
+
+        // 7. Blue Circle (Left)
+        const blueCircleGeom = new THREE.SphereGeometry(0.3, 32, 32);
+        const blueCircle = new THREE.Mesh(blueCircleGeom, blueGlassMaterial);
+
+        // 8. Blue Capsule (Top)
+        const blueCapsule = createCapsuleGroup(0.16, 0.55, blueGlassMaterial);
+        blueCapsule.rotation.z = Math.PI / 4;
+
+        // 9. Blue Pentagon (Right)
+        const bluePentagonShape = createRoundedPolygonShape(0.22, 5, 0.04);
+        const bluePentagonGeom = new THREE.ExtrudeGeometry(bluePentagonShape, { depth: 0.08, bevelEnabled: false });
+        bluePentagonGeom.center();
+        const bluePentagon = new THREE.Mesh(bluePentagonGeom, blueGlassMaterial);
+
+        // 10. Ribbon 1 (Winding/looping organic curve on the left)
+        const ribbon1Points = [
+            new THREE.Vector3(-12, 9, -5),
+            new THREE.Vector3(-6, 5, 2),
+            new THREE.Vector3(-11, 1, 0),
+            new THREE.Vector3(-5, -3, 3),
+            new THREE.Vector3(-9, -7, -1),
+            new THREE.Vector3(-12, -12, -4)
+        ];
+        const ribbon1Curve = new THREE.CatmullRomCurve3(ribbon1Points);
+        const ribbon1Geom = new THREE.TubeGeometry(ribbon1Curve, 64, 0.22, 12, false);
+        ribbon1 = new THREE.Mesh(ribbon1Geom, ribbonMaterial);
+
+        // Ribbon 2 (Winding/looping organic curve on the right)
+        const ribbon2Points = [
+            new THREE.Vector3(12, 10, -5),
+            new THREE.Vector3(6, 6, 1),
+            new THREE.Vector3(11, 2, -2),
+            new THREE.Vector3(5, -2, 3),
+            new THREE.Vector3(9, -6, 0),
+            new THREE.Vector3(12, -12, -3)
+        ];
+        const ribbon2Curve = new THREE.CatmullRomCurve3(ribbon2Points);
+        const ribbon2Geom = new THREE.TubeGeometry(ribbon2Curve, 64, 0.22, 12, false);
+        ribbon2 = new THREE.Mesh(ribbon2Geom, ribbonMaterial);
+
+        // Setup user data for animation and position mapping
+        leftGiantSphere.userData = { 
+            s1Pos: { xPerc: -0.6, yPerc: 0.28 }, 
+            s2Pos: { xPerc: -0.6, yPerc: 0.28 }, 
+            s3Pos: { xPerc: -0.05, yPerc: 0.28 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.0,
+            distance: 9.0, 
+            driftAmp: 0.15 
+        };
+        leftCapsule.userData = { 
+            s1Pos: { xPerc: -0.3, yPerc: -0.3 }, 
+            s2Pos: { xPerc: -0.3, yPerc: -0.3 }, 
+            s3Pos: { xPerc: 0.28, yPerc: 0.35 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.0,
+            distance: 10.0, 
+            driftAmp: 0.2 
+        };
+        centerSphere.userData = { 
+            s1Pos: { xPerc: 1.4, yPerc: -0.2 }, 
+            s2Pos: { xPerc: 0.88, yPerc: 0.12 }, 
+            s3Pos: { xPerc: 0.52, yPerc: 0.64 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.15,
+            distance: 9.0, 
+            driftAmp: 0.12 
+        };
+        rightBlob.userData = { 
+            s1Pos: { xPerc: 1.5, yPerc: 0.05 }, 
+            s2Pos: { xPerc: 0.86, yPerc: 0.15 }, 
+            s3Pos: { xPerc: 0.86, yPerc: 0.28 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.7,
+            distance: 9.0, 
+            driftAmp: 0.18 
+        };
+        bottomLeftCard.userData = { 
+            s1Pos: { xPerc: 0.26, yPerc: 1.6 }, 
+            s2Pos: { xPerc: 0.26, yPerc: 1.6 }, 
+            s3Pos: { xPerc: 0.26, yPerc: 0.76 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.0,
+            distance: 9.5, 
+            driftAmp: 0.25 
+        };
+        bottomRightGlassSphere.userData = { 
+            s1Pos: { xPerc: 1.4, yPerc: 0.3 }, 
+            s2Pos: { xPerc: 0.90, yPerc: 0.22 }, 
+            s3Pos: { xPerc: 0.81, yPerc: 0.68 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.3,
+            distance: 9.5, 
+            driftAmp: 0.2 
+        };
+        blueCircle.userData = { 
+            s1Pos: { xPerc: -0.3, yPerc: 0.53 }, 
+            s2Pos: { xPerc: -0.3, yPerc: 0.53 }, 
+            s3Pos: { xPerc: 0.18, yPerc: 0.53 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.0,
+            distance: 10.0, 
+            driftAmp: 0.3 
+        };
+        blueCapsule.userData = { 
+            s1Pos: { xPerc: 1.3, yPerc: -0.1 }, 
+            s2Pos: { xPerc: 0.82, yPerc: 0.08 }, 
+            s3Pos: { xPerc: 0.63, yPerc: 0.16 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.9,
+            distance: 10.5, 
+            driftAmp: 0.35 
+        };
+        bluePentagon.userData = { 
+            s1Pos: { xPerc: 1.3, yPerc: 0.66 }, 
+            s2Pos: { xPerc: 1.3, yPerc: 0.66 }, 
+            s3Pos: { xPerc: 0.70, yPerc: 0.66 }, 
+            s1Scale: 0.0, 
+            s2Scale: 0.0,
+            distance: 10.2, 
+            driftAmp: 0.28 
+        };
+
+        shapesList.push(
+            leftGiantSphere, leftCapsule, centerSphere, rightBlob,
+            bottomLeftCard, bottomRightGlassSphere, blueCircle, blueCapsule, bluePentagon
+        );
+
+        shapesList.forEach(mesh => {
+            bubbleScene.add(mesh);
+        });
+        bubbleScene.add(ribbon1);
+        bubbleScene.add(ribbon2);
+
+        // Helper to generate a partially extended tube geometry along the ribbon path points
+        function getSubCurveGeom(points, progress, radius) {
+            if (progress <= 0.01) {
+                // Return a tiny cube if progress is basically 0 to prevent WebGL compilation warnings
+                return new THREE.BoxGeometry(0.001, 0.001, 0.001);
+            }
+            const divisions = 40;
+            const subPoints = [];
+            const curve = new THREE.CatmullRomCurve3(points);
+            const limit = Math.floor(divisions * progress);
+            for (let i = 0; i <= limit; i++) {
+                subPoints.push(curve.getPointAt(i / divisions));
+            }
+            if (limit < divisions) {
+                subPoints.push(curve.getPointAt(progress));
+            }
+            const subCurve = new THREE.CatmullRomCurve3(subPoints);
+            return new THREE.TubeGeometry(subCurve, Math.max(2, Math.floor(64 * progress)), radius, 8, false);
+        }
+
+        // Per-frame update for bubbles
+        function updateBubbles(now) {
+            const isVisible = bubbleVisibility > 0;
+            shapesList.forEach(mesh => { mesh.visible = isVisible; });
+            ribbon1.visible = isVisible;
+            ribbon2.visible = isVisible;
+
+            if (!isVisible) return;
+
+            // Calculate ribbon extension progress (only starts after 3/4 scroll through Phase 2)
+            let ribbonProgress = 0;
+            if (bubblePhase2Progress > 0.75) {
+                ribbonProgress = (bubblePhase2Progress - 0.75) / 0.25;
+            }
+
+            // Dynamically redraw ribbon geometries to make them grow along their paths
+            ribbon1.geometry.dispose();
+            ribbon1.geometry = getSubCurveGeom(ribbon1Points, ribbonProgress, 0.22);
+            ribbon1.rotation.y = Math.sin(now * 0.05) * 0.05;
+            ribbon1.rotation.z = Math.cos(now * 0.04) * 0.05;
+            
+            ribbon2.geometry.dispose();
+            ribbon2.geometry = getSubCurveGeom(ribbon2Points, ribbonProgress, 0.22);
+            ribbon2.rotation.y = Math.cos(now * 0.06) * 0.05;
+
+            shapesList.forEach((mesh, idx) => {
+                const ud = mesh.userData;
+                const t = now * 0.5 + idx * 0.5;
+                
+                let xPerc, yPerc, currentScale;
+                if (bubblePhase2Progress === 0) {
+                    // Phase 1 scroll transition (Section 1 -> Section 2)
+                    xPerc = THREE.MathUtils.lerp(ud.s1Pos.xPerc, ud.s2Pos.xPerc, bubblePhase1Progress);
+                    yPerc = THREE.MathUtils.lerp(ud.s1Pos.yPerc, ud.s2Pos.yPerc, bubblePhase1Progress);
+                    currentScale = THREE.MathUtils.lerp(ud.s1Scale, ud.s2Scale, bubblePhase1Progress);
+                } else {
+                    // Phase 2 scroll transition (Section 2 -> Section 3)
+                    xPerc = THREE.MathUtils.lerp(ud.s2Pos.xPerc, ud.s3Pos.xPerc, bubblePhase2Progress);
+                    yPerc = THREE.MathUtils.lerp(ud.s2Pos.yPerc, ud.s3Pos.yPerc, bubblePhase2Progress);
+                    currentScale = THREE.MathUtils.lerp(ud.s2Scale, 1.0, bubblePhase2Progress);
+                }
+                
+                mesh.scale.setScalar(currentScale);
+
+                // Position calculation with soft float drift
+                const driftX = Math.sin(t * 0.8) * ud.driftAmp * 0.25;
+                const driftY = Math.cos(t * 0.6) * ud.driftAmp * 0.25;
+                
+                const targetWorldPos = screenPercentToWorld(
+                    xPerc + driftX,
+                    yPerc + driftY,
+                    ud.distance
+                );
+                
+                mesh.position.lerp(targetWorldPos, 0.08);
+                
+                // Rotation
+                mesh.rotation.y += 0.003 * (idx % 2 ? -1 : 1);
+                mesh.rotation.x += 0.0015 * (idx % 3 ? 1 : -1);
+
+                // Specific internal updates (plus sign in glass sphere)
+                if (mesh === bottomRightGlassSphere) {
+                    plusGroup.rotation.y = -mesh.rotation.y * 1.5;
+                    plusGroup.rotation.x = -mesh.rotation.x * 1.5;
+                }
+            });
+        }
 
         function easeOutCubic(t) {
             return 1 - Math.pow(1 - t, 3);
@@ -912,7 +1439,10 @@
 
         // SCROLL STATE
         let scrollProgress = 0;
-        let loadingDone = false; // true once loading+transition completes
+        let bubblePhase1Progress = 0; // scroll from Section 1 to Section 2 (0 to 1)
+        let bubblePhase2Progress = 0; // scroll from Section 2 to Section 3 (0 to 1)
+        let bubbleVisibility = 0;     // 0 = hidden, 1 = visible
+        let loadingDone = false;      // true once loading+transition completes
 
         const heroBg = document.getElementById('heroBg');
         const heroOverlay = document.getElementById('heroOverlay');
@@ -925,8 +1455,30 @@
         function onScroll() {
             if (!loadingDone) return;
             const scrollY = window.scrollY;
-            const targetMaxScroll = window.innerHeight;
-            scrollProgress = targetMaxScroll > 0 ? Math.min(scrollY / targetMaxScroll, 1) : 0;
+            const viewHeight = window.innerHeight;
+            
+            // Camera transitions from Section 1 to Section 2
+            scrollProgress = viewHeight > 0 ? Math.min(scrollY / viewHeight, 1) : 0;
+            
+            // Phase 1 (Section 1 -> Section 2): starts at 0.3 * viewHeight, completes at viewHeight
+            const phase1Start = 0.3 * viewHeight;
+            if (scrollY < phase1Start) {
+                bubblePhase1Progress = 0;
+                bubbleVisibility = 0;
+            } else if (scrollY < viewHeight) {
+                bubblePhase1Progress = (scrollY - phase1Start) / (viewHeight - phase1Start);
+                bubbleVisibility = 1;
+            } else {
+                bubblePhase1Progress = 1;
+                bubbleVisibility = 1;
+            }
+
+            // Phase 2 (Section 2 -> Section 3): starts at viewHeight, completes at 2 * viewHeight
+            if (scrollY < viewHeight) {
+                bubblePhase2Progress = 0;
+            } else {
+                bubblePhase2Progress = viewHeight > 0 ? Math.min((scrollY - viewHeight) / viewHeight, 1) : 0;
+            }
         }
         window.addEventListener('scroll', onScroll, { passive: true });
 
@@ -935,6 +1487,9 @@
             camera.aspect = innerWidth / innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(innerWidth, innerHeight);
+            bubbleCamera.aspect = innerWidth / innerHeight;
+            bubbleCamera.updateProjectionMatrix();
+            bubbleRenderer.setSize(innerWidth, innerHeight);
         });
 
         // MAIN CAMERA POSITIONS (post-loading)
@@ -1122,7 +1677,10 @@
                 }
             }
 
+            // update 3D bubbles (position + vertex wobble)
+            try { updateBubbles(now); } catch (e) { /* fail safe */ }
             renderer.render(scene, camera);
+            bubbleRenderer.render(bubbleScene, bubbleCamera);
         })();
 
     })();
