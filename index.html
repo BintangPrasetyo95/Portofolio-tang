@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bintang Prastyo — Portfolio</title>
+    <title>Bintang Prastyo</title>
     <meta name="description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing projects and skills.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -273,6 +273,7 @@
             transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
             background: linear-gradient(135deg, #ffe596 0%, #fcb32d 55%, #b67500 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -332,6 +333,15 @@
             pointer-events: none;
             text-shadow: 0 0 10px rgba(252, 179, 45, 0.25);
             transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+        }
+
+        @media (max-width: 576px) {
+            .hello-bubble {
+                top: 20%;
+                left: 12%;
+                border-bottom-left-radius: 20px;
+                border-bottom-right-radius: 4px;
+            }
         }
 
         .social-sidebar {
@@ -416,7 +426,7 @@
 
         @media (max-width: 768px) {
             .social-sidebar {
-                left: 0.75rem;
+                left: 1.75rem;
             }
 
             .social-sidebar::after {
@@ -1238,7 +1248,14 @@
             peachGlassMaterial.transmission = 0.88;
             lavenderGlassMaterial.transmission = 0.88;
             blueGlassMaterial.transmission = 0.82;
-            leftGiantMaterial.transmission = 0.35;
+            
+            if (window.innerWidth < 576) {
+                leftGiantMaterial.transmission = 0.96;
+                leftGiantMaterial.opacity = 0.22;
+            } else {
+                leftGiantMaterial.transmission = 0.35;
+                leftGiantMaterial.opacity = 0.98;
+            }
 
             // Visibility depends on whether the smoothed progress has started/finished entering
             const isVisible = bubblePhase1Progress > 0.005;
@@ -1627,7 +1644,41 @@
         const line1Span = document.querySelector('#heroTitle .line:nth-child(1) span');
         const line2Span = document.querySelector('#heroTitle .line:nth-child(2) span');
 
+        const helloBubble = document.getElementById('helloBubble');
+        if (helloBubble) {
+            const greetings = [
+                "Hello!",
+                "I'm here!",
+                "Hi there!",
+                "Hey!",
+                "Interested?",
+                "Yo!",
+                "Sup!",
+                "It's me!"
+            ];
+            // helloBubble.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+            helloBubble.textContent = greetings[4];
+        }
+
         let titleAnimated = false;
+
+        let stickyRange = 0.8;
+        let phase2Range = 0.5;
+
+        function updateScrollThresholds() {
+            const isMobile = window.innerWidth < 576;
+            const wrap = document.getElementById('section-2-wrap');
+            if (isMobile) {
+                stickyRange = 0.45;
+                phase2Range = 0.35;
+                if (wrap) wrap.style.height = '145vh';
+            } else {
+                stickyRange = 0.8;
+                phase2Range = 0.5;
+                if (wrap) wrap.style.height = '180vh';
+            }
+        }
+        updateScrollThresholds();
 
         function onScroll() {
             if (!loadingDone) return;
@@ -1647,18 +1698,20 @@
                 targetPhase1Progress = 1;
             }
 
-            // Phase 2 target: starts after sticky unpins (1.8 * viewHeight) and completes at 50% scroll after sticky (2.3 * viewHeight)
-            if (scrollY < 1.8 * viewHeight) {
+            const stickyEnd = (1.0 + stickyRange) * viewHeight;
+
+            // Phase 2 target: starts after sticky unpins and completes at phase2Range scroll distance
+            if (scrollY < stickyEnd) {
                 targetPhase2Progress = 0;
             } else {
-                targetPhase2Progress = viewHeight > 0 ? Math.min((scrollY - 1.8 * viewHeight) / (0.5 * viewHeight), 1) : 0;
+                targetPhase2Progress = viewHeight > 0 ? Math.min((scrollY - stickyEnd) / (phase2Range * viewHeight), 1) : 0;
             }
 
             // Sticky Section 2 progress (goes 0 to 1 as Section 2 remains sticky on screen)
             if (scrollY < viewHeight) {
                 targetStickyProgress = 0;
-            } else if (scrollY < 1.8 * viewHeight) {
-                targetStickyProgress = viewHeight > 0 ? (scrollY - viewHeight) / (0.8 * viewHeight) : 0;
+            } else if (scrollY < stickyEnd) {
+                targetStickyProgress = viewHeight > 0 ? (scrollY - viewHeight) / (stickyRange * viewHeight) : 0;
             } else {
                 targetStickyProgress = 1;
             }
@@ -1666,8 +1719,8 @@
             // Social header transitions (Top center sliding header)
             const socialHeader = document.querySelector('.social-header');
             if (socialHeader) {
-                // Slides down from the top and becomes visible once Section 2 ends (at 1.8 * viewHeight)
-                if (scrollY >= 1.8 * viewHeight - 20) {
+                // Slides down from the top and becomes visible once Section 2 ends
+                if (scrollY >= stickyEnd - 20) {
                     socialHeader.classList.add('visible');
                 } else {
                     socialHeader.classList.remove('visible');
@@ -1686,6 +1739,7 @@
             bubbleCamera.updateProjectionMatrix();
             bubbleRenderer.setSize(innerWidth, innerHeight);
             updateResponsiveCamera();
+            updateScrollThresholds();
         });
 
         // ANIMATION LOOP
