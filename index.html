@@ -66,8 +66,8 @@
 
         /* Once loading is done we allow scrolling */
         body.scrollable {
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow-x: clip;
+            overflow-y: visible;
             height: auto;
         }
 
@@ -292,6 +292,36 @@
             text-orientation: mixed;
         }
 
+        .corner-label.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hello bubble Speech bubble matching the theme */
+        .hello-bubble {
+            position: absolute;
+            top: 26%;
+            left: 64%;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #ffe596;
+            background: rgba(252, 179, 45, 0.12);
+            border: 1px solid rgba(252, 179, 45, 0.45);
+            border-radius: 20px;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 8px 32px 0 rgba(252, 179, 45, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            z-index: 12;
+            pointer-events: none;
+            text-shadow: 0 0 10px rgba(252, 179, 45, 0.25);
+            transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+        }
+
         .social-sidebar {
             position: absolute;
             top: 50%;
@@ -312,6 +342,36 @@
             height: 5.5rem;
             background: rgba(255, 255, 255, 0.18);
             margin-top: 0.5rem;
+        }
+
+        /* Top-center header social links (slides down from nonexistent top) */
+        .social-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.85rem;
+            z-index: 13;
+            pointer-events: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .social-header.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 2rem);
+        }
+
+        .social-header .social-link:hover,
+        .social-header .social-link:focus-visible {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.14);
         }
 
         .social-link {
@@ -448,6 +508,24 @@
 
     <canvas id="bubbleCanvas"></canvas>
 
+    <div class="social-header" aria-label="Social header links">
+        <a class="social-link" href="https://www.instagram.com/bintangprasetyo95/" target="_blank" rel="noreferrer noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.5 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75Zm-4.25 1.25a4.75 4.75 0 1 1 0 9.5 4.75 4.75 0 0 1 0-9.5Zm0 1.5a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z"/>
+            </svg>
+        </a>
+        <a class="social-link" href="https://www.linkedin.com/in/bintang-prasetyo-kusumo-wicaksono-b104012b6/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6.94 6.58a1.74 1.74 0 1 0 0-3.48 1.74 1.74 0 0 0 0 3.48Zm.04 1.98H4V20h2.98V8.56Zm5.88 0H9.88V20h2.98v-6.02c0-1.42.25-2.78 2.02-2.78 1.76 0 1.78 1.7 1.78 2.86V20h2.98v-6.52c0-3.5-.75-6.24-4.78-6.24-1.98 0-3.24 1.08-3.78 2.32h.04Z"/>
+            </svg>
+        </a>
+        <a class="social-link" href="https://github.com/BintangPrasetyo95" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.61-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.54 2.36 1.1 2.94.84.09-.66.35-1.1.64-1.35-2.22-.25-4.56-1.11-4.56-4.96 0-1.1.39-2 .1-2.7 0 0 .82-.26 2.7 1.03A9.4 9.4 0 0 1 12 7.3c.83.01 1.67.11 2.45.32 1.87-1.29 2.69-1.03 2.69-1.03.49 1.34.18 2.34.09 2.58.61.35 1.04.99 1.04 2.1 0 3.86-2.34 4.71-4.57 4.96.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>
+            </svg>
+        </a>
+    </div>
+
     <!-- Section 1: 3D Cutout -->
     <section class="section" id="section-1">
         <!-- Scroll indicator -->
@@ -457,49 +535,55 @@
         </div>
     </section>
 
-    <!-- Section 2: Reveal Section -->
-    <section class="section" id="section-2">
-        <!-- Glowing golden border frame -->
-        <div class="border-glow"></div>
+    <!-- Section 2 Wrapper (provides height for sticking) -->
+    <div id="section-2-wrap" style="height: 180vh; position: relative;">
+        <!-- Section 2: Reveal Section -->
+        <section class="section" id="section-2" style="position: sticky; top: 0; z-index: 2; height: 100vh;">
+            <!-- Glowing golden border frame -->
+            <div class="border-glow"></div>
 
 
-        <!-- Background image (revealed on scroll) -->
-        <div class="hero-bg" id="heroBg">
-            <img src="./images/IMG_5877.JPG" alt="Hero background">
-        </div>
+            <!-- Background image (revealed on scroll) -->
+            <div class="hero-bg" id="heroBg">
+                <img src="./images/IMG_5877.JPG" alt="Hero background">
+            </div>
 
-        <!-- Worm animation canvas -->
-        <canvas id="wormCanvas"></canvas>
+            <!-- Worm animation canvas -->
+            <canvas id="wormCanvas"></canvas>
 
-        <div class="social-sidebar" aria-label="Social links">
-            <a class="social-link" href="https://www.instagram.com/bintangprasetyo95/" target="_blank" rel="noreferrer noopener" aria-label="Instagram">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.5 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75Zm-4.25 1.25a4.75 4.75 0 1 1 0 9.5 4.75 4.75 0 0 1 0-9.5Zm0 1.5a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z"/>
-                </svg>
-            </a>
-            <a class="social-link" href="https://www.linkedin.com/in/bintang-prasetyo-kusumo-wicaksono-b104012b6/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6.94 6.58a1.74 1.74 0 1 0 0-3.48 1.74 1.74 0 0 0 0 3.48Zm.04 1.98H4V20h2.98V8.56Zm5.88 0H9.88V20h2.98v-6.02c0-1.42.25-2.78 2.02-2.78 1.76 0 1.78 1.7 1.78 2.86V20h2.98v-6.52c0-3.5-.75-6.24-4.78-6.24-1.98 0-3.24 1.08-3.78 2.32h.04Z"/>
-                </svg>
-            </a>
-            <a class="social-link" href="https://github.com/BintangPrasetyo95" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.61-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.54 2.36 1.1 2.94.84.09-.66.35-1.1.64-1.35-2.22-.25-4.56-1.11-4.56-4.96 0-1.1.39-2 .1-2.7 0 0 .82-.26 2.7 1.03A9.4 9.4 0 0 1 12 7.3c.83.01 1.67.11 2.45.32 1.87-1.29 2.69-1.03 2.69-1.03.49 1.34.18 2.34.09 2.58.61.35 1.04.99 1.04 2.1 0 3.86-2.34 4.71-4.57 4.96.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>
-                </svg>
-            </a>
-        </div>
+            <div class="social-sidebar" aria-label="Social links">
+                <a class="social-link" href="https://www.instagram.com/bintangprasetyo95/" target="_blank" rel="noreferrer noopener" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.5 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75Zm-4.25 1.25a4.75 4.75 0 1 1 0 9.5 4.75 4.75 0 0 1 0-9.5Zm0 1.5a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z"/>
+                    </svg>
+                </a>
+                <a class="social-link" href="https://www.linkedin.com/in/bintang-prasetyo-kusumo-wicaksono-b104012b6/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6.94 6.58a1.74 1.74 0 1 0 0-3.48 1.74 1.74 0 0 0 0 3.48Zm.04 1.98H4V20h2.98V8.56Zm5.88 0H9.88V20h2.98v-6.02c0-1.42.25-2.78 2.02-2.78 1.76 0 1.78 1.7 1.78 2.86V20h2.98v-6.52c0-3.5-.75-6.24-4.78-6.24-1.98 0-3.24 1.08-3.78 2.32h.04Z"/>
+                    </svg>
+                </a>
+                <a class="social-link" href="https://github.com/BintangPrasetyo95" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.61-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.54 2.36 1.1 2.94.84.09-.66.35-1.1.64-1.35-2.22-.25-4.56-1.11-4.56-4.96 0-1.1.39-2 .1-2.7 0 0 .82-.26 2.7 1.03A9.4 9.4 0 0 1 12 7.3c.83.01 1.67.11 2.45.32 1.87-1.29 2.69-1.03 2.69-1.03.49 1.34.18 2.34.09 2.58.61.35 1.04.99 1.04 2.1 0 3.86-2.34 4.71-4.57 4.96.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>
+                    </svg>
+                </a>
+            </div>
 
-        <!-- Overlay text -->
-        <div class="hero-overlay" id="heroOverlay">
-            <h1 class="hero-title" id="heroTitle">
-                <span class="line"><span>Bintang</span></span>
-                <span class="line"><span>Prastyo</span></span>
-            </h1>
-        </div>
+            <!-- Hello! bubble -->
+            <div class="hello-bubble" id="helloBubble">Hello!</div>
 
-        <!-- Corner label -->
-        <div class="corner-label" id="cornerLabel">IT Enthusiast</div>
-    </section>
+            <!-- Overlay text -->
+            <div class="hero-overlay" id="heroOverlay">
+                <h1 class="hero-title" id="heroTitle">
+                    <span class="line"><span>Bintang</span></span>
+                    <span class="line"><span>Prastyo</span></span>
+                </h1>
+            </div>
+
+            <!-- Corner label -->
+            <div class="corner-label" id="cornerLabel">IT Enthusiast</div>
+        </section>
+    </div>
 
     <!-- Section 3: Works & Details -->
     <section class="section" id="section-3" style="background: #000000; display: flex; align-items: center; justify-content: center; z-index: 2; position: relative;">
@@ -700,6 +784,8 @@
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
             reflectivity: 0.8,
+            emissive: new THREE.Color(0xff4500),
+            emissiveIntensity: 0.0,
             side: THREE.DoubleSide
         });
 
@@ -714,6 +800,8 @@
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
             reflectivity: 0.7,
+            emissive: new THREE.Color(0xff4500),
+            emissiveIntensity: 0.0,
             side: THREE.DoubleSide
         });
 
@@ -728,6 +816,8 @@
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
             reflectivity: 0.7,
+            emissive: new THREE.Color(0xff4500),
+            emissiveIntensity: 0.0,
             side: THREE.DoubleSide
         });
 
@@ -742,6 +832,8 @@
             clearcoat: 1.0,
             clearcoatRoughness: 0.05,
             reflectivity: 0.9,
+            emissive: new THREE.Color(0xff4500),
+            emissiveIntensity: 0.0,
             side: THREE.DoubleSide
         });
 
@@ -821,9 +913,26 @@
             return group;
         }
 
+        // Dedicated material for leftGiantSphere to turn up the opacity (make it more visible/solid)
+        const leftGiantMaterial = new THREE.MeshPhysicalMaterial({
+            map: clearTex,
+            metalness: 0,
+            roughness: 0.28,      // Soft Edges Blur
+            transmission: 0.35,    // Lower transmission to make it less transparent
+            transparent: true,
+            opacity: 0.98,
+            ior: 1.5,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.05,
+            reflectivity: 0.8,
+            emissive: new THREE.Color(0xff4500),
+            emissiveIntensity: 0.0,
+            side: THREE.DoubleSide
+        });
+
         // 1. Far Left Giant Sphere
         const leftGiantGeom = new THREE.SphereGeometry(3.0, 64, 64);
-        const leftGiantSphere = new THREE.Mesh(leftGiantGeom, clearGlassMaterial);
+        const leftGiantSphere = new THREE.Mesh(leftGiantGeom, leftGiantMaterial);
         
         // 2. Left Capsule (oblong shape)
         const leftCapsule = createCapsuleGroup(1.0, 2.2, peachGlassMaterial);
@@ -927,27 +1036,25 @@
         bluePentagonGeom.center();
         const bluePentagon = new THREE.Mesh(bluePentagonGeom, blueGlassMaterial);
 
-        // 10. Ribbon 1 (Winding/looping organic curve on the left)
+        // 10. Ribbon 1 (Starts center-top, loops down and out to bottom-left corner)
         const ribbon1Points = [
-            new THREE.Vector3(-12, 9, -5),
-            new THREE.Vector3(-6, 5, 2),
-            new THREE.Vector3(-11, 1, 0),
-            new THREE.Vector3(-5, -3, 3),
-            new THREE.Vector3(-9, -7, -1),
+            new THREE.Vector3(-1.5, 9, -4),
+            new THREE.Vector3(-5, 5, 2),
+            new THREE.Vector3(-3, 2, 0),
+            new THREE.Vector3(-8, -3, 3),
             new THREE.Vector3(-12, -12, -4)
         ];
         const ribbon1Curve = new THREE.CatmullRomCurve3(ribbon1Points);
         const ribbon1Geom = new THREE.TubeGeometry(ribbon1Curve, 64, 0.22, 12, false);
         ribbon1 = new THREE.Mesh(ribbon1Geom, ribbonMaterial);
 
-        // Ribbon 2 (Winding/looping organic curve on the right)
+        // Ribbon 2 (Starts right side, arches up to top-right, swoops down to bottom-right, staying on the right segment)
         const ribbon2Points = [
-            new THREE.Vector3(12, 10, -5),
-            new THREE.Vector3(6, 6, 1),
-            new THREE.Vector3(11, 2, -2),
-            new THREE.Vector3(5, -2, 3),
-            new THREE.Vector3(9, -6, 0),
-            new THREE.Vector3(12, -12, -3)
+            new THREE.Vector3(15, -2, -3),
+            new THREE.Vector3(6, 4, 1),
+            new THREE.Vector3(10, 7, -4),
+            new THREE.Vector3(5, 0, 3),
+            new THREE.Vector3(11, -12, -4)
         ];
         const ribbon2Curve = new THREE.CatmullRomCurve3(ribbon2Points);
         const ribbon2Geom = new THREE.TubeGeometry(ribbon2Curve, 64, 0.22, 12, false);
@@ -1047,6 +1154,16 @@
         bubbleScene.add(ribbon1);
         bubbleScene.add(ribbon2);
 
+        // Pre-compile / warm up WebGL shaders during load to prevent scroll lag on Section 2 entry
+        shapesList.forEach(mesh => { mesh.visible = true; });
+        ribbon1.visible = true;
+        ribbon2.visible = true;
+        bubbleRenderer.compile(bubbleScene, bubbleCamera);
+        bubbleRenderer.render(bubbleScene, bubbleCamera);
+        shapesList.forEach(mesh => { mesh.visible = false; });
+        ribbon1.visible = false;
+        ribbon2.visible = false;
+
         // Helper to generate a partially extended tube geometry along the ribbon path points
         function getSubCurveGeom(points, progress, radius) {
             if (progress <= 0.01) {
@@ -1064,22 +1181,38 @@
                 subPoints.push(curve.getPointAt(progress));
             }
             const subCurve = new THREE.CatmullRomCurve3(subPoints);
-            return new THREE.TubeGeometry(subCurve, Math.max(2, Math.floor(64 * progress)), radius, 8, false);
+            // Increased radial segments to 24 (was 8) for a round, block-free surface
+            const geom = new THREE.TubeGeometry(subCurve, Math.max(2, Math.floor(64 * progress)), radius, 24, false);
+            geom.computeVertexNormals(); // Ensure smooth lighting shading across the geometry normal vectors
+            return geom;
         }
 
         // Per-frame update for bubbles
         function updateBubbles(now) {
-            const isVisible = bubbleVisibility > 0;
+            // Lerp current scroll progresses towards target scroll progresses for inertia ("brakes" effect) - Snappier
+            bubblePhase1Progress = THREE.MathUtils.lerp(bubblePhase1Progress, targetPhase1Progress, 0.14);
+            bubblePhase2Progress = THREE.MathUtils.lerp(bubblePhase2Progress, targetPhase2Progress, 0.14);
+            bubbleStickyProgress = THREE.MathUtils.lerp(bubbleStickyProgress, targetStickyProgress, 0.14);
+
+            // Restore constant transmission defaults
+            clearGlassMaterial.transmission = 0.9;
+            peachGlassMaterial.transmission = 0.88;
+            lavenderGlassMaterial.transmission = 0.88;
+            blueGlassMaterial.transmission = 0.82;
+            leftGiantMaterial.transmission = 0.35;
+
+            // Visibility depends on whether the smoothed progress has started/finished entering
+            const isVisible = bubblePhase1Progress > 0.005;
             shapesList.forEach(mesh => { mesh.visible = isVisible; });
             ribbon1.visible = isVisible;
             ribbon2.visible = isVisible;
 
             if (!isVisible) return;
 
-            // Calculate ribbon extension progress (only starts after 3/4 scroll through Phase 2)
+            // Calculate ribbon extension progress (starts after 50% scroll through Phase 2 / Section 2)
             let ribbonProgress = 0;
-            if (bubblePhase2Progress > 0.75) {
-                ribbonProgress = (bubblePhase2Progress - 0.75) / 0.25;
+            if (bubblePhase2Progress > 0.5) {
+                ribbonProgress = (bubblePhase2Progress - 0.5) / 0.5;
             }
 
             // Dynamically redraw ribbon geometries to make them grow along their paths
@@ -1439,16 +1572,21 @@
 
         // SCROLL STATE
         let scrollProgress = 0;
-        let bubblePhase1Progress = 0; // scroll from Section 1 to Section 2 (0 to 1)
-        let bubblePhase2Progress = 0; // scroll from Section 2 to Section 3 (0 to 1)
-        let bubbleVisibility = 0;     // 0 = hidden, 1 = visible
+        let bubblePhase1Progress = 0; // current smoothed progress (lerped)
+        let bubblePhase2Progress = 0; // current smoothed progress (lerped)
+        let targetPhase1Progress = 0; // target based on scroll position
+        let targetPhase2Progress = 0; // target based on scroll position
         let loadingDone = false;      // true once loading+transition completes
+        let bubbleStickyProgress = 0; // current smoothed progress of section 2 sticky phase (lerped)
+        let targetStickyProgress = 0; // target based on scroll position
 
         const heroBg = document.getElementById('heroBg');
         const heroOverlay = document.getElementById('heroOverlay');
         const heroTitle = document.getElementById('heroTitle');
         const cornerLabel = document.getElementById('cornerLabel');
         const scrollIndicator = document.getElementById('scrollIndicator');
+        const line1Span = document.querySelector('#heroTitle .line:nth-child(1) span');
+        const line2Span = document.querySelector('#heroTitle .line:nth-child(2) span');
 
         let titleAnimated = false;
 
@@ -1460,24 +1598,41 @@
             // Camera transitions from Section 1 to Section 2
             scrollProgress = viewHeight > 0 ? Math.min(scrollY / viewHeight, 1) : 0;
             
-            // Phase 1 (Section 1 -> Section 2): starts at 0.3 * viewHeight, completes at viewHeight
+            // Phase 1 target: starts at 0.3 * viewHeight, completes at viewHeight
             const phase1Start = 0.3 * viewHeight;
             if (scrollY < phase1Start) {
-                bubblePhase1Progress = 0;
-                bubbleVisibility = 0;
+                targetPhase1Progress = 0;
             } else if (scrollY < viewHeight) {
-                bubblePhase1Progress = (scrollY - phase1Start) / (viewHeight - phase1Start);
-                bubbleVisibility = 1;
+                targetPhase1Progress = (scrollY - phase1Start) / (viewHeight - phase1Start);
             } else {
-                bubblePhase1Progress = 1;
-                bubbleVisibility = 1;
+                targetPhase1Progress = 1;
             }
 
-            // Phase 2 (Section 2 -> Section 3): starts at viewHeight, completes at 2 * viewHeight
-            if (scrollY < viewHeight) {
-                bubblePhase2Progress = 0;
+            // Phase 2 target: starts after sticky unpins (1.8 * viewHeight) and completes at 50% scroll after sticky (2.3 * viewHeight)
+            if (scrollY < 1.8 * viewHeight) {
+                targetPhase2Progress = 0;
             } else {
-                bubblePhase2Progress = viewHeight > 0 ? Math.min((scrollY - viewHeight) / viewHeight, 1) : 0;
+                targetPhase2Progress = viewHeight > 0 ? Math.min((scrollY - 1.8 * viewHeight) / (0.5 * viewHeight), 1) : 0;
+            }
+
+            // Sticky Section 2 progress (goes 0 to 1 as Section 2 remains sticky on screen)
+            if (scrollY < viewHeight) {
+                targetStickyProgress = 0;
+            } else if (scrollY < 1.8 * viewHeight) {
+                targetStickyProgress = viewHeight > 0 ? (scrollY - viewHeight) / (0.8 * viewHeight) : 0;
+            } else {
+                targetStickyProgress = 1;
+            }
+
+            // Social header transitions (Top center sliding header)
+            const socialHeader = document.querySelector('.social-header');
+            if (socialHeader) {
+                // Slides down from the top and becomes visible once Section 2 ends (at 1.8 * viewHeight)
+                if (scrollY >= 1.8 * viewHeight - 20) {
+                    socialHeader.classList.add('visible');
+                } else {
+                    socialHeader.classList.remove('visible');
+                }
             }
         }
         window.addEventListener('scroll', onScroll, { passive: true });
@@ -1596,6 +1751,7 @@
                         if (fadeProgress >= 1.0) {
                             isLoading = false;
                             loadingDone = true;
+                            onScroll();
                             scene.remove(loadingGroup);
 
                             loadingGroup.traverse(child => {
@@ -1649,7 +1805,7 @@
                 camera.lookAt(MAIN_LOOK.x, lookY, MAIN_LOOK.z);
 
                 // ── REVEAL LAYERS ──
-                // Trigger title animation and reveal image zoom when scrolling down to Section 2
+                // Trigger reveal image zoom when scrolling down to Section 2
                 const section2 = document.getElementById('section-2');
                 if (scrollProgress > 0.4) {
                     heroBg.classList.add('revealed');
@@ -1667,6 +1823,28 @@
                         heroTitle.classList.remove('animate');
                         cornerLabel.classList.remove('visible');
                     }
+                }
+
+                // Scroll-driven progressive Hello! bubble showing and fading
+                let helloProgress = 0;
+                if (bubbleStickyProgress < 0.3) {
+                    // Fade in from 0.0 to 0.3 scroll progress
+                    helloProgress = bubbleStickyProgress / 0.3;
+                } else if (bubbleStickyProgress < 0.6) {
+                    // Stay fully visible
+                    helloProgress = 1.0;
+                } else if (bubbleStickyProgress < 0.9) {
+                    // Fade out from 0.6 to 0.9 scroll progress
+                    helloProgress = 1.0 - ((bubbleStickyProgress - 0.6) / 0.3);
+                } else {
+                    helloProgress = 0.0;
+                }
+
+                const helloBubble = document.getElementById('helloBubble');
+                if (helloBubble) {
+                    helloBubble.style.opacity = helloProgress;
+                    // Slightly slide up (translateY 15px to 0px) and scale up (0.9 to 1.0)
+                    helloBubble.style.transform = `translateY(${(1.0 - helloProgress) * 15}px) scale(${0.9 + (helloProgress * 0.1)})`;
                 }
 
                 // Hide scroll indicator when scrolled
