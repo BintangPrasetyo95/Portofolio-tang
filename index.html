@@ -522,7 +522,502 @@
                 padding: 1.5rem;
             }
         }
-        
+
+        /* ─── SECTION 4: 3D BOOK & SHOWCASE ─── */
+        #section-4 {
+            perspective: 2000px;
+            font-family: 'Space Grotesk', 'Outfit', sans-serif;
+            background: #000000;
+        }
+
+        .s4-ambient-glow {
+            position: absolute;
+            bottom: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, rgba(252, 179, 45, 0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            filter: blur(80px);
+            z-index: 1;
+        }
+
+        /* Floating Project Showcase */
+        .showcase-container {
+            position: absolute;
+            top: 8%;
+            width: 100%;
+            max-width: 1000px;
+            height: 440px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .floating-project {
+            position: absolute;
+            width: 90%;
+            max-width: 850px;
+            height: 100%;
+            display: flex;
+            background: rgba(10, 10, 10, 0.65);
+            border: 1px solid rgba(252, 179, 45, 0.25);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transform: translate3d(0, 50px, -100px) rotateX(10deg);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        box-shadow 0.5s ease;
+        }
+
+        .floating-project.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate3d(0, 0, 50px) rotateX(0deg);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9),
+                        0 0 30px rgba(252, 179, 45, 0.15),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        }
+
+        /* Hover effect on card */
+        .floating-project:hover {
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.95),
+                        0 0 45px rgba(252, 179, 45, 0.25),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        .project-image-box {
+            width: 45%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border-right: 1px solid rgba(252, 179, 45, 0.2);
+        }
+
+        .project-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .floating-project:hover .project-image-box img {
+            transform: scale(1.08);
+        }
+
+        .project-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(0,0,0,0) 60%, rgba(10, 10, 10, 0.95));
+        }
+
+        .project-details-box {
+            width: 55%;
+            height: 100%;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .project-tech-list {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(252, 179, 45, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(252, 179, 45, 0.25);
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #fcd58b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .project-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .see-now-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .see-now-btn.active {
+            background: var(--accent);
+            color: #000000;
+            border: 1px solid var(--accent);
+            box-shadow: 0 4px 15px rgba(252, 179, 45, 0.3);
+        }
+
+        .see-now-btn.active:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(252, 179, 45, 0.5), 0 0 10px rgba(252, 179, 45, 0.3);
+            background: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .see-now-btn.disabled {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* 3D BOOK PORTION */
+        .book-viewport {
+            position: absolute;
+            bottom: -50px;
+            width: 100vw;
+            height: 480px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .book-3d {
+            position: relative;
+            width: 98vw;
+            max-width: 1450px;
+            height: 380px;
+            transform-style: preserve-3d;
+            transform: rotateX(42deg) rotateY(0deg) rotateZ(0deg) translateY(40px);
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .book-cover-3d {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            background: #0d0d0d;
+            border: 4px solid #222222;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            transform-style: preserve-3d;
+        }
+
+        .book-cover-3d.left-cover {
+            left: 0;
+            transform-origin: right center;
+            border-radius: 16px 0 0 16px;
+            transform: rotateY(-3deg);
+            border-right: none;
+        }
+
+        .book-cover-3d.right-cover {
+            right: 0;
+            transform-origin: left center;
+            border-radius: 0 16px 16px 0;
+            transform: rotateY(3deg);
+            border-left: none;
+        }
+
+        .cover-pattern {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid rgba(252, 179, 45, 0.15);
+            border-radius: 8px;
+            background: radial-gradient(circle at center, rgba(252, 179, 45, 0.03) 0%, transparent 70%);
+        }
+
+        .book-spine-3d {
+            position: absolute;
+            left: calc(50% - 16px);
+            width: 32px;
+            height: 100%;
+            background: #050505;
+            border-left: 1px solid rgba(252, 179, 45, 0.2);
+            border-right: 1px solid rgba(252, 179, 45, 0.2);
+            transform: translateZ(-2px);
+        }
+
+        .book-pages-container {
+            position: absolute;
+            inset: 0;
+            transform-style: preserve-3d;
+        }
+
+        /* 3D Pages styling */
+        .page-sheet-3d {
+            position: absolute;
+            width: calc(50% - 8px);
+            height: calc(100% - 16px);
+            top: 8px;
+            background: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(252, 179, 45, 0.18);
+            transform-style: preserve-3d;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .page-sheet-3d.left-static {
+            right: 50%;
+            border-radius: 8px 0 0 8px;
+            transform-origin: right center;
+            transform: rotateY(-2deg) translateZ(1px);
+        }
+
+        .page-sheet-3d.right-static {
+            left: 50%;
+            border-radius: 0 8px 8px 0;
+            transform-origin: left center;
+            transform: rotateY(2deg) translateZ(1px);
+        }
+
+        /* Flipping Page (Middle) */
+        .page-sheet-3d.flipping-page {
+            left: 50%;
+            border-radius: 0 8px 8px 0;
+            transform-origin: left center;
+            z-index: 10;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: rotateY(0deg);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .page-sheet-3d.flipping-page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* Page Content styling */
+        .page-inner-content {
+            position: absolute;
+            inset: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .page-blueprint {
+            position: absolute;
+            inset: 10px;
+            opacity: 0.18;
+            pointer-events: none;
+            stroke-dasharray: 4;
+            animation: blueprintGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes blueprintGlow {
+            0% { opacity: 0.12; }
+            100% { opacity: 0.25; }
+        }
+
+        .page-header {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            border-bottom: 1px solid rgba(252, 179, 45, 0.15);
+            padding-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .page-body-blueprint {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-footer {
+            font-size: 9px;
+            letter-spacing: 1px;
+            color: var(--muted-2);
+            text-align: right;
+        }
+
+        /* NAVIGATION OVERLAY */
+        .book-navigation {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            gap: 40px;
+            z-index: 20;
+        }
+
+        .nav-btn {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: rgba(15, 15, 15, 0.75);
+            border: 1px solid rgba(252, 179, 45, 0.35);
+            color: var(--accent);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5),
+                        0 0 10px rgba(252, 179, 45, 0.1);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .nav-btn:hover {
+            background: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+            box-shadow: 0 6px 20px rgba(252, 179, 45, 0.4),
+                        0 0 15px rgba(252, 179, 45, 0.2);
+            transform: scale(1.08);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Pagination dots */
+        .project-pagination {
+            position: absolute;
+            bottom: 105px;
+            display: flex;
+            gap: 12px;
+            z-index: 20;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            width: 24px;
+            border-radius: 4px;
+        }
+
+        /* Responsive styling for Section 4 */
+        @media (max-width: 900px) {
+            .showcase-container {
+                height: auto;
+                top: 8%;
+            }
+
+            .floating-project {
+                flex-direction: column;
+                height: 520px;
+                max-width: 450px;
+            }
+
+            .project-image-box {
+                width: 100%;
+                height: 40%;
+                border-right: none;
+                border-bottom: 1px solid rgba(252, 179, 45, 0.2);
+            }
+
+            .project-image-overlay {
+                background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 15%, rgba(0,0,0,0));
+            }
+
+            .project-details-box {
+                width: 100%;
+                height: 60%;
+                padding: 1.5rem;
+            }
+
+            .project-title {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .project-description {
+                font-size: 0.85rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .book-viewport {
+                height: 300px;
+            }
+
+            .book-3d {
+                width: 480px;
+                height: 270px;
+                transform: rotateX(48deg) rotateY(0deg) rotateZ(0deg) translateY(40px);
+            }
+            
+            .nav-btn {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .floating-project {
+                height: 480px;
+            }
+            .book-3d {
+                width: 340px;
+                height: 200px;
+                transform: rotateX(45deg) rotateY(0deg) rotateZ(0deg) translateY(20px);
+            }
+            .project-pagination {
+                bottom: 85px;
+            }
+            .book-navigation {
+                bottom: 15px;
+            }
+        }
     </style>
 </head>
 
@@ -607,10 +1102,72 @@
         </section>
     </div>
 
-    <!-- Section 3: Works & Details -->
-    <section class="section" id="section-3" style="background: #000000; display: flex; align-items: center; justify-content: center; z-index: 2; position: relative;">
-        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 4rem); color: var(--accent); text-transform: uppercase; text-shadow: 0 0 20px rgba(252, 179, 45, 0.25);">Works & Projects</h2>
-    </section>
+    <!-- Section 3 & 4 Wrapper (provides height for sticky horizontal transition) -->
+    <div id="section-3-4-wrap" style="height: 250vh; position: relative; background: #000000;">
+        <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 3;">
+            <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh; transition: transform 0.1s ease-out;">
+
+                <!-- Section 3: Works & Details -->
+                <section class="section" id="section-3" style="width: 100vw; height: 100vh; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; overflow: hidden;">
+                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 4rem); color: var(--accent); text-transform: uppercase; text-shadow: 0 0 20px rgba(252, 179, 45, 0.25);">Works & Projects</h2>
+                </section>
+
+                <!-- Section 4: 3D Book & Projects Showcase -->
+                <section class="section" id="section-4" style="width: 100vw; height: 100vh; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; flex-shrink: 0;">
+                    
+                    <!-- Ambient bottom glow -->
+                    <div class="s4-ambient-glow"></div>
+                    
+                    <!-- Floating project card container -->
+                    <div class="showcase-container" id="projectShowcase">
+                        <!-- Cards will be populated dynamically -->
+                    </div>
+
+                    <!-- 3D Book Container at bottom POV -->
+                    <div class="book-viewport">
+                        <div class="book-3d" id="book3d">
+                            <!-- Cover Left -->
+                            <div class="book-cover-3d left-cover">
+                                <div class="cover-pattern"></div>
+                            </div>
+                            
+                            <!-- Spine -->
+                            <div class="book-spine-3d"></div>
+                            
+                            <!-- Inner Pages container -->
+                            <div class="book-pages-container" id="bookPages">
+                                <!-- Static and turning page sheets populated dynamically -->
+                            </div>
+                            
+                            <!-- Cover Right -->
+                            <div class="book-cover-3d right-cover">
+                                <div class="cover-pattern"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Arrows -->
+                    <div class="book-navigation">
+                        <button class="nav-btn prev-btn" id="prevProjectBtn" aria-label="Previous Project">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="nav-btn next-btn" id="nextProjectBtn" aria-label="Next Project">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Pagination Indicator Dots -->
+                    <div class="project-pagination" id="projectPagination"></div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1656,8 +2213,8 @@
                 "Sup!",
                 "It's me!"
             ];
-            // helloBubble.textContent = greetings[Math.floor(Math.random() * greetings.length)];
-            helloBubble.textContent = greetings[4];
+            helloBubble.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+            // helloBubble.textContent = greetings[4];
         }
 
         let titleAnimated = false;
@@ -1724,6 +2281,29 @@
                     socialHeader.classList.add('visible');
                 } else {
                     socialHeader.classList.remove('visible');
+                }
+            }
+
+            // Section 3-4 Horizontal Sticky Slide
+            const wrap34 = document.getElementById('section-3-4-wrap');
+            if (wrap34) {
+                const wrapTop = wrap34.offsetTop;
+                const wrapHeight = wrap34.offsetHeight;
+                const scrollRange = wrapHeight - viewHeight;
+                let horizontalProgress = 0;
+                
+                if (scrollY > wrapTop) {
+                    horizontalProgress = Math.min((scrollY - wrapTop) / scrollRange, 1.0);
+                }
+                
+                const strip = document.getElementById('horizontal-strip');
+                if (strip) {
+                    strip.style.transform = `translateX(${-horizontalProgress * 100}vw)`;
+                }
+
+                const bCanvas = document.getElementById('bubbleCanvas');
+                if (bCanvas) {
+                    bCanvas.style.transform = `translateX(${-horizontalProgress * 100}vw)`;
                 }
             }
         }
@@ -2108,6 +2688,407 @@
     </script>
 
 
+    <!-- Section 4: 3D Book & Showcase Script -->
+    <script>
+    (function() {
+        'use strict';
 
+        const projects = [
+            {
+                title: "AlphaForge Engine",
+                description: "A high-performance next-generation 3D rendering pipeline built in Rust and WebGPU. Features real-time ray-guided path tracing, micro-surface reflection modeling, and custom compute shader particle systems.",
+                image: "images/project1.jpg",
+                url: "https://github.com/BintangPrasetyo95/AlphaForge",
+                disabled: false,
+                tech: ["Rust", "WebGPU", "WASM", "WGSL"],
+                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="50" y1="10" x2="50" y2="90" stroke="#fcb32d" stroke-width="0.5" />
+                    <circle cx="50" cy="50" r="30" fill="none" stroke="#fcb32d" stroke-width="0.75" stroke-dasharray="2" />
+                    <rect x="35" y="35" width="30" height="30" fill="none" stroke="#fcb32d" stroke-width="1" />
+                    <line x1="35" y1="35" x2="65" y2="65" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="65" y1="35" x2="35" y2="65" stroke="#fcb32d" stroke-width="0.5" />
+                    <circle cx="35" cy="35" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <circle cx="65" cy="65" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <circle cx="65" cy="35" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <circle cx="35" cy="65" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                </svg>`,
+                specs: [
+                    "RENDERING: Ray-Guided Path Tracing",
+                    "PIPELINE: WebGPU Compute Shaders",
+                    "SHADERS: WGSL Native Functions",
+                    "PERF: 60 FPS under 10k light instances"
+                ]
+            },
+            {
+                title: "Quantum Sandbox",
+                description: "An interactive quantum computing playground and visual block-based circuit editor. Simulates multi-qubit gates, superposition, and entanglement in real-time with automatic Bloch sphere rendering.",
+                image: "images/project2.jpg",
+                url: "#",
+                disabled: true,
+                tech: ["TypeScript", "WebGL", "QuantumJS", "React"],
+                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
+                    <line x1="10" y1="30" x2="90" y2="30" stroke="#fcb32d" stroke-width="0.75" />
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="#fcb32d" stroke-width="0.75" />
+                    <line x1="10" y1="70" x2="90" y2="70" stroke="#fcb32d" stroke-width="0.75" />
+                    <rect x="25" y="20" width="15" height="20" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <text x="32.5" y="33" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">H</text>
+                    <rect x="50" y="40" width="15" height="20" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <text x="57.5" y="53" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">X</text>
+                    <circle cx="32.5" cy="50" r="2" fill="#fcb32d" />
+                    <line x1="32.5" y1="30" x2="32.5" y2="50" stroke="#fcb32d" stroke-width="0.5" />
+                    <circle cx="57.5" cy="70" r="2" fill="#fcb32d" />
+                    <line x1="57.5" y1="50" x2="57.5" y2="70" stroke="#fcb32d" stroke-width="0.5" />
+                </svg>`,
+                specs: [
+                    "SIMULATION: Real-time Multi-qubit States",
+                    "RENDER: WebGL Bloch Sphere",
+                    "LIBRARIES: Custom QuantumJS Kernel",
+                    "GATES: Hadamard, Pauli-X, CNOT"
+                ]
+            },
+            {
+                title: "Nebula Core OS",
+                description: "A custom microkernel operating system written for ARM architecture. Implements real-time task scheduling, virtual memory management, and an isolated sandbox environment for system services.",
+                image: "images/project3.jpg",
+                url: "https://github.com/BintangPrasetyo95/NebulaOS",
+                disabled: false,
+                tech: ["C", "Assembly", "ARM v8", "Docker"],
+                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
+                    <rect x="15" y="15" width="70" height="70" rx="6" fill="none" stroke="#fcb32d" stroke-width="0.5" stroke-dasharray="2" />
+                    <rect x="25" y="25" width="50" height="15" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <text x="50" y="34" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">USER APP SPACE</text>
+                    <rect x="25" y="48" width="50" height="15" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <text x="50" y="57" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">SYS SERVICES</text>
+                    <rect x="30" y="72" width="40" height="10" rx="2" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <text x="50" y="79" fill="#fcb32d" font-size="5" font-family="monospace" text-anchor="middle">MICROKERNEL</text>
+                    <line x1="50" y1="40" x2="50" y2="48" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="50" y1="63" x2="50" y2="72" stroke="#fcb32d" stroke-width="0.5" />
+                </svg>`,
+                specs: [
+                    "ARCHITECTURE: Modular Microkernel",
+                    "COMPATIBILITY: ARM v8 System-on-Chip",
+                    "SCHEDULER: Fixed-priority preemptive",
+                    "SECURITY: Sandboxed drivers & IPC"
+                ]
+            },
+            {
+                title: "Synapse-Net AI",
+                description: "A distributed neural network modeling framework. Visualizes active synapses and node activations in real-time across billions of synthetic connections using WebGL instances.",
+                image: "images/project4.jpg",
+                url: "#",
+                disabled: true,
+                tech: ["Python", "PyTorch", "Three.js", "WebSockets"],
+                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
+                    <circle cx="20" cy="30" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <circle cx="20" cy="50" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <circle cx="20" cy="70" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <circle cx="50" cy="40" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <circle cx="50" cy="60" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <circle cx="80" cy="50" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    
+                    <line x1="24" y1="30" x2="46" y2="40" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <line x1="24" y1="30" x2="46" y2="60" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <line x1="24" y1="50" x2="46" y2="40" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <line x1="24" y1="50" x2="46" y2="60" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <line x1="24" y1="70" x2="46" y2="40" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <line x1="24" y1="70" x2="46" y2="60" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    
+                    <line x1="54" y1="40" x2="76" y2="50" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <line x1="54" y1="60" x2="76" y2="50" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                </svg>`,
+                specs: [
+                    "NETWORK: Feedforward Neural Network Map",
+                    "VISUALIZATION: WebGL Instanced Nodes",
+                    "TRANSMISSION: Binary WebSockets protocol",
+                    "TRAINING: PyTorch integration wrapper"
+                ]
+            }
+        ];
+
+        let currentIndex = 0;
+        let isTransitioning = false;
+
+        const showcase = document.getElementById('projectShowcase');
+        const bookPages = document.getElementById('bookPages');
+        const pagination = document.getElementById('projectPagination');
+        const prevBtn = document.getElementById('prevProjectBtn');
+        const nextBtn = document.getElementById('nextProjectBtn');
+        const book3d = document.getElementById('book3d');
+
+        // Setup layouts
+        function initShowcase() {
+            showcase.innerHTML = '';
+            pagination.innerHTML = '';
+            
+            projects.forEach((proj, idx) => {
+                // Floating Card HTML
+                const card = document.createElement('div');
+                card.className = `floating-project ${idx === currentIndex ? 'active' : ''}`;
+                card.dataset.index = idx;
+                
+                const techTagsHtml = proj.tech.map(t => `<span class="tech-tag">${t}</span>`).join('');
+                
+                const btnHtml = proj.disabled 
+                    ? `<button class="see-now-btn disabled" disabled>See Now (Locked)</button>`
+                    : `<a href="${proj.url}" target="_blank" rel="noreferrer noopener" class="see-now-btn active">See Now</a>`;
+
+                card.innerHTML = `
+                    <div class="project-image-box">
+                        <img src="${proj.image}" alt="${proj.title}">
+                        <div class="project-image-overlay"></div>
+                    </div>
+                    <div class="project-details-box">
+                        <div class="project-tech-list">
+                            ${techTagsHtml}
+                        </div>
+                        <h3 class="project-title">${proj.title}</h3>
+                        <p class="project-description">${proj.description}</p>
+                        <div class="project-actions">
+                            ${btnHtml}
+                        </div>
+                    </div>
+                `;
+                showcase.appendChild(card);
+
+                // Dot HTML
+                const dot = document.createElement('div');
+                dot.className = `dot ${idx === currentIndex ? 'active' : ''}`;
+                dot.addEventListener('click', () => {
+                    if (isTransitioning || idx === currentIndex) return;
+                    goToProject(idx);
+                });
+                pagination.appendChild(dot);
+            });
+
+            updateBookPages();
+        }
+
+        // Setup static left and right pages
+        function updateBookPages() {
+            const currentProj = projects[currentIndex];
+
+            bookPages.innerHTML = `
+                <!-- Left static page -->
+                <div class="page-sheet-3d left-static">
+                    ${currentProj.blueprint}
+                    <div class="page-inner-content">
+                        <div class="page-header">
+                            <span>BLUEPRINT ARCHITECTURE</span>
+                            <span>SYS.REV 0.4</span>
+                        </div>
+                        <div class="page-body-blueprint"></div>
+                        <div class="page-footer">
+                            <span>PAGE ${currentIndex * 2 + 1}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right static page -->
+                <div class="page-sheet-3d right-static">
+                    <div class="page-inner-content">
+                        <div class="page-header">
+                            <span>TECHNICAL METRICS</span>
+                            <span>SPEC SHEET</span>
+                        </div>
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; font-family: monospace; font-size: 10px; color: #fcb32d; padding: 10px 0;">
+                            <div>// CONFIG SPECIFICATIONS</div>
+                            ${currentProj.specs.map(spec => `<div>&gt; ${spec}</div>`).join('')}
+                        </div>
+                        <div class="page-footer">
+                            <span>PAGE ${currentIndex * 2 + 2}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Slide navigation wrapper
+        function goToProject(targetIndex, direction = null) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            
+            if (direction === null) {
+                direction = targetIndex > currentIndex ? 'next' : 'prev';
+            }
+
+            const oldIndex = currentIndex;
+            currentIndex = targetIndex;
+
+            // Update pagination dots
+            const dots = pagination.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentIndex);
+            });
+
+            // Create flipping page
+            const flipPage = document.createElement('div');
+            flipPage.className = `page-sheet-3d flipping-page`;
+            
+            const prevProj = projects[oldIndex];
+            const newProj = projects[currentIndex];
+
+            if (direction === 'next') {
+                flipPage.style.left = '50%';
+                flipPage.style.transformOrigin = 'left center';
+                
+                flipPage.innerHTML = `
+                    <!-- Front -->
+                    <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(252, 179, 45, 0.18); border-radius: 0 8px 8px 0; overflow: hidden; padding: 20px;">
+                        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                            <div class="page-header">
+                                <span>TECHNICAL METRICS</span>
+                                <span>SPEC SHEET</span>
+                            </div>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; font-family: monospace; font-size: 10px; color: #fcb32d;">
+                                <div>// FLIPPING PROCESS</div>
+                                <div>&gt; SAVING RUNSTATE...</div>
+                                <div>&gt; LOADING NEXT METRICS...</div>
+                            </div>
+                            <div class="page-footer">
+                                <span>PAGE ${oldIndex * 2 + 2}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Back -->
+                    <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg); background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(252, 179, 45, 0.18); border-radius: 8px 0 0 8px; overflow: hidden; padding: 20px;">
+                        ${newProj.blueprint}
+                        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; position: relative; z-index: 2;">
+                            <div class="page-header">
+                                <span>BLUEPRINT ARCHITECTURE</span>
+                                <span>SYS.REV 0.4</span>
+                            </div>
+                            <div class="page-body-blueprint"></div>
+                            <div class="page-footer">
+                                <span>PAGE ${currentIndex * 2 + 1}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                bookPages.appendChild(flipPage);
+                flipPage.offsetHeight; // force reflow
+                
+                book3d.style.transform = 'rotateX(52deg) rotateY(-8deg) rotateZ(-2deg) translateY(60px)';
+                flipPage.classList.add('flipped');
+
+            } else {
+                flipPage.style.right = '50%';
+                flipPage.style.left = 'auto';
+                flipPage.style.transformOrigin = 'right center';
+                flipPage.style.borderRadius = '8px 0 0 8px';
+                
+                flipPage.innerHTML = `
+                    <!-- Front -->
+                    <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(252, 179, 45, 0.18); border-radius: 8px 0 0 8px; overflow: hidden; padding: 20px;">
+                        ${prevProj.blueprint}
+                        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%; position: relative; z-index: 2;">
+                            <div class="page-header">
+                                <span>BLUEPRINT ARCHITECTURE</span>
+                                <span>SYS.REV 0.4</span>
+                            </div>
+                            <div class="page-body-blueprint"></div>
+                            <div class="page-footer">
+                                <span>PAGE ${oldIndex * 2 + 1}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Back -->
+                    <div style="position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(-180deg); background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(252, 179, 45, 0.18); border-radius: 0 8px 8px 0; overflow: hidden; padding: 20px;">
+                        <div style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+                            <div class="page-header">
+                                <span>TECHNICAL METRICS</span>
+                                <span>SPEC SHEET</span>
+                            </div>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; font-family: monospace; font-size: 10px; color: #fcb32d;">
+                                <div>// FLIPPING PROCESS</div>
+                                <div>&gt; DECRYPTING CORE...</div>
+                                <div>&gt; RENDERING SCHEMATIC...</div>
+                            </div>
+                            <div class="page-footer">
+                                <span>PAGE ${currentIndex * 2 + 2}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                bookPages.appendChild(flipPage);
+                flipPage.offsetHeight; // force reflow
+                
+                book3d.style.transform = 'rotateX(52deg) rotateY(8deg) rotateZ(2deg) translateY(60px)';
+                flipPage.style.transform = 'rotateY(180deg)';
+            }
+
+            // Update cards
+            const cards = showcase.querySelectorAll('.floating-project');
+            cards.forEach(c => {
+                c.classList.remove('active');
+                if (parseInt(c.dataset.index) === currentIndex) {
+                    setTimeout(() => {
+                        c.classList.add('active');
+                    }, 150);
+                }
+            });
+
+            // End transition
+            setTimeout(() => {
+                updateBookPages();
+                book3d.style.transform = 'rotateX(54deg) rotateY(0deg) rotateZ(0deg) translateY(60px)';
+                isTransitioning = false;
+            }, 1200);
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            let targetIdx = currentIndex - 1;
+            if (targetIdx < 0) targetIdx = projects.length - 1;
+            goToProject(targetIdx, 'prev');
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (isTransitioning) return;
+            let targetIdx = (currentIndex + 1) % projects.length;
+            goToProject(targetIdx, 'next');
+        });
+
+        // Mouse Parallax in Section 4
+        const s4 = document.getElementById('section-4');
+        s4.addEventListener('mousemove', (e) => {
+            if (isTransitioning) return;
+
+            const rect = s4.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const xOffset = (x / rect.width) - 0.5;
+            const yOffset = (y / rect.height) - 0.5;
+
+            // Tilt the book
+            const bookTiltX = 54 - (yOffset * 10);
+            const bookTiltY = xOffset * 12;
+            book3d.style.transform = `rotateX(${bookTiltX}deg) rotateY(${bookTiltY}deg) rotateZ(${xOffset * 3}deg) translateY(60px)`;
+
+            // Tilt floating card
+            const activeCard = showcase.querySelector('.floating-project.active');
+            if (activeCard) {
+                const cardTiltX = -yOffset * 15;
+                const cardTiltY = xOffset * 15;
+                activeCard.style.transform = `translate3d(0, 0, 50px) rotateX(${cardTiltX}deg) rotateY(${cardTiltY}deg)`;
+            }
+        });
+
+        s4.addEventListener('mouseleave', () => {
+            if (isTransitioning) return;
+            book3d.style.transform = 'rotateX(54deg) rotateY(0deg) rotateZ(0deg) translateY(60px)';
+            const activeCard = showcase.querySelector('.floating-project.active');
+            if (activeCard) {
+                activeCard.style.transform = 'translate3d(0, 0, 50px) rotateX(0deg) rotateY(0deg)';
+            }
+        });
+
+        // Initialize immediately
+        initShowcase();
+    })();
+    </script>
 </body>
 </html>
