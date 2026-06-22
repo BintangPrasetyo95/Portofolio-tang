@@ -535,9 +535,9 @@
             bottom: -20%;
             left: 50%;
             transform: translateX(-50%);
-            width: 800px;
-            height: 400px;
-            background: radial-gradient(ellipse at center, rgba(252, 179, 45, 0.15) 0%, rgba(0,0,0,0) 70%);
+            width: 700px;
+            height: 340px;
+            background: radial-gradient(ellipse at center, rgba(252, 179, 45, 0.08) 0%, rgba(0,0,0,0) 70%);
             pointer-events: none;
             filter: blur(80px);
             z-index: 1;
@@ -546,10 +546,10 @@
         /* Floating Project Showcase */
         .showcase-container {
             position: absolute;
-            top: 8%;
+            top: 6%;
             width: 100%;
-            max-width: 1000px;
-            height: 440px;
+            max-width: 1400px;
+            height: 560px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -558,17 +558,16 @@
 
         .floating-project {
             position: absolute;
-            width: 90%;
-            max-width: 850px;
-            height: 100%;
+            width: 100%;
+            max-width: 1700px;
+            min-height: 860px;
             display: flex;
-            background: rgba(10, 10, 10, 0.65);
-            border: 1px solid rgba(252, 179, 45, 0.25);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            align-items: center;
+            gap: 3.5rem;
+            border: none;
             border-radius: 24px;
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             overflow: hidden;
             transform-style: preserve-3d;
             transform: translate3d(0, 50px, -100px) rotateX(10deg);
@@ -583,24 +582,17 @@
             opacity: 1;
             pointer-events: auto;
             transform: translate3d(0, 0, 50px) rotateX(0deg);
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.9),
-                        0 0 30px rgba(252, 179, 45, 0.15),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        }
-
-        /* Hover effect on card */
-        .floating-project:hover {
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.95),
-                        0 0 45px rgba(252, 179, 45, 0.25),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.25);
         }
 
         .project-image-box {
-            width: 45%;
-            height: 100%;
+            width: 44%;
+            min-width: 280px;
+            height: calc(100% - 2rem);
+            margin-left: 1rem;
             position: relative;
             overflow: hidden;
-            border-right: 1px solid rgba(252, 179, 45, 0.2);
+            border-radius: 28px;
+            transform: translateX(-8px);
         }
 
         .project-image-box img {
@@ -617,42 +609,84 @@
         .project-image-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to right, rgba(0,0,0,0) 60%, rgba(10, 10, 10, 0.95));
+            background: none;
         }
 
         .project-details-box {
-            width: 55%;
+            width: calc(56% - 1.5rem);
             height: 100%;
-            padding: 2.5rem;
+            padding: 2.5rem 2rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: flex-end;
+            text-align: right;
+            gap: 1rem;
         }
 
         .project-tech-list {
             display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
         }
 
         .tech-tag {
-            font-size: 11px;
-            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.65rem;
+            padding: 0.65rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--color-white);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .tech-tag:hover,
+        .tech-tag:focus-visible {
+            background: rgba(252, 179, 45, 0.16);
+            border-color: rgba(252, 179, 45, 0.28);
+            transform: translateY(-2px);
+        }
+
+        .tech-icon {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .tech-icon svg,
+        .tech-icon img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .tech-icon img {
+            object-fit: contain;
+        }
+
+        .tech-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 4px 10px;
-            border-radius: 100px;
-            background: rgba(252, 179, 45, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(252, 179, 45, 0.25);
+            color: var(--color-white);
+            white-space: nowrap;
         }
 
         .project-title {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: clamp(2.4rem, 4vw, 3.5rem);
+            font-weight: 800;
             color: #ffffff;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             background: linear-gradient(to right, #ffffff, #fcd58b);
@@ -662,15 +696,18 @@
         }
 
         .project-description {
-            font-size: 0.9rem;
+            font-size: 1.05rem;
             line-height: 1.6;
             color: var(--muted);
             margin-bottom: 1.5rem;
+            max-width: 95%;
         }
 
         .project-actions {
             display: flex;
+            justify-content: flex-end;
             gap: 15px;
+            width: 100%;
         }
 
         .see-now-btn {
@@ -711,17 +748,69 @@
             pointer-events: none;
         }
 
+        .see-more-btn {
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(252, 179, 45, 0.24);
+            background: rgba(252, 179, 45, 0.12);
+            color: #ffffff;
+        }
+
+        .see-more-btn:hover,
+        .see-more-btn:focus-visible {
+            background: rgba(252, 179, 45, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .subproject-list {
+            margin: 1rem 0 0;
+            padding: 0;
+            list-style: none;
+            opacity: 1;
+            max-height: none;
+        }
+
+
+        .subproject-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .subproject-list li a {
+            color: #fcd67e;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .subproject-list li a:hover,
+        .subproject-list li a:focus-visible {
+            text-decoration: underline;
+        }
+
+        .subproject-list li:last-child {
+            margin-bottom: 0;
+        }
+
         /* 3D BOOK PORTION */
         .book-viewport {
             position: absolute;
-            bottom: -50px;
+            bottom: 50px;
             width: 100vw;
             height: 480px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
             pointer-events: none;
-            z-index: 5;
+            z-index: 30;
         }
 
         .book-3d {
@@ -783,6 +872,7 @@
             position: absolute;
             inset: 0;
             transform-style: preserve-3d;
+            overflow: hidden;
         }
 
         /* 3D Pages styling */
@@ -792,6 +882,7 @@
             height: calc(100% - 16px);
             top: 8px;
             background: rgba(20, 20, 20, 0.75);
+            overflow: hidden;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(252, 179, 45, 0.18);
@@ -837,6 +928,7 @@
             flex-direction: column;
             justify-content: space-between;
             color: rgba(255, 255, 255, 0.7);
+            overflow: hidden;
         }
 
         .page-blueprint {
@@ -2695,113 +2787,91 @@
 
         const projects = [
             {
-                title: "AlphaForge Engine",
-                description: "A high-performance next-generation 3D rendering pipeline built in Rust and WebGPU. Features real-time ray-guided path tracing, micro-surface reflection modeling, and custom compute shader particle systems.",
+                title: "Diva AC",
+                description: "Website for Diva AC Bengkel AC Mobil — affordable, high-quality car AC service in Central Lampung.",
                 image: "images/project1.jpg",
-                url: "https://github.com/BintangPrasetyo95/AlphaForge",
+                url: "https://github.com/BintangPrasetyo95/Diva-AC",
                 disabled: false,
-                tech: ["Rust", "WebGPU", "WASM", "WGSL"],
+                tech: ["Laravel", "React", "Tailwind", "Motion", "Three.js"],
                 blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
-                    <line x1="10" y1="50" x2="90" y2="50" stroke="#fcb32d" stroke-width="0.5" />
-                    <line x1="50" y1="10" x2="50" y2="90" stroke="#fcb32d" stroke-width="0.5" />
-                    <circle cx="50" cy="50" r="30" fill="none" stroke="#fcb32d" stroke-width="0.75" stroke-dasharray="2" />
-                    <rect x="35" y="35" width="30" height="30" fill="none" stroke="#fcb32d" stroke-width="1" />
-                    <line x1="35" y1="35" x2="65" y2="65" stroke="#fcb32d" stroke-width="0.5" />
-                    <line x1="65" y1="35" x2="35" y2="65" stroke="#fcb32d" stroke-width="0.5" />
-                    <circle cx="35" cy="35" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <circle cx="65" cy="65" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <circle cx="65" cy="35" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <circle cx="35" cy="65" r="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
+                    <rect x="18" y="18" width="64" height="64" rx="8" fill="none" stroke="#fcb32d" stroke-width="0.75" stroke-dasharray="2" />
+                    <line x1="18" y1="40" x2="82" y2="40" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="34" y1="30" x2="34" y2="70" stroke="#fcb32d" stroke-width="0.5" />
+                    <path d="M30 60c5 4 12 6 22 6s17-2 22-6" stroke="#fcb32d" stroke-width="0.5" fill="none" />
+                    <circle cx="50" cy="50" r="8" fill="none" stroke="#fcb32d" stroke-width="0.75" />
                 </svg>`,
                 specs: [
-                    "RENDERING: Ray-Guided Path Tracing",
-                    "PIPELINE: WebGPU Compute Shaders",
-                    "SHADERS: WGSL Native Functions",
-                    "PERF: 60 FPS under 10k light instances"
+                    "FRAMEWORK: Laravel + React",
+                    "STYLE: Tailwind CSS",
+                    "MOTION: Framer Motion effects",
+                    "3D: Three.js visuals"
                 ]
             },
             {
-                title: "Quantum Sandbox",
-                description: "An interactive quantum computing playground and visual block-based circuit editor. Simulates multi-qubit gates, superposition, and entanglement in real-time with automatic Bloch sphere rendering.",
+                title: "Edulab",
+                description: "A lightweight virtual lab website for NeoEngineer, built to support national competition goals and ranked 5th place.",
                 image: "images/project2.jpg",
-                url: "#",
-                disabled: true,
-                tech: ["TypeScript", "WebGL", "QuantumJS", "React"],
-                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
-                    <line x1="10" y1="30" x2="90" y2="30" stroke="#fcb32d" stroke-width="0.75" />
-                    <line x1="10" y1="50" x2="90" y2="50" stroke="#fcb32d" stroke-width="0.75" />
-                    <line x1="10" y1="70" x2="90" y2="70" stroke="#fcb32d" stroke-width="0.75" />
-                    <rect x="25" y="20" width="15" height="20" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <text x="32.5" y="33" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">H</text>
-                    <rect x="50" y="40" width="15" height="20" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <text x="57.5" y="53" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">X</text>
-                    <circle cx="32.5" cy="50" r="2" fill="#fcb32d" />
-                    <line x1="32.5" y1="30" x2="32.5" y2="50" stroke="#fcb32d" stroke-width="0.5" />
-                    <circle cx="57.5" cy="70" r="2" fill="#fcb32d" />
-                    <line x1="57.5" y1="50" x2="57.5" y2="70" stroke="#fcb32d" stroke-width="0.5" />
-                </svg>`,
-                specs: [
-                    "SIMULATION: Real-time Multi-qubit States",
-                    "RENDER: WebGL Bloch Sphere",
-                    "LIBRARIES: Custom QuantumJS Kernel",
-                    "GATES: Hadamard, Pauli-X, CNOT"
-                ]
-            },
-            {
-                title: "Nebula Core OS",
-                description: "A custom microkernel operating system written for ARM architecture. Implements real-time task scheduling, virtual memory management, and an isolated sandbox environment for system services.",
-                image: "images/project3.jpg",
-                url: "https://github.com/BintangPrasetyo95/NebulaOS",
+                url: "https://bintangprasetyo95.github.io/edulab/",
                 disabled: false,
-                tech: ["C", "Assembly", "ARM v8", "Docker"],
+                tech: ["HTML5", "CSS", "JavaScript"],
                 blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
-                    <rect x="15" y="15" width="70" height="70" rx="6" fill="none" stroke="#fcb32d" stroke-width="0.5" stroke-dasharray="2" />
-                    <rect x="25" y="25" width="50" height="15" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <text x="50" y="34" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">USER APP SPACE</text>
-                    <rect x="25" y="48" width="50" height="15" rx="3" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <text x="50" y="57" fill="#fcb32d" font-size="6" font-family="monospace" text-anchor="middle">SYS SERVICES</text>
-                    <rect x="30" y="72" width="40" height="10" rx="2" fill="#000" stroke="#fcb32d" stroke-width="1" />
-                    <text x="50" y="79" fill="#fcb32d" font-size="5" font-family="monospace" text-anchor="middle">MICROKERNEL</text>
-                    <line x1="50" y1="40" x2="50" y2="48" stroke="#fcb32d" stroke-width="0.5" />
-                    <line x1="50" y1="63" x2="50" y2="72" stroke="#fcb32d" stroke-width="0.5" />
+                    <rect x="16" y="16" width="68" height="68" rx="8" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <line x1="24" y1="32" x2="76" y2="32" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="24" y1="46" x2="76" y2="46" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="24" y1="60" x2="76" y2="60" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="24" y1="74" x2="76" y2="74" stroke="#fcb32d" stroke-width="0.5" />
                 </svg>`,
                 specs: [
-                    "ARCHITECTURE: Modular Microkernel",
-                    "COMPATIBILITY: ARM v8 System-on-Chip",
-                    "SCHEDULER: Fixed-priority preemptive",
-                    "SECURITY: Sandboxed drivers & IPC"
+                    "UI: Responsive HTML5/CSS",
+                    "INTERACTIVITY: Vanilla JavaScript",
+                    "COMPETITION: 5th place nationals",
+                    "TEAM: NeoEngineer virtual lab"
                 ]
             },
             {
-                title: "Synapse-Net AI",
-                description: "A distributed neural network modeling framework. Visualizes active synapses and node activations in real-time across billions of synthetic connections using WebGL instances.",
-                image: "images/project4.jpg",
-                url: "#",
-                disabled: true,
-                tech: ["Python", "PyTorch", "Three.js", "WebSockets"],
+                title: "Project Sayuri",
+                description: "My AI helper and companion, designed to stay versatile and support me in the coming years.",
+                image: "images/project3.jpg",
+                url: "https://github.com/BintangPrasetyo95/Project-Sayuri",
+                disabled: false,
+                tech: ["Kotlin", "Gemini"],
                 blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
-                    <circle cx="20" cy="30" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
-                    <circle cx="20" cy="50" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
-                    <circle cx="20" cy="70" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
-                    <circle cx="50" cy="40" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
-                    <circle cx="50" cy="60" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
-                    <circle cx="80" cy="50" r="4" fill="none" stroke="#fcb32d" stroke-width="0.75" />
-                    
-                    <line x1="24" y1="30" x2="46" y2="40" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    <line x1="24" y1="30" x2="46" y2="60" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    <line x1="24" y1="50" x2="46" y2="40" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    <line x1="24" y1="50" x2="46" y2="60" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    <line x1="24" y1="70" x2="46" y2="40" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    <line x1="24" y1="70" x2="46" y2="60" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    
-                    <line x1="54" y1="40" x2="76" y2="50" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
-                    <line x1="54" y1="60" x2="76" y2="50" stroke="#fcb32d" stroke-width="0.3" opacity="0.6" />
+                    <path d="M20 50c10-16 20-24 30-24s20 8 30 24" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <path d="M20 50c10 16 20 24 30 24s20-8 30-24" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <circle cx="50" cy="50" r="12" fill="none" stroke="#fcb32d" stroke-width="0.75" />
                 </svg>`,
                 specs: [
-                    "NETWORK: Feedforward Neural Network Map",
-                    "VISUALIZATION: WebGL Instanced Nodes",
-                    "TRANSMISSION: Binary WebSockets protocol",
-                    "TRAINING: PyTorch integration wrapper"
+                    "AI: Gemini-powered assistant",
+                    "PLATFORM: Kotlin-based companion",
+                    "DESIGN: Versatile long-term utility",
+                    "FOCUS: productivity and support"
+                ]
+            },
+            {
+                title: "PHP Utility Suite",
+                description: "A collection of native PHP applications built without AI: library system, tuition payment, and inventory management.",
+                image: "images/project4.jpg",
+                url: "https://github.com/BintangPrasetyo95/UKK-perpustakaan-bintang",
+                disabled: false,
+                tech: ["PHP", "HTML5", "Bootstrap5"],
+                subProjects: [
+                    { title: "UKK Perpustakaan (Final Exam)", url: "https://github.com/BintangPrasetyo95/UKK-perpustakaan-bintang" },
+                    { title: "Perpustakaan", url: "https://github.com/BintangPrasetyo95/perpustakaan" },
+                    { title: "Pembayaran SPP", url: "https://github.com/BintangPrasetyo95/Pembayaran-SPP" },
+                    { title: "Inventaris Barang", url: "https://github.com/BintangPrasetyo95/Inventaris_Barang" }
+                ],
+                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
+                    <rect x="18" y="18" width="64" height="64" rx="5" fill="none" stroke="#fcb32d" stroke-width="0.75" />
+                    <line x1="28" y1="32" x2="72" y2="32" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="28" y1="48" x2="72" y2="48" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="28" y1="64" x2="72" y2="64" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="28" y1="80" x2="72" y2="80" stroke="#fcb32d" stroke-width="0.5" />
+                </svg>`,
+                specs: [
+                    "LANGUAGE: Native PHP",
+                    "UI: HTML5 + Bootstrap 5",
+                    "SYSTEMS: Library, SPP payment, inventory management",
+                    "AUTHENTIC: built without AI generation"
                 ]
             }
         ];
@@ -2816,6 +2886,29 @@
         const nextBtn = document.getElementById('nextProjectBtn');
         const book3d = document.getElementById('book3d');
 
+        function getTechIconSrc(tag) {
+            const normalized = tag.toLowerCase().replace(/\+/g, 'plus').replace(/\./g, '').replace(/[^a-z0-9]/g, '');
+            const map = {
+                html5: 'html5',
+                css: 'css3',
+                css3: 'css3',
+                javascript: 'js',
+                js: 'js',
+                laravel: 'laravel',
+                react: 'react',
+                tailwind: 'tailwind',
+                motion: 'motion',
+                'threejs': 'threejs',
+                'threejs': 'threejs',
+                php: 'php',
+                kotlin: 'kotlin',
+                gemini: 'gemini',
+                bootstrap5: 'bootstrap5'
+            };
+            const file = map[normalized] || normalized;
+            return `images/tech logo/${file}.svg`;
+        }
+
         // Setup layouts
         function initShowcase() {
             showcase.innerHTML = '';
@@ -2827,11 +2920,27 @@
                 card.className = `floating-project ${idx === currentIndex ? 'active' : ''}`;
                 card.dataset.index = idx;
                 
-                const techTagsHtml = proj.tech.map(t => `<span class="tech-tag">${t}</span>`).join('');
+                const techTagsHtml = proj.tech.map(t => {
+                    const key = t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                    const iconPath = getTechIconSrc(t);
+                    return `<span class="tech-tag tech-${key}">
+                        <span class="tech-icon">
+                            <img src="${iconPath}" alt="${t} logo" loading="lazy" />
+                        </span>
+                        <span class="tech-label">${t}</span>
+                    </span>`;
+                }).join('');
                 
-                const btnHtml = proj.disabled 
+                const hasSubProjects = Array.isArray(proj.subProjects) && proj.subProjects.length > 0;
+                const btnHtml = proj.disabled
                     ? `<button class="see-now-btn disabled" disabled>See Now (Locked)</button>`
                     : `<a href="${proj.url}" target="_blank" rel="noreferrer noopener" class="see-now-btn active">See Now</a>`;
+
+                const subProjectHtml = hasSubProjects
+                    ? `<ul class="subproject-list open" aria-hidden="false">
+                            ${proj.subProjects.map(sub => `<li><a href="${sub.url}" target="_blank" rel="noreferrer noopener">${sub.title}</a></li>`).join('')}
+                        </ul>`
+                    : '';
 
                 card.innerHTML = `
                     <div class="project-image-box">
@@ -2847,6 +2956,7 @@
                         <div class="project-actions">
                             ${btnHtml}
                         </div>
+                        ${subProjectHtml}
                     </div>
                 `;
                 showcase.appendChild(card);
