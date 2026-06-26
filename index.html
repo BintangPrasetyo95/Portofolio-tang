@@ -555,9 +555,7 @@
             align-items: center;
             z-index: 40;
         }
-
         
-
         .floating-project {
             position: absolute;
             width: 100%;
@@ -566,12 +564,7 @@
             display: flex;
             align-items: center;
             gap: 3.5rem;
-            border: none;
             border-radius: 24px;
-            /* reduce backdrop-filter cost */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            overflow: hidden;
             transform-style: preserve-3d;
             transform: translate3d(0, 50px, -100px) rotateX(10deg);
             opacity: 0;
@@ -595,7 +588,15 @@
             height: 100%;
             position: relative;
             overflow: hidden;
-            border-right: 1px solid rgba(252, 179, 45, 0.2);
+            border-radius: 24px;
+            border: 2px solid #fcb32d;
+            box-shadow: 0 0 15px rgba(252, 179, 45, 0.4), inset 0 0 10px rgba(252, 179, 45, 0.2);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .project-image-box:hover {
+            box-shadow: 0 0 35px rgba(252, 179, 45, 0.95), inset 0 0 20px rgba(252, 179, 45, 0.55);
+            border-color: #ffcc00;
         }
 
         .project-image-box img {
@@ -605,7 +606,117 @@
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .floating-project:hover .project-image-box img {
+        .project-image-box:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Split image layout styles */
+        .split-image-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .split-image-top, .split-image-bottom {
+            height: 50%;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .split-image-top {
+            border-bottom: 1px solid rgba(252, 179, 45, 0.2);
+        }
+
+        .split-image-top img, .split-image-bottom img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* 3-split image layout styles */
+        .split-image-container.split-three {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .split-image-top-full {
+            height: 50%;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid rgba(252, 179, 45, 0.2);
+        }
+
+        .split-image-bottom-row {
+            display: flex;
+            height: 50%;
+            width: 100%;
+        }
+
+        .split-image-bottom-left, .split-image-bottom-right {
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .split-image-bottom-left {
+            border-right: 1px solid rgba(252, 179, 45, 0.2);
+        }
+
+        .split-image-top-full img, 
+        .split-image-bottom-left img, 
+        .split-image-bottom-right img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* 4-split (2x2) image layout styles */
+        .split-image-container.split-four {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            width: 100%;
+            height: 100%;
+            gap: 0;
+        }
+
+        .split-four .split-quad {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .split-four .split-quad:nth-child(1) {
+            border-right: 1px solid rgba(252, 179, 45, 0.2);
+            border-bottom: 1px solid rgba(252, 179, 45, 0.2);
+        }
+        .split-four .split-quad:nth-child(2) {
+            border-bottom: 1px solid rgba(252, 179, 45, 0.2);
+        }
+        .split-four .split-quad:nth-child(3) {
+            border-right: 1px solid rgba(252, 179, 45, 0.2);
+        }
+
+        .split-four .split-quad img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        .project-image-box:hover .split-image-top img,
+        .project-image-box:hover .split-image-bottom img,
+        .project-image-box:hover .split-image-top-full img,
+        .project-image-box:hover .split-image-bottom-left img,
+        .project-image-box:hover .split-image-bottom-right img,
+        .project-image-box:hover .split-four .split-quad img {
             transform: scale(1.08);
         }
 
@@ -625,6 +736,12 @@
             align-items: flex-end;
             text-align: right;
             gap: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
         .project-tech-list {
@@ -2798,8 +2915,8 @@
         const projects = [
             {
                 title: "Diva AC",
-                description: "Website for Diva AC Bengkel AC Mobil — affordable, high-quality car AC service in Central Lampung.",
-                image: "images/project1.jpg",
+                description: "Website for Diva AC Bengkel AC Mobil - affordable, high-quality car AC service in Central Lampung.",
+                image: ["images/Diva-AC/hero.png", "images/Diva-AC/dashboard.png"],
                 url: "https://github.com/BintangPrasetyo95/Diva-AC",
                 disabled: false,
                 tech: ["Laravel", "React", "Tailwind", "Motion", "Three.js"],
@@ -2820,7 +2937,7 @@
             {
                 title: "Edulab",
                 description: "A lightweight virtual lab website for NeoEngineer, built to support national competition goals and ranked 5th place.",
-                image: "images/project2.jpg",
+                image: ["images/Edulab/dashboard.png", "images/Edulab/hero.png", "images/Edulab/simulation.png"],
                 url: "https://bintangprasetyo95.github.io/edulab/",
                 disabled: false,
                 tech: ["HTML5", "CSS", "JavaScript"],
@@ -2860,9 +2977,10 @@
             {
                 title: "PHP Utility Suite",
                 description: "A collection of native PHP applications built without AI: library system, tuition payment, and inventory management.",
-                image: "images/project4.jpg",
+                image: ["images/PHP SMK/ukk-perpustakaan.png", "images/PHP SMK/perpustakaan.png", "images/PHP SMK/pembayaran-spp.png", "images/PHP SMK/inventaris-barang.png"],
                 url: "https://github.com/BintangPrasetyo95/UKK-perpustakaan-bintang",
                 disabled: false,
+                hideButton: true,
                 tech: ["PHP", "HTML5", "Bootstrap5"],
                 subProjects: [
                     { title: "UKK Perpustakaan (Final Exam)", url: "https://github.com/BintangPrasetyo95/UKK-perpustakaan-bintang" },
@@ -2942,9 +3060,11 @@
                 }).join('');
                 
                 const hasSubProjects = Array.isArray(proj.subProjects) && proj.subProjects.length > 0;
-                const btnHtml = proj.disabled
-                    ? `<button class="see-now-btn disabled" disabled>See Now (Locked)</button>`
-                    : `<a href="${proj.url}" target="_blank" rel="noreferrer noopener" class="see-now-btn active">See Now</a>`;
+                const btnHtml = proj.hideButton
+                    ? ''
+                    : proj.disabled
+                        ? `<button class="see-now-btn disabled" disabled>See Now (Locked)</button>`
+                        : `<a href="${proj.url}" target="_blank" rel="noreferrer noopener" class="see-now-btn active">See Now</a>`;
 
                 const subProjectHtml = hasSubProjects
                     ? `<ul class="subproject-list open" aria-hidden="false">
@@ -2952,9 +3072,60 @@
                         </ul>`
                     : '';
 
+                let imageHtml = '';
+                if (Array.isArray(proj.image)) {
+                    if (proj.image.length === 4) {
+                        imageHtml = `
+                            <div class="split-image-container split-four">
+                                <div class="split-quad">
+                                    <img src="${proj.image[0]}" alt="${proj.title} - UKK">
+                                </div>
+                                <div class="split-quad">
+                                    <img src="${proj.image[1]}" alt="${proj.title} - Perpustakaan">
+                                </div>
+                                <div class="split-quad">
+                                    <img src="${proj.image[2]}" alt="${proj.title} - Pembayaran SPP">
+                                </div>
+                                <div class="split-quad">
+                                    <img src="${proj.image[3]}" alt="${proj.title} - Inventaris Barang">
+                                </div>
+                            </div>
+                        `;
+                    } else if (proj.image.length === 3) {
+                        imageHtml = `
+                            <div class="split-image-container split-three">
+                                <div class="split-image-top-full">
+                                    <img src="${proj.image[0]}" alt="${proj.title} Dashboard">
+                                </div>
+                                <div class="split-image-bottom-row">
+                                    <div class="split-image-bottom-left">
+                                        <img src="${proj.image[1]}" alt="${proj.title} Hero">
+                                    </div>
+                                    <div class="split-image-bottom-right">
+                                        <img src="${proj.image[2]}" alt="${proj.title} Simulation">
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        imageHtml = `
+                            <div class="split-image-container">
+                                <div class="split-image-top">
+                                    <img src="${proj.image[0]}" alt="${proj.title} Hero">
+                                </div>
+                                <div class="split-image-bottom">
+                                    <img src="${proj.image[1]}" alt="${proj.title} Dashboard">
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    imageHtml = `<img src="${proj.image}" alt="${proj.title}">`;
+                }
+
                 card.innerHTML = `
                     <div class="project-image-box">
-                        <img src="${proj.image}" alt="${proj.title}">
+                        ${imageHtml}
                         <div class="project-image-overlay"></div>
                     </div>
                     <div class="project-details-box">
@@ -3226,7 +3397,7 @@
 
                 const activeCard = showcase.querySelector('.floating-project.active');
                 if (activeCard) {
-                    activeCard.style.transform = `translate3d(0, 0, 50px) rotateX(${cardTiltCurrent.x}deg) rotateY(${cardTiltCurrent.y}deg)`;
+                    activeCard.style.transform = `translate3d(0, 0, 50px)`;
                 }
             }
 
