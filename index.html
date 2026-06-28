@@ -101,6 +101,12 @@
             z-index: 2;
         }
 
+        #section-3 {
+            background: var(--color-bg);
+            z-index: 2;
+            overflow: visible;
+        }
+
         /* Glowing golden borders for Section 2 */
         .border-glow {
             position: absolute;
@@ -546,10 +552,10 @@
         /* Floating Project Showcase */
         .showcase-container {
             position: absolute;
-            top: 6%;
+            top: 12%;
             width: 100%;
             max-width: 1400px;
-            height: 560px;
+            height: 460px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -592,6 +598,7 @@
             border: 2px solid #fcb32d;
             box-shadow: 0 0 15px rgba(252, 179, 45, 0.4), inset 0 0 10px rgba(252, 179, 45, 0.2);
             transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
         }
 
         .project-image-box:hover {
@@ -925,32 +932,36 @@
             position: absolute;
             bottom: 50px;
             width: 100vw;
-            height: 480px;
+            height: 430px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
             pointer-events: none;
             z-index: 30;
+            perspective: 2400px;
         }
 
         .book-3d {
             position: relative;
-            width: 98vw;
-            max-width: 1450px;
-            height: 380px;
+            width: 90vw;
+            max-width: 1200px;
+            height: 330px;
             transform-style: preserve-3d;
             transform: rotateX(42deg) rotateY(0deg) rotateZ(0deg) translateY(40px);
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
+        /* Leather-textured covers - Bold Yellow Orange with antique/pirate style */
         .book-cover-3d {
             position: absolute;
             width: 50%;
             height: 100%;
-            background: #0d0d0d;
-            border: 4px solid #222222;
-            /* reduce shadow intensity */
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75);
+            background: linear-gradient(135deg, #e68a00 0%, #cc7a00 40%, #b36b00 70%, #804d00 100%);
+            border: 3px solid #ffaa00;
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.9),
+                inset 0 2px 3px rgba(255, 255, 255, 0.25),
+                inset 0 -2px 10px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
         }
 
@@ -972,41 +983,59 @@
 
         .cover-pattern {
             position: absolute;
-            inset: 12px;
-            border: 1px solid rgba(252, 179, 45, 0.15);
+            inset: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.45);
             border-radius: 8px;
-            background: radial-gradient(circle at center, rgba(252, 179, 45, 0.03) 0%, transparent 70%);
+            background:
+                radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.15) 0%, transparent 60%),
+                radial-gradient(circle at 70% 60%, rgba(255, 215, 0, 0.1) 0%, transparent 60%);
+            box-shadow: 
+                inset 0 0 25px rgba(0, 0, 0, 0.4),
+                0 0 15px rgba(255, 170, 0, 0.1);
         }
 
+        /* Gold foil spine - updated to match bold orange-yellow cover */
         .book-spine-3d {
             position: absolute;
             left: calc(50% - 16px);
             width: 32px;
             height: 100%;
-            background: #050505;
-            border-left: 1px solid rgba(252, 179, 45, 0.2);
-            border-right: 1px solid rgba(252, 179, 45, 0.2);
+            background: linear-gradient(to right, #663d00, #b36b00, #663d00);
+            border-left: 1px solid rgba(255, 170, 0, 0.4);
+            border-right: 1px solid rgba(255, 170, 0, 0.4);
             transform: translateZ(-2px);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
         }
 
         .book-pages-container {
             position: absolute;
             inset: 0;
             transform-style: preserve-3d;
-            overflow: hidden;
+            overflow: visible;
         }
 
-        /* 3D Pages styling */
+        /* ═══ Pirate Parchment Pages (with chipped/old rustic texture) ═══ */
         .page-sheet-3d {
             position: absolute;
             width: calc(50% - 8px);
             height: calc(100% - 16px);
             top: 8px;
-            background: rgba(18, 18, 18, 0.97);
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 105, 20, 0.05) 0%, transparent 60%),
+                radial-gradient(circle at 80% 70%, rgba(90, 69, 32, 0.08) 0%, transparent 60%),
+                linear-gradient(135deg, #f2e5c4 0%, #eddcae 35%, #e3ce94 75%, #d1ba7b 100%);
             overflow: hidden;
-            border: 1px solid rgba(252, 179, 45, 0.18);
+            border: 1px solid rgba(139, 105, 20, 0.45);
             transform-style: preserve-3d;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            box-shadow:
+                0 3px 12px rgba(80, 60, 20, 0.25),
+                inset 0 0 50px rgba(90, 69, 32, 0.22);
+            /* chipped/weathered page corner outline simulator */
+            clip-path: polygon(
+                0% 2%, 2% 0%, 98% 0%, 100% 2%, 
+                100% 95%, 99% 96%, 98% 95%, 97% 98%, 95% 97%, 
+                93% 100%, 7% 100%, 5% 98%, 3% 97%, 1% 99%, 0% 98%
+            );
         }
 
         .page-sheet-3d.left-static {
@@ -1014,6 +1043,11 @@
             border-radius: 8px 0 0 8px;
             transform-origin: right center;
             transform: rotateY(-2deg) translateZ(1px);
+            /* Subtle inner shadow on binding edge */
+            box-shadow:
+                0 3px 12px rgba(80, 60, 20, 0.25),
+                inset -20px 0 25px -10px rgba(90, 69, 32, 0.35),
+                inset 0 0 50px rgba(90, 69, 32, 0.22);
         }
 
         .page-sheet-3d.right-static {
@@ -1021,63 +1055,103 @@
             border-radius: 0 8px 8px 0;
             transform-origin: left center;
             transform: rotateY(2deg) translateZ(1px);
+            box-shadow:
+                0 3px 12px rgba(80, 60, 20, 0.25),
+                inset 20px 0 25px -10px rgba(90, 69, 32, 0.35),
+                inset 0 0 50px rgba(90, 69, 32, 0.22);
         }
 
-        /* Flipping Page (Middle) */
+        /* ═══ Realistic page-flip element ═══ */
         .page-sheet-3d.flipping-page {
-            left: 50%;
             border-radius: 0 8px 8px 0;
             transform-origin: left center;
-            z-index: 10;
-            transition: transform 1.05s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 100;
             transform: rotateY(0deg);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
             will-change: transform;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+            box-shadow:
+                0 8px 25px rgba(50, 30, 10, 0.45);
+            /* Preserve 3D context so children flip correctly */
+            transform-style: preserve-3d;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            clip-path: none !important;
+            transition: transform 1.25s cubic-bezier(0.35, 0, 0.25, 1);
         }
 
-        .page-sheet-3d.flipping-page.flipped {
-            transform: rotateY(-180deg);
+        /* Dynamic shadow that moves with the flip */
+        .page-flip-shadow {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(to left, rgba(80, 60, 30, 0.18), transparent);
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            pointer-events: none;
+            z-index: 50;
         }
 
-        /* Page Content styling */
+        .page-sheet-3d.flipping-page.flipping .page-flip-shadow {
+            opacity: 1;
+        }
+
+        /* Fold crease highlight on the binding edge */
+        .page-crease {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 100%;
+            background: linear-gradient(to right,
+                rgba(120, 100, 60, 0.15),
+                rgba(120, 100, 60, 0.04) 50%,
+                transparent 100%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Page Content styling — dark text on cream */
         .page-inner-content {
             position: absolute;
             inset: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(60, 48, 30, 0.75);
             overflow: hidden;
         }
 
         .page-blueprint {
             position: absolute;
-            /* constrain blueprint so it cannot overflow the page area */
             inset: 20px;
             width: calc(100% - 40px);
             height: calc(100% - 40px);
             max-width: calc(100% - 40px);
             max-height: calc(100% - 40px);
             display: block;
-            opacity: 0.18;
+            opacity: 0.65;
             pointer-events: none;
             stroke-dasharray: 4;
             animation: blueprintGlow 3s ease-in-out infinite alternate;
         }
 
+        .page-blueprint * {
+            stroke: #a0781b !important;
+        }
+
         @keyframes blueprintGlow {
-            0% { opacity: 0.12; }
-            100% { opacity: 0.25; }
+            0% { opacity: 0.50; }
+            100% { opacity: 0.80; }
         }
 
         .page-header {
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
-            color: var(--accent);
-            border-bottom: 1px solid rgba(252, 179, 45, 0.15);
+            color: #8b6914;
+            border-bottom: 1px solid rgba(139, 105, 20, 0.25);
             padding-bottom: 5px;
             display: flex;
             justify-content: space-between;
@@ -1093,8 +1167,33 @@
         .page-footer {
             font-size: 9px;
             letter-spacing: 1px;
-            color: var(--muted-2);
+            color: rgba(100, 80, 40, 0.5);
             text-align: right;
+        }
+
+        /* Page-turn edge stacking effect (visible page thickness) */
+        .book-pages-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 10px;
+            width: calc(50% - 12px);
+            height: calc(100% - 20px);
+            border-radius: 0 6px 6px 0;
+            transform: translateZ(-1px);
+            box-shadow: inset 2px 0 4px rgba(100, 80, 40, 0.1);
+        }
+
+        .book-pages-container::after {
+            content: '';
+            position: absolute;
+            right: 50%;
+            top: 10px;
+            width: calc(50% - 12px);
+            height: calc(100% - 20px);
+            border-radius: 6px 0 0 6px;
+            transform: translateZ(-1px);
+            box-shadow: inset -2px 0 4px rgba(100, 80, 40, 0.1);
         }
 
         /* NAVIGATION OVERLAY */
@@ -1103,7 +1202,7 @@
             bottom: 30px;
             display: flex;
             gap: 40px;
-            z-index: 20;
+            z-index: 40;
         }
 
         .nav-btn {
@@ -1206,18 +1305,23 @@
             }
 
             .book-viewport {
-                height: 300px;
+                height: 270px;
             }
 
             .book-3d {
-                width: 480px;
-                height: 270px;
+                width: 430px;
+                height: 240px;
                 transform: rotateX(48deg) rotateY(0deg) rotateZ(0deg) translateY(40px);
             }
             
             .nav-btn {
                 width: 44px;
                 height: 44px;
+            }
+
+            .book-pages-container::before,
+            .book-pages-container::after {
+                display: none;
             }
         }
 
@@ -1226,8 +1330,8 @@
                 height: 480px;
             }
             .book-3d {
-                width: 340px;
-                height: 200px;
+                width: 300px;
+                height: 180px;
                 transform: rotateX(45deg) rotateY(0deg) rotateZ(0deg) translateY(20px);
             }
             .project-pagination {
@@ -1236,6 +1340,157 @@
             .book-navigation {
                 bottom: 15px;
             }
+        }
+
+
+
+        /* ═══ Fullscreen Image Lightbox Modal ═══ */
+        .project-image-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: auto;
+            animation: modalFadeIn 0.3s forwards ease;
+        }
+        
+        .project-image-modal.closing {
+            animation: modalFadeOut 0.3s forwards ease;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(8, 8, 12, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .modal-content-container {
+            position: relative;
+            width: 90vw;
+            max-width: 1400px;
+            max-height: 85vh;
+            background: rgba(20, 20, 25, 0.9);
+            border: 2px solid #fcb32d;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(252, 179, 45, 0.15);
+            display: flex;
+            flex-direction: column;
+            padding: 24px;
+            z-index: 10;
+            transform: scale(0.9);
+            animation: modalScaleIn 0.3s forwards cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .project-image-modal.closing .modal-content-container {
+            animation: modalScaleOut 0.3s forwards ease;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            background: rgba(252, 179, 45, 0.1);
+            border: 1px solid #fcb32d;
+            border-radius: 50%;
+            color: #fcb32d;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: #fcb32d;
+            color: #000;
+            transform: rotate(90deg);
+            box-shadow: 0 0 10px rgba(252, 179, 45, 0.5);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(252, 179, 45, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            color: #fcb32d;
+            text-shadow: 0 0 10px rgba(252, 179, 45, 0.3);
+        }
+
+        .modal-grid {
+            flex-grow: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .modal-image-wrapper {
+            position: relative;
+            flex: 1 1 300px;
+            max-width: 100%;
+            height: auto;
+            max-height: 60vh;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(252, 179, 45, 0.2);
+            background: #050508;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-image-wrapper:hover {
+            border-color: #fcb32d;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(252, 179, 45, 0.25);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-height: 60vh;
+            display: block;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes modalFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes modalScaleIn {
+            from { transform: scale(0.9); }
+            to { transform: scale(1); }
+        }
+        
+        @keyframes modalScaleOut {
+            from { transform: scale(1); }
+            to { transform: scale(0.9); }
         }
     </style>
 </head>
@@ -1323,11 +1578,11 @@
 
     <!-- Section 3 & 4 Wrapper (provides height for sticky horizontal transition) -->
     <div id="section-3-4-wrap" style="height: 250vh; position: relative; background: #000000;">
-        <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: hidden; z-index: 3;">
+        <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: visible; z-index: 3;">
             <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh; transition: transform 0.1s ease-out;">
 
                 <!-- Section 3: Works & Details -->
-                <section class="section" id="section-3" style="width: 100vw; height: 100vh; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; overflow: hidden;">
+                <section class="section" id="section-3" style="width: 100vw; height: 100vh; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; overflow: visible;">
                     <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 4rem); color: var(--accent); text-transform: uppercase; text-shadow: 0 0 20px rgba(252, 179, 45, 0.25);">Works & Projects</h2>
                 </section>
 
@@ -3142,6 +3397,13 @@
                 `;
                 showcase.appendChild(card);
 
+                const imageBox = card.querySelector('.project-image-box');
+                if (imageBox) {
+                    imageBox.addEventListener('click', () => {
+                        openImageLightbox(proj);
+                    });
+                }
+
                 // Dot HTML
                 const dot = document.createElement('div');
                 dot.className = `dot ${idx === currentIndex ? 'active' : ''}`;
@@ -3155,13 +3417,14 @@
             updateBookPages();
         }
 
-        // Setup static left and right pages
+        // Setup static left and right pages (cream palette)
         function updateBookPages() {
             const currentProj = projects[currentIndex];
 
             bookPages.innerHTML = `
                 <!-- Left static page -->
                 <div class="page-sheet-3d left-static">
+                    <div class="page-crease" style="left:auto;right:0;background:linear-gradient(to left,rgba(120,100,60,0.15),rgba(120,100,60,0.04) 50%,transparent 100%);"></div>
                     ${currentProj.blueprint}
                     <div class="page-inner-content">
                         <div class="page-header">
@@ -3177,13 +3440,14 @@
                 
                 <!-- Right static page -->
                 <div class="page-sheet-3d right-static">
+                    <div class="page-crease"></div>
                     <div class="page-inner-content">
                         <div class="page-header">
                             <span>TECHNICAL METRICS</span>
                             <span>SPEC SHEET</span>
                         </div>
-                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; font-family: monospace; font-size: 10px; color: #fcb32d; padding: 10px 0;">
-                            <div>// CONFIG SPECIFICATIONS</div>
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; font-family: monospace; font-size: 10px; color: #8b6914; padding: 10px 0;">
+                            <div style="color:#5a4520;">// CONFIG SPECIFICATIONS</div>
                             ${currentProj.specs.map(spec => `<div>&gt; ${spec}</div>`).join('')}
                         </div>
                         <div class="page-footer">
@@ -3215,6 +3479,48 @@
             const prevProj = projects[oldIndex];
             const newProj = projects[currentIndex];
 
+            // Setup the static pages behind the turning page IMMEDIATELY
+            // If turning NEXT: Left static page remains oldIndex's blueprint, Right static page changes to newIndex's metrics sheet
+            // If turning PREV: Left static page changes to newIndex's blueprint, Right static page remains oldIndex's metrics sheet
+            const staticLeftProj = direction === 'next' ? prevProj : newProj;
+            const staticRightProj = direction === 'next' ? newProj : prevProj;
+
+            bookPages.innerHTML = `
+                <!-- Left static page -->
+                <div class="page-sheet-3d left-static">
+                    <div class="page-crease" style="left:auto;right:0;background:linear-gradient(to left,rgba(120,100,60,0.15),rgba(120,100,60,0.04) 50%,transparent 100%);"></div>
+                    ${staticLeftProj.blueprint}
+                    <div class="page-inner-content">
+                        <div class="page-header">
+                            <span>BLUEPRINT ARCHITECTURE</span>
+                            <span>SYS.REV 0.4</span>
+                        </div>
+                        <div class="page-body-blueprint"></div>
+                        <div class="page-footer">
+                            <span>PAGE ${(direction === 'next' ? oldIndex : currentIndex) * 2 + 1}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right static page -->
+                <div class="page-sheet-3d right-static">
+                    <div class="page-crease"></div>
+                    <div class="page-inner-content">
+                        <div class="page-header">
+                            <span>TECHNICAL METRICS</span>
+                            <span>SPEC SHEET</span>
+                        </div>
+                        <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center; gap: 10px; font-family: monospace; font-size: 10px; color: #8b6914; padding: 10px 0;">
+                            <div style="color:#5a4520;">// CONFIG SPECIFICATIONS</div>
+                            ${staticRightProj.specs.map(spec => `<div>&gt; ${spec}</div>`).join('')}
+                        </div>
+                        <div class="page-footer">
+                            <span>PAGE ${(direction === 'next' ? currentIndex : oldIndex) * 2 + 2}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
             // Build a flipping page element with front/back content
             const flipPage = document.createElement('div');
             flipPage.className = 'page-sheet-3d flipping-page';
@@ -3222,22 +3528,31 @@
             flipPage.style.top = '8px';
             flipPage.style.height = 'calc(100% - 16px)';
             flipPage.style.zIndex = 40;
-            flipPage.style.backfaceVisibility = 'hidden';
+
+            const pageClipPath = `polygon(
+                0% 2%, 2% 0%, 98% 0%, 100% 2%, 
+                100% 95%, 99% 96%, 98% 95%, 97% 98%, 95% 97%, 
+                93% 100%, 7% 100%, 5% 98%, 3% 97%, 1% 99%, 0% 98%
+            )`;
+
+            const pageBg = `radial-gradient(circle at 20% 30%, rgba(139, 105, 20, 0.05) 0%, transparent 60%),
+                            radial-gradient(circle at 80% 70%, rgba(90, 69, 32, 0.08) 0%, transparent 60%),
+                            linear-gradient(135deg, #f2e5c4 0%, #eddcae 35%, #e3ce94 75%, #d1ba7b 100%)`;
 
             if (direction === 'next') {
                 flipPage.style.left = '50%';
                 flipPage.style.transformOrigin = 'left center';
                 flipPage.innerHTML = `
-                    <div class="flip-front" style="position:absolute;inset:0;backface-visibility:hidden;padding:20px;overflow:hidden;border-radius:0 8px 8px 0;background:rgba(20,20,20,0.95);border:1px solid rgba(252,179,45,0.18);">
+                    <div class="flip-front" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:20px;overflow:hidden;border-radius:0 8px 8px 0;background:${pageBg};border:1px solid rgba(139, 105, 20, 0.45);color:#8b6914;clip-path:${pageClipPath};box-shadow:inset 0 0 50px rgba(90, 69, 32, 0.22);">
                         <div class="page-header"><span>TECHNICAL METRICS</span><span>SPEC SHEET</span></div>
-                        <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:10px;font-family:monospace;font-size:10px;color:#fcb32d;">
-                            <div>// FLIPPING PROCESS</div>
-                            <div>&gt; SAVING RUNSTATE...</div>
-                            <div>&gt; LOADING NEXT METRICS...</div>
+                        <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:10px;font-family:monospace;font-size:10px;color:#5a4520;">
+                             <div>// FLIPPING PROCESS</div>
+                             <div>&gt; SAVING RUNSTATE...</div>
+                             <div>&gt; LOADING NEXT METRICS...</div>
                         </div>
                         <div class="page-footer"><span>PAGE ${oldIndex * 2 + 2}</span></div>
                     </div>
-                    <div class="flip-back" style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);padding:20px;overflow:hidden;border-radius:8px 0 0 8px;background:rgba(20,20,20,0.95);border:1px solid rgba(252,179,45,0.18);">
+                    <div class="flip-back" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);padding:20px;overflow:hidden;border-radius:8px 0 0 8px;background:${pageBg};border:1px solid rgba(139, 105, 20, 0.45);color:#8b6914;clip-path:${pageClipPath};box-shadow:inset 0 0 50px rgba(90, 69, 32, 0.22);">
                         ${newProj.blueprint}
                         <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;position:relative;z-index:2;">
                             <div class="page-header"><span>BLUEPRINT ARCHITECTURE</span><span>SYS.REV 0.4</span></div>
@@ -3251,7 +3566,7 @@
                 flipPage.style.left = 'auto';
                 flipPage.style.transformOrigin = 'right center';
                 flipPage.innerHTML = `
-                    <div class="flip-front" style="position:absolute;inset:0;backface-visibility:hidden;padding:20px;overflow:hidden;border-radius:8px 0 0 8px;background:rgba(20,20,20,0.95);border:1px solid rgba(252,179,45,0.18);">
+                    <div class="flip-front" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:20px;overflow:hidden;border-radius:8px 0 0 8px;background:${pageBg};border:1px solid rgba(139, 105, 20, 0.45);color:#8b6914;clip-path:${pageClipPath};box-shadow:inset 0 0 50px rgba(90, 69, 32, 0.22);">
                         ${prevProj.blueprint}
                         <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;position:relative;z-index:2;">
                             <div class="page-header"><span>BLUEPRINT ARCHITECTURE</span><span>SYS.REV 0.4</span></div>
@@ -3259,10 +3574,10 @@
                             <div class="page-footer"><span>PAGE ${oldIndex * 2 + 1}</span></div>
                         </div>
                     </div>
-                    <div class="flip-back" style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(-180deg);padding:20px;overflow:hidden;border-radius:0 8px 8px 0;background:rgba(20,20,20,0.95);border:1px solid rgba(252,179,45,0.18);">
+                    <div class="flip-back" style="position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(-180deg);padding:20px;overflow:hidden;border-radius:0 8px 8px 0;background:${pageBg};border:1px solid rgba(139, 105, 20, 0.45);color:#8b6914;clip-path:${pageClipPath};box-shadow:inset 0 0 50px rgba(90, 69, 32, 0.22);">
                         <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;">
                             <div class="page-header"><span>TECHNICAL METRICS</span><span>SPEC SHEET</span></div>
-                            <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:10px;font-family:monospace;font-size:10px;color:#fcb32d;">
+                            <div style="flex-grow:1;display:flex;flex-direction:column;justify-content:center;gap:10px;font-family:monospace;font-size:10px;color:#5a4520;">
                                 <div>// FLIPPING PROCESS</div>
                                 <div>&gt; DECRYPTING CORE...</div>
                                 <div>&gt; RENDERING SCHEMATIC...</div>
@@ -3286,13 +3601,13 @@
                 book3d.style.transform = 'rotateX(52deg) rotateY(-8deg) rotateZ(-2deg) translateY(60px)';
                 // start flip to -180deg
                 requestAnimationFrame(() => {
-                    flipPage.style.transition = 'transform 1.05s cubic-bezier(0.25, 1, 0.5, 1)';
+                    flipPage.style.transition = 'transform 1.25s cubic-bezier(0.35, 0, 0.25, 1)';
                     flipPage.style.transform = 'rotateY(-180deg)';
                 });
             } else {
                 book3d.style.transform = 'rotateX(52deg) rotateY(8deg) rotateZ(2deg) translateY(60px)';
                 requestAnimationFrame(() => {
-                    flipPage.style.transition = 'transform 1.05s cubic-bezier(0.25, 1, 0.5, 1)';
+                    flipPage.style.transition = 'transform 1.25s cubic-bezier(0.35, 0, 0.25, 1)';
                     flipPage.style.transform = 'rotateY(180deg)';
                 });
             }
@@ -3403,6 +3718,57 @@
 
             requestAnimationFrame(tiltLoop);
         })();
+
+        // Fullscreen project image gallery modal
+        function openImageLightbox(proj) {
+            const imgs = Array.isArray(proj.image) ? proj.image : [proj.image];
+            
+            const modal = document.createElement('div');
+            modal.className = 'project-image-modal';
+            
+            const imagesHtml = imgs.map(img => `
+                <div class="modal-image-wrapper">
+                    <img src="${img}" alt="${proj.title}" class="modal-image" />
+                </div>
+            `).join('');
+            
+            modal.innerHTML = `
+                <div class="modal-backdrop"></div>
+                <div class="modal-content-container">
+                    <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                    <div class="modal-header">
+                        <h3>${proj.title} - Project Gallery</h3>
+                    </div>
+                    <div class="modal-grid">
+                        ${imagesHtml}
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Prevent scroll on body while modal is open
+            document.body.style.overflow = 'hidden';
+            
+            const closeModal = () => {
+                modal.classList.add('closing');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            };
+            
+            modal.querySelector('.modal-close-btn').addEventListener('click', closeModal);
+            modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+            
+            const keyHandler = (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    document.removeEventListener('keydown', keyHandler);
+                }
+            };
+            document.addEventListener('keydown', keyHandler);
+        }
 
         // Initialize immediately
         initShowcase();
