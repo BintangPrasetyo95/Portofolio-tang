@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bintang Prastyo</title>
     <meta name="description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing projects and skills.">
+    <!-- <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23000000%22 stroke=%22%23fcb32d%22 stroke-width=%226%22/><text x=%2250%25%22 y=%2267%25%22 font-family=%22Outfit,sans-serif%22 font-size=%2250%22 font-weight=%22800%22 fill=%22%23fcb32d%22 text-anchor=%22middle%22>B</text></svg>"> -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -1747,6 +1748,11 @@
     <script>
     (function () {
         'use strict';
+
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        window.scrollTo(0, 0);
 
         // THEME
         const THEME = {
@@ -3846,18 +3852,20 @@
                 pCtx.fillStyle = this.color + this.alpha + ')';
                 pCtx.fill();
 
-                // Draw a subtle soft glow around brighter particles
-                if (this.alpha > 0.5) {
+                // Draw a subtle soft glow around brighter particles (disabled on mobile for performance)
+                if (!isMobile && this.alpha > 0.7) {
                     pCtx.beginPath();
-                    pCtx.arc(this.x, this.y, this.drawSize * 2.5, 0, Math.PI * 2);
-                    pCtx.fillStyle = this.color + (this.alpha * 0.15) + ')';
+                    pCtx.arc(this.x, this.y, this.drawSize * 2.0, 0, Math.PI * 2);
+                    pCtx.fillStyle = this.color + (this.alpha * 0.1) + ')';
                     pCtx.fill();
                 }
             }
         }
 
-        // Generate initial particles
-        const particleCount = 70;
+        const isMobile = window.innerWidth < 768 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        // Generate initial particles (reduced on mobile)
+        const particleCount = isMobile ? 25 : 70;
         for (let i = 0; i < particleCount; i++) {
             particles.push(new S4Particle());
         }
@@ -3872,6 +3880,7 @@
         function easeLerp(a, b, t) { return a + (b - a) * t; }
 
         s4.addEventListener('mousemove', (e) => {
+            if (isMobile) return;
             const rect = s4.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
@@ -3895,14 +3904,27 @@
         }, { passive: true });
 
         s4.addEventListener('mouseleave', () => {
+            if (isMobile) return;
             mouse.active = false;
             if (isTransitioning) return;
             bookTiltTarget = { x: 54, y: 0, z: 0 };
             cardTiltTarget = { x: 0, y: 0 };
         });
 
+        let section4Visible = false;
+        const s4Observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                section4Visible = entry.isIntersecting;
+            });
+        }, { threshold: 0.001 });
+        if (s4) s4Observer.observe(s4);
+
         // RAF loop to interpolate transforms and apply them once per frame
         (function tiltLoop() {
+            requestAnimationFrame(tiltLoop);
+
+            if (!section4Visible) return;
+
             // Update and render particles
             pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
             for (let i = 0; i < particles.length; i++) {
@@ -3910,8 +3932,8 @@
                 particles[i].draw();
             }
 
-            // Skip all DOM writes while a page flip is running
-            if (!isTransitioning) {
+            // Skip all DOM writes while a page flip is running, and bypass parallax transforms on mobile
+            if (!isTransitioning && !isMobile) {
                 // interpolate towards targets
                 const t = 0.14; // smoothing factor
                 bookTiltCurrent.x = easeLerp(bookTiltCurrent.x, bookTiltTarget.x, t);
@@ -3929,8 +3951,6 @@
                     activeCard.style.transform = `translate3d(0, 0, 50px)`;
                 }
             }
-
-            requestAnimationFrame(tiltLoop);
         })();
 
         // Fullscreen project image gallery modal
