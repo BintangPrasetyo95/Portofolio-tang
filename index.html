@@ -562,6 +562,72 @@
             z-index: 40;
         }
         
+        /* ─── Project Summon-from-Book Keyframes ─── */
+
+        /* Card rises from the RIGHT page (triggered by "next") */
+        @keyframes projectSummonRight {
+            0%   {
+                opacity: 0;
+                transform: translate3d(210px, 188px, -230px) scale(0.2) rotateX(54deg) rotateZ(-16deg);
+                filter: blur(14px);
+            }
+            8%   { opacity: 0.3; }
+            40%  {
+                opacity: 0.85;
+                transform: translate3d(65px, 32px, 5px) scale(0.76) rotateX(13deg) rotateZ(-4deg);
+                filter: blur(3px);
+            }
+            70%  {
+                opacity: 1;
+                transform: translate3d(-10px, -14px, 68px) scale(1.028) rotateX(-2.5deg) rotateZ(0.5deg);
+                filter: blur(0);
+            }
+            85%  { transform: translate3d(4px, 5px, 44px) scale(0.986) rotateX(1.2deg) rotateZ(0deg); }
+            100% { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+        }
+
+        /* Card rises from the LEFT page (triggered by "prev") */
+        @keyframes projectSummonLeft {
+            0%   {
+                opacity: 0;
+                transform: translate3d(-210px, 188px, -230px) scale(0.2) rotateX(54deg) rotateZ(16deg);
+                filter: blur(14px);
+            }
+            8%   { opacity: 0.3; }
+            40%  {
+                opacity: 0.85;
+                transform: translate3d(-65px, 32px, 5px) scale(0.76) rotateX(13deg) rotateZ(4deg);
+                filter: blur(3px);
+            }
+            70%  {
+                opacity: 1;
+                transform: translate3d(10px, -14px, 68px) scale(1.028) rotateX(-2.5deg) rotateZ(-0.5deg);
+                filter: blur(0);
+            }
+            85%  { transform: translate3d(-4px, 5px, 44px) scale(0.986) rotateX(1.2deg) rotateZ(0deg); }
+            100% { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+        }
+
+        /* Card sinks back into the LEFT page (exit on "next") */
+        @keyframes projectSinkLeft {
+            0%   { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+            25%  { transform: translate3d(-25px, 20px, 15px) scale(0.9) rotateX(12deg) rotateZ(-3deg); }
+            100% { opacity: 0; transform: translate3d(-180px, 172px, -215px) scale(0.18) rotateX(54deg) rotateZ(-12deg); filter: blur(14px); }
+        }
+
+        /* Card sinks back into the RIGHT page (exit on "prev") */
+        @keyframes projectSinkRight {
+            0%   { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+            25%  { transform: translate3d(25px, 20px, 15px) scale(0.9) rotateX(12deg) rotateZ(3deg); }
+            100% { opacity: 0; transform: translate3d(180px, 172px, -215px) scale(0.18) rotateX(54deg) rotateZ(12deg); filter: blur(14px); }
+        }
+
+        /* Children rise from the page surface with a slight stagger */
+        @keyframes childRiseUp {
+            from { opacity: 0; transform: translateY(32px) rotateX(8deg); }
+            to   { opacity: 1; transform: translateY(0) rotateX(0deg); }
+        }
+
         .floating-project {
             position: absolute;
             width: 100%;
@@ -572,21 +638,49 @@
             gap: 3.5rem;
             border-radius: 24px;
             transform-style: preserve-3d;
-            transform: translate3d(0, 50px, -100px) rotateX(10deg);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        box-shadow 0.3s ease;
             will-change: transform, opacity;
         }
 
+        /* Entry: next → summons from right page */
+        .floating-project.active.from-right {
+            animation: projectSummonRight 1.08s cubic-bezier(0.16, 1, 0.3, 1) both;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Entry: prev → summons from left page */
+        .floating-project.active.from-left {
+            animation: projectSummonLeft 1.08s cubic-bezier(0.16, 1, 0.3, 1) both;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Fallback active (no direction) */
         .floating-project.active {
             opacity: 1;
             pointer-events: auto;
-            transform: translate3d(0, 0, 50px) rotateX(0deg) rotateY(0deg);
-            transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        box-shadow 0.3s ease;
+        }
+
+        /* Exit: next → old card sinks toward left page */
+        .floating-project.exiting-next {
+            animation: projectSinkLeft 0.62s cubic-bezier(0.4, 0, 0.8, 0.6) forwards;
+            pointer-events: none;
+        }
+
+        /* Exit: prev → old card sinks toward right page */
+        .floating-project.exiting-prev {
+            animation: projectSinkRight 0.62s cubic-bezier(0.4, 0, 0.8, 0.6) forwards;
+            pointer-events: none;
+        }
+
+        /* Children rise up with slight stagger on summon */
+        .floating-project.active .project-image-box {
+            animation: childRiseUp 0.78s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
+        }
+        .floating-project.active .project-details-box {
+            animation: childRiseUp 0.78s cubic-bezier(0.16, 1, 0.3, 1) 0.26s both;
         }
 
         .project-image-box {
@@ -1589,6 +1683,9 @@
                 <!-- Section 4: 3D Book & Projects Showcase -->
                 <section class="section" id="section-4" style="width: 100vw; height: 100vh; position: relative; display: flex; justify-content: center; align-items: center; overflow: hidden; flex-shrink: 0;">
                     
+                    <!-- Canvas particles behind -->
+                    <canvas id="section-4-particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></canvas>
+
                     <!-- Ambient bottom glow -->
                     <div class="s4-ambient-glow"></div>
                     
@@ -3300,7 +3397,7 @@
             projects.forEach((proj, idx) => {
                 // Floating Card HTML
                 const card = document.createElement('div');
-                card.className = `floating-project ${idx === currentIndex ? 'active' : ''}`;
+                card.className = `floating-project ${idx === currentIndex ? 'active from-right' : ''}`;
                 card.dataset.index = idx;
                 
                 const techTagsHtml = proj.tech.map(t => {
@@ -3415,6 +3512,7 @@
             });
 
             updateBookPages();
+            cardEnteringUntil = Date.now() + 1100; // let first card's entry animation play uninterrupted
         }
 
         // Setup static left and right pages (cream palette)
@@ -3612,12 +3710,24 @@
                 });
             }
 
-            // Update cards visibility
+            // Update cards visibility — trigger directional exit on the leaving card
             const cards = showcase.querySelectorAll('.floating-project');
-            cards.forEach(c => c.classList.remove('active'));
+            const exitingCard = showcase.querySelector('.floating-project.active');
+            if (exitingCard) {
+                exitingCard.style.transform = ''; // clear tilt-loop inline style so CSS animation runs
+                exitingCard.classList.add(`exiting-${direction}`);
+                setTimeout(() => exitingCard.classList.remove(`exiting-${direction}`), 700);
+            }
+            cards.forEach(c => c.classList.remove('active', 'from-left', 'from-right'));
             const activateCard = () => {
                 const card = showcase.querySelector(`.floating-project[data-index="${currentIndex}"]`);
-                if (card) card.classList.add('active');
+                if (card) {
+                    card.style.transform = ''; // clear any stale inline style
+                    // next → card rises from right page; prev → from left page
+                    const enterClass = direction === 'next' ? 'from-right' : 'from-left';
+                    card.classList.add('active', enterClass);
+                    cardEnteringUntil = Date.now() + 1150; // block tilt loop during entry animation
+                }
             };
 
             // Cleanup after transition
@@ -3660,22 +3770,118 @@
             goToProject(targetIdx, 'next');
         });
 
-        // Mouse Parallax in Section 4 (throttled via RAF loop)
+        // Mouse Parallax & Particles in Section 4 (throttled via RAF loop)
         const s4 = document.getElementById('section-4');
+        const pCanvas = document.getElementById('section-4-particles');
+        const pCtx = pCanvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, active: false };
+
+        function resizeParticlesCanvas() {
+            if (!pCanvas) return;
+            pCanvas.width = s4.clientWidth;
+            pCanvas.height = s4.clientHeight;
+        }
+        window.addEventListener('resize', resizeParticlesCanvas);
+        resizeParticlesCanvas();
+
+        class S4Particle {
+            constructor() {
+                this.reset(true);
+            }
+
+            reset(init = false) {
+                this.x = Math.random() * pCanvas.width;
+                this.y = init ? Math.random() * pCanvas.height : pCanvas.height + 10;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = -(Math.random() * 0.7 + 0.3); // drift up slowly
+                this.size = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.4 + 0.15;
+                this.baseAlpha = this.alpha;
+                // Amber/gold hue range: 35 to 48
+                const hue = 35 + Math.random() * 13;
+                const sat = 90 + Math.random() * 10;
+                const light = 50 + Math.random() * 18;
+                this.color = `hsla(${hue}, ${sat}%, ${light}%, `;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Mouse interaction: glow brighter and sway/attract when near cursor
+                if (mouse.active) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const maxDist = 220;
+
+                    if (dist < maxDist) {
+                        const intensity = (1 - dist / maxDist);
+                        this.alpha = Math.min(1.0, this.baseAlpha + intensity * 0.8);
+                        
+                        // Gentle pull towards or push away (let's do a gentle pull/sway)
+                        const force = (maxDist - dist) / maxDist;
+                        this.x += (dx / dist) * force * 0.7;
+                        this.y += (dy / dist) * force * 0.7;
+                        this.drawSize = this.size * (1 + intensity * 0.7);
+                    } else {
+                        this.alpha = this.baseAlpha;
+                        this.drawSize = this.size;
+                    }
+                } else {
+                    this.alpha = this.baseAlpha;
+                    this.drawSize = this.size;
+                }
+
+                // Reset when out of screen bounds
+                if (this.y < -10 || this.x < -10 || this.x > pCanvas.width + 10) {
+                    this.reset(false);
+                }
+            }
+
+            draw() {
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.drawSize, 0, Math.PI * 2);
+                pCtx.fillStyle = this.color + this.alpha + ')';
+                pCtx.fill();
+
+                // Draw a subtle soft glow around brighter particles
+                if (this.alpha > 0.5) {
+                    pCtx.beginPath();
+                    pCtx.arc(this.x, this.y, this.drawSize * 2.5, 0, Math.PI * 2);
+                    pCtx.fillStyle = this.color + (this.alpha * 0.15) + ')';
+                    pCtx.fill();
+                }
+            }
+        }
+
+        // Generate initial particles
+        const particleCount = 70;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new S4Particle());
+        }
 
         // Targets and current state for smooth interpolation
         let bookTiltTarget = { x: 54, y: 0, z: 0 };
         let bookTiltCurrent = { x: 54, y: 0, z: 0 };
         let cardTiltTarget = { x: 0, y: 0 };
         let cardTiltCurrent = { x: 0, y: 0 };
+        let cardEnteringUntil = 0; // timestamp — tilt loop skips inline style writes during entry animation
 
         function easeLerp(a, b, t) { return a + (b - a) * t; }
 
         s4.addEventListener('mousemove', (e) => {
-            if (isTransitioning) return;
             const rect = s4.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
+            
+            // Update mouse tracking for particles
+            mouse.x = x;
+            mouse.y = y;
+            mouse.active = true;
+
+            if (isTransitioning) return;
             const xOffset = (x / rect.width) - 0.5;
             const yOffset = (y / rect.height) - 0.5;
 
@@ -3689,6 +3895,7 @@
         }, { passive: true });
 
         s4.addEventListener('mouseleave', () => {
+            mouse.active = false;
             if (isTransitioning) return;
             bookTiltTarget = { x: 54, y: 0, z: 0 };
             cardTiltTarget = { x: 0, y: 0 };
@@ -3696,6 +3903,13 @@
 
         // RAF loop to interpolate transforms and apply them once per frame
         (function tiltLoop() {
+            // Update and render particles
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+
             // Skip all DOM writes while a page flip is running
             if (!isTransitioning) {
                 // interpolate towards targets
@@ -3711,7 +3925,7 @@
                 book3d.style.transform = `rotateX(${bookTiltCurrent.x}deg) rotateY(${bookTiltCurrent.y}deg) rotateZ(${bookTiltCurrent.z}deg) translateY(60px)`;
 
                 const activeCard = showcase.querySelector('.floating-project.active');
-                if (activeCard) {
+                if (activeCard && Date.now() > cardEnteringUntil) {
                     activeCard.style.transform = `translate3d(0, 0, 50px)`;
                 }
             }
