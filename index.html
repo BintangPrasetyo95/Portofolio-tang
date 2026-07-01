@@ -2248,8 +2248,10 @@
             s1Pos: { xPerc: -0.6, yPerc: 0.28 }, 
             s2Pos: { xPerc: -0.6, yPerc: 0.28 }, 
             s3Pos: { xPerc: -0.05, yPerc: 0.28 }, 
+            s4Pos: { xPerc: -0.2, yPerc: 0.15 }, 
             s1Scale: 0.0, 
             s2Scale: 0.0,
+            s4Scale: 0.8,
             distance: 9.0, 
             driftAmp: 0.15 
         };
@@ -2257,8 +2259,10 @@
             s1Pos: { xPerc: -0.3, yPerc: -0.3 }, 
             s2Pos: { xPerc: -0.3, yPerc: -0.3 }, 
             s3Pos: { xPerc: 0.28, yPerc: 0.35 }, 
+            s4Pos: { xPerc: 0.1, yPerc: 0.8 }, 
             s1Scale: 0.0, 
             s2Scale: 0.0,
+            s4Scale: 1.0,
             distance: 10.0, 
             driftAmp: 0.2 
         };
@@ -2266,8 +2270,10 @@
             s1Pos: { xPerc: 1.4, yPerc: -0.2 }, 
             s2Pos: { xPerc: 0.88, yPerc: 0.12 }, 
             s3Pos: { xPerc: 0.52, yPerc: 0.64 }, 
+            s4Pos: { xPerc: 0.85, yPerc: 0.85 }, 
             s1Scale: 0.0, 
             s2Scale: 0.15,
+            s4Scale: 1.0,
             distance: 9.0, 
             driftAmp: 0.12 
         };
@@ -2275,8 +2281,10 @@
             s1Pos: { xPerc: 1.5, yPerc: 0.05 }, 
             s2Pos: { xPerc: 0.86, yPerc: 0.15 }, 
             s3Pos: { xPerc: 0.86, yPerc: 0.28 }, 
+            s4Pos: { xPerc: 1.1, yPerc: 0.15 }, 
             s1Scale: 0.0, 
             s2Scale: 0.7,
+            s4Scale: 1.0,
             distance: 9.0, 
             driftAmp: 0.18 
         };
@@ -2284,8 +2292,10 @@
             s1Pos: { xPerc: 0.26, yPerc: 1.6 }, 
             s2Pos: { xPerc: 0.26, yPerc: 1.6 }, 
             s3Pos: { xPerc: 0.26, yPerc: 0.76 }, 
+            s4Pos: { xPerc: 0.05, yPerc: 0.85 }, 
             s1Scale: 0.0, 
             s2Scale: 0.0,
+            s4Scale: 0.9,
             distance: 9.5, 
             driftAmp: 0.25 
         };
@@ -2293,8 +2303,10 @@
             s1Pos: { xPerc: 1.4, yPerc: 0.3 }, 
             s2Pos: { xPerc: 0.90, yPerc: 0.22 }, 
             s3Pos: { xPerc: 0.81, yPerc: 0.68 }, 
+            s4Pos: { xPerc: 0.9, yPerc: 0.7 }, 
             s1Scale: 0.0, 
             s2Scale: 0.3,
+            s4Scale: 1.0,
             distance: 9.5, 
             driftAmp: 0.2 
         };
@@ -2302,8 +2314,10 @@
             s1Pos: { xPerc: -0.3, yPerc: 0.53 }, 
             s2Pos: { xPerc: -0.3, yPerc: 0.53 }, 
             s3Pos: { xPerc: 0.18, yPerc: 0.53 }, 
+            s4Pos: { xPerc: 0.15, yPerc: 0.4 }, 
             s1Scale: 0.0, 
             s2Scale: 0.0,
+            s4Scale: 1.0,
             distance: 10.0, 
             driftAmp: 0.3 
         };
@@ -2311,8 +2325,10 @@
             s1Pos: { xPerc: 1.3, yPerc: -0.1 }, 
             s2Pos: { xPerc: 0.82, yPerc: 0.08 }, 
             s3Pos: { xPerc: 0.63, yPerc: 0.16 }, 
+            s4Pos: { xPerc: 0.8, yPerc: 0.05 }, 
             s1Scale: 0.0, 
             s2Scale: 0.9,
+            s4Scale: 1.0,
             distance: 10.5, 
             driftAmp: 0.35 
         };
@@ -2320,8 +2336,10 @@
             s1Pos: { xPerc: 1.3, yPerc: 0.66 }, 
             s2Pos: { xPerc: 1.3, yPerc: 0.66 }, 
             s3Pos: { xPerc: 0.70, yPerc: 0.66 }, 
+            s4Pos: { xPerc: 0.9, yPerc: 0.8 }, 
             s1Scale: 0.0, 
             s2Scale: 0.0,
+            s4Scale: 1.0,
             distance: 10.2, 
             driftAmp: 0.28 
         };
@@ -2375,6 +2393,7 @@
             // Lerp current scroll progresses towards target scroll progresses for inertia ("brakes" effect) - Snappier
             bubblePhase1Progress = THREE.MathUtils.lerp(bubblePhase1Progress, targetPhase1Progress, 0.14);
             bubblePhase2Progress = THREE.MathUtils.lerp(bubblePhase2Progress, targetPhase2Progress, 0.14);
+            bubblePhase3Progress = THREE.MathUtils.lerp(bubblePhase3Progress, targetPhase3Progress, 0.14);
             bubbleStickyProgress = THREE.MathUtils.lerp(bubbleStickyProgress, targetStickyProgress, 0.14);
 
             // Restore constant transmission defaults
@@ -2401,7 +2420,9 @@
 
             // Calculate ribbon extension progress (starts after 50% scroll through Phase 2 / Section 2)
             let ribbonProgress = 0;
-            if (bubblePhase2Progress > 0.5) {
+            if (bubblePhase3Progress > 0) {
+                ribbonProgress = 1.0 - bubblePhase3Progress;
+            } else if (bubblePhase2Progress > 0.5) {
                 ribbonProgress = (bubblePhase2Progress - 0.5) / 0.5;
             }
 
@@ -2420,16 +2441,21 @@
                 const t = now * 0.5 + idx * 0.5;
                 
                 let xPerc, yPerc, currentScale;
-                if (bubblePhase2Progress === 0) {
-                    // Phase 1 scroll transition (Section 1 -> Section 2)
-                    xPerc = THREE.MathUtils.lerp(ud.s1Pos.xPerc, ud.s2Pos.xPerc, bubblePhase1Progress);
-                    yPerc = THREE.MathUtils.lerp(ud.s1Pos.yPerc, ud.s2Pos.yPerc, bubblePhase1Progress);
-                    currentScale = THREE.MathUtils.lerp(ud.s1Scale, ud.s2Scale, bubblePhase1Progress);
-                } else {
+                if (bubblePhase3Progress > 0) {
+                    // Phase 3 scroll transition (Section 3 -> Section 4)
+                    xPerc = THREE.MathUtils.lerp(ud.s3Pos.xPerc, ud.s4Pos.xPerc, bubblePhase3Progress);
+                    yPerc = THREE.MathUtils.lerp(ud.s3Pos.yPerc, ud.s4Pos.yPerc, bubblePhase3Progress);
+                    currentScale = THREE.MathUtils.lerp(1.0, ud.s4Scale, bubblePhase3Progress);
+                } else if (bubblePhase2Progress > 0) {
                     // Phase 2 scroll transition (Section 2 -> Section 3)
                     xPerc = THREE.MathUtils.lerp(ud.s2Pos.xPerc, ud.s3Pos.xPerc, bubblePhase2Progress);
                     yPerc = THREE.MathUtils.lerp(ud.s2Pos.yPerc, ud.s3Pos.yPerc, bubblePhase2Progress);
                     currentScale = THREE.MathUtils.lerp(ud.s2Scale, 1.0, bubblePhase2Progress);
+                } else {
+                    // Phase 1 scroll transition (Section 1 -> Section 2)
+                    xPerc = THREE.MathUtils.lerp(ud.s1Pos.xPerc, ud.s2Pos.xPerc, bubblePhase1Progress);
+                    yPerc = THREE.MathUtils.lerp(ud.s1Pos.yPerc, ud.s2Pos.yPerc, bubblePhase1Progress);
+                    currentScale = THREE.MathUtils.lerp(ud.s1Scale, ud.s2Scale, bubblePhase1Progress);
                 }
                 
                 mesh.scale.setScalar(currentScale);
@@ -2764,8 +2790,10 @@
         let scrollProgress = 0;
         let bubblePhase1Progress = 0; // current smoothed progress (lerped)
         let bubblePhase2Progress = 0; // current smoothed progress (lerped)
+        let bubblePhase3Progress = 0; // current smoothed progress (lerped)
         let targetPhase1Progress = 0; // target based on scroll position
         let targetPhase2Progress = 0; // target based on scroll position
+        let targetPhase3Progress = 0; // target based on scroll position
         let loadingDone = false;      // true once loading+transition completes
         let bubbleStickyProgress = 0; // current smoothed progress of section 2 sticky phase (lerped)
         let targetStickyProgress = 0; // target based on scroll position
@@ -2873,6 +2901,8 @@
                     horizontalProgress = Math.min((scrollY - wrapTop) / scrollRange, 1.0);
                 }
                 
+                targetPhase3Progress = horizontalProgress;
+                
                 const strip = document.getElementById('horizontal-strip');
                 if (strip) {
                     strip.style.transform = `translateX(${-horizontalProgress * 100}vw)`;
@@ -2880,7 +2910,8 @@
 
                 const bCanvas = document.getElementById('bubbleCanvas');
                 if (bCanvas) {
-                    bCanvas.style.transform = `translateX(${-horizontalProgress * 100}vw)`;
+                    // Keep bubbleCanvas stationary so 3D assets span across Section 3 & 4
+                    bCanvas.style.transform = 'none';
                 }
             }
         }
