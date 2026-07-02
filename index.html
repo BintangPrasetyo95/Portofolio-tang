@@ -994,12 +994,37 @@
             transform: translateY(-1px);
         }
 
-        .subproject-list {
+        .subproject-scroll-wrapper {
             margin: 1rem 0 0;
+            width: 100%;
+            max-height: 90px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #fcb32d transparent;
+            pointer-events: auto;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .subproject-scroll-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        .subproject-scroll-wrapper::-webkit-scrollbar-thumb {
+            background-color: #fcb32d;
+            border-radius: 4px;
+        }
+        .subproject-scroll-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .subproject-list {
             padding: 0;
+            margin: 0;
             list-style: none;
             opacity: 1;
-            max-height: none;
+            padding-right: 0.5rem;
         }
 
 
@@ -3390,6 +3415,34 @@
                     "SYSTEMS: Library, SPP payment, inventory management",
                     "AUTHENTIC: built without AI generation"
                 ]
+            },
+            {
+                title: "Fun Projects",
+                description: "A collection of various fun and experimental projects.",
+                image: ["images/Fun-Projects/shrinker.png", "images/Fun-Projects/nametag.png", "images/Fun-Projects/statue.png", "images/Fun-Projects/backrooms.png"],
+                url: "#",
+                disabled: false,
+                hideButton: true,
+                tech: ["HTML5", "CSS", "JavaScript"],
+                subProjects: [
+                    { title: "BintangPrasetyo95's Shrinker", url: "https://bintangprasetyo95.github.io/PDFnDOCX-Compressor/" },
+                    { title: "Custom Nametags", url: "https://github.com/BintangPrasetyo95/Modern-Nametag-B4" },
+                    { title: "Three Js Experiment", url: "https://github.com/BintangPrasetyo95/Three-JS-Test" },
+                    { title: "SMKN 3 Metro Website Overhaul", url: "https://bintangprasetyo95.github.io/smkn3metro-overhauled/" },
+                    { title: "2 Days Landing Page Development", url: "https://bintangprasetyo95.github.io/Landing-Page-Experiment/" }
+                ],
+                blueprint: `<svg class="page-blueprint" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#fcb32d" stroke-width="0.75" stroke-dasharray="4 4" />
+                    <circle cx="50" cy="50" r="20" fill="none" stroke="#fcb32d" stroke-width="0.5" />
+                    <line x1="10" y1="50" x2="90" y2="50" stroke="#fcb32d" stroke-width="0.25" />
+                    <line x1="50" y1="10" x2="50" y2="90" stroke="#fcb32d" stroke-width="0.25" />
+                </svg>`,
+                specs: [
+                    "TYPE: Various Experiments",
+                    "FOCUS: Web & Fun",
+                    "CATEGORY: Experimental",
+                    "STATUS: Ongoing"
+                ]
             }
         ];
 
@@ -3456,9 +3509,11 @@
                         : `<a href="${proj.url}" target="_blank" rel="noreferrer noopener" class="see-now-btn active">See Now</a>`;
 
                 const subProjectHtml = hasSubProjects
-                    ? `<ul class="subproject-list open" aria-hidden="false">
-                            ${proj.subProjects.map(sub => `<li><a href="${sub.url}" target="_blank" rel="noreferrer noopener">${sub.title}</a></li>`).join('')}
-                        </ul>`
+                    ? `<div class="subproject-scroll-wrapper" data-lenis-prevent>
+                            <ul class="subproject-list open" aria-hidden="false">
+                                ${proj.subProjects.map(sub => `<li><a href="${sub.url}" target="_blank" rel="noreferrer noopener">${sub.title}</a></li>`).join('')}
+                            </ul>
+                        </div>`
                     : '';
 
                 let imageHtml = '';
@@ -3467,16 +3522,16 @@
                         imageHtml = `
                             <div class="split-image-container split-four">
                                 <div class="split-quad">
-                                    <img src="${proj.image[0]}" alt="${proj.title} - UKK">
+                                    <img src="${proj.image[0]}" alt="${proj.title} Image 1">
                                 </div>
                                 <div class="split-quad">
-                                    <img src="${proj.image[1]}" alt="${proj.title} - Perpustakaan">
+                                    <img src="${proj.image[1]}" alt="${proj.title} Image 2">
                                 </div>
                                 <div class="split-quad">
-                                    <img src="${proj.image[2]}" alt="${proj.title} - Pembayaran SPP">
+                                    <img src="${proj.image[2]}" alt="${proj.title} Image 3">
                                 </div>
                                 <div class="split-quad">
-                                    <img src="${proj.image[3]}" alt="${proj.title} - Inventaris Barang">
+                                    <img src="${proj.image[3]}" alt="${proj.title} Image 4">
                                 </div>
                             </div>
                         `;
