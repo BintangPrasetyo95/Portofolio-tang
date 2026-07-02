@@ -1765,7 +1765,22 @@
         </div>
     </div>
 
+    <!-- Section 5: 3D Door Transition -->
+    <div id="section-5-wrap" style="height: 150vh; position: relative; background: transparent; z-index: 4;">
+        <div id="section-5-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: hidden; perspective: 1500px; z-index: 5; pointer-events: none;">
+            
+            <!-- Left Door -->
+            <div id="s5-door-left" style="position: absolute; top: 0; left: 0; width: 50vw; height: 100vh; background: var(--accent); transform-origin: left; transform: rotateY(-90deg); overflow: hidden; border-right: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
+                <h2 style="position: absolute; width: 100vw; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Section 5</h2>
+            </div>
+            
+            <!-- Right Door -->
+            <div id="s5-door-right" style="position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
+                <h2 style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Section 5</h2>
+            </div>
 
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
@@ -2937,6 +2952,32 @@
                 if (bCanvas) {
                     // Keep bubbleCanvas stationary so 3D assets span across Section 3 & 4
                     bCanvas.style.transform = 'none';
+                }
+            }
+
+            // Section 5 3D Door Closing
+            const wrap5 = document.getElementById('section-5-wrap');
+            if (wrap5) {
+                const wrapTop = wrap5.offsetTop;
+                const wrapHeight = wrap5.offsetHeight;
+                const scrollRange = wrapHeight - viewHeight;
+                let doorProgress = 0;
+                
+                if (scrollY > wrapTop) {
+                    doorProgress = Math.min((scrollY - wrapTop) / scrollRange, 1.0);
+                } else if (scrollY <= wrapTop) {
+                    doorProgress = 0;
+                }
+                
+                const leftDoor = document.getElementById('s5-door-left');
+                const rightDoor = document.getElementById('s5-door-right');
+
+                if (leftDoor && rightDoor) {
+                    // Doors start at -90deg and 90deg, and close to 0deg
+                    const leftAngle = -90 + (doorProgress * 90);
+                    const rightAngle = 90 - (doorProgress * 90);
+                    leftDoor.style.transform = `rotateY(${leftAngle}deg)`;
+                    rightDoor.style.transform = `rotateY(${rightAngle}deg)`;
                 }
             }
         }
