@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bintang Prastyo</title>
     <meta name="description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing projects and skills.">
-    <!-- <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23000000%22 stroke=%22%23fcb32d%22 stroke-width=%226%22/><text x=%2250%25%22 y=%2267%25%22 font-family=%22Outfit,sans-serif%22 font-size=%2250%22 font-weight=%22800%22 fill=%22%23fcb32d%22 text-anchor=%22middle%22>B</text></svg>"> -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23000000%22 stroke=%22%23fcb32d%22 stroke-width=%226%22/><text x=%2250%25%22 y=%2267%25%22 font-family=%22Outfit,sans-serif%22 font-size=%2250%22 font-weight=%22800%22 fill=%22%23fcb32d%22 text-anchor=%22middle%22>B</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -423,6 +423,18 @@
             transform: translateX(4px);
             background: rgba(255, 255, 255, 0.07);
             border-color: rgba(255, 255, 255, 0.14);
+        }
+
+        .social-header.dark-mode .social-link {
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            color: #000;
+        }
+
+        .social-header.dark-mode .social-link:hover,
+        .social-header.dark-mode .social-link:focus-visible {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: rgba(0, 0, 0, 0.6);
         }
 
         .social-link svg {
@@ -1619,23 +1631,6 @@
 
     <canvas id="bubbleCanvas"></canvas>
 
-    <div class="social-header" aria-label="Social header links">
-        <a class="social-link" href="https://www.instagram.com/bintangprasetyo95/" target="_blank" rel="noreferrer noopener" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5Zm8.5 2.5a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75Zm-4.25 1.25a4.75 4.75 0 1 1 0 9.5 4.75 4.75 0 0 1 0-9.5Zm0 1.5a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z"/>
-            </svg>
-        </a>
-        <a class="social-link" href="https://www.linkedin.com/in/bintang-prasetyo-kusumo-wicaksono-b104012b6/" target="_blank" rel="noreferrer noopener" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6.94 6.58a1.74 1.74 0 1 0 0-3.48 1.74 1.74 0 0 0 0 3.48Zm.04 1.98H4V20h2.98V8.56Zm5.88 0H9.88V20h2.98v-6.02c0-1.42.25-2.78 2.02-2.78 1.76 0 1.78 1.7 1.78 2.86V20h2.98v-6.52c0-3.5-.75-6.24-4.78-6.24-1.98 0-3.24 1.08-3.78 2.32h.04Z"/>
-            </svg>
-        </a>
-        <a class="social-link" href="https://github.com/BintangPrasetyo95" target="_blank" rel="noreferrer noopener" aria-label="GitHub">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.69c-2.78.61-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1.01.07 1.54 1.03 1.54 1.03.9 1.54 2.36 1.1 2.94.84.09-.66.35-1.1.64-1.35-2.22-.25-4.56-1.11-4.56-4.96 0-1.1.39-2 .1-2.7 0 0 .82-.26 2.7 1.03A9.4 9.4 0 0 1 12 7.3c.83.01 1.67.11 2.45.32 1.87-1.29 2.69-1.03 2.69-1.03.49 1.34.18 2.34.09 2.58.61.35 1.04.99 1.04 2.1 0 3.86-2.34 4.71-4.57 4.96.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>
-            </svg>
-        </a>
-    </div>
 
     <!-- Section 1: 3D Cutout -->
     <section class="section" id="section-1">
@@ -1696,8 +1691,8 @@
         </section>
     </div>
 
-    <!-- Section 3 & 4 Wrapper (provides height for sticky horizontal transition) -->
-    <div id="section-3-4-wrap" style="height: 250vh; position: relative; background: #000000;">
+    <!-- Section 3, 4 & 5 Wrapper (provides height for sticky horizontal transition + S5 doors) -->
+    <div id="section-3-4-wrap" style="height: 450vh; position: relative; background: #000000;">
         <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: visible; z-index: 3;">
             <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh; transition: transform 0.1s ease-out;">
 
@@ -1759,27 +1754,25 @@
                     
                     <!-- Pagination Indicator Dots -->
                     <div class="project-pagination" id="projectPagination"></div>
-                </section>
-
             </div>
         </div>
-    </div>
-
-    <!-- Section 5: 3D Door Transition -->
-    <div id="section-5-wrap" style="height: 150vh; position: relative; background: transparent; z-index: 4;">
-        <div id="section-5-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: hidden; perspective: 1500px; z-index: 5; pointer-events: none;">
-            
+        
+        <!-- Section 5: 3D Door Transition (Overlay) -->
+        <div id="section-5-overlay" style="position: sticky; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; perspective: 1500px; z-index: 10; pointer-events: none;">
             <!-- Left Door -->
             <div id="s5-door-left" style="position: absolute; top: 0; left: 0; width: 50vw; height: 100vh; background: var(--accent); transform-origin: left; transform: rotateY(-90deg); overflow: hidden; border-right: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
-                <h2 style="position: absolute; width: 100vw; right: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Section 5</h2>
+                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Things i did</h2>
             </div>
             
             <!-- Right Door -->
             <div id="s5-door-right" style="position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
-                <h2 style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Section 5</h2>
+                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Things i did</h2>
             </div>
-
+            
+            <!-- Black Vertical Line -->
+            <div id="s5-black-line" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 0px; height: 100vh; background: #000; pointer-events: none; z-index: 10;"></div>
         </div>
+        
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -2918,27 +2911,16 @@
                 targetStickyProgress = 1;
             }
 
-            // Social header transitions (Top center sliding header)
-            const socialHeader = document.querySelector('.social-header');
-            if (socialHeader) {
-                // Slides down from the top and becomes visible once Section 2 ends
-                if (scrollY >= stickyEnd - 20) {
-                    socialHeader.classList.add('visible');
-                } else {
-                    socialHeader.classList.remove('visible');
-                }
-            }
-
-            // Section 3-4 Horizontal Sticky Slide
+            // Section 3-4-5 Unified Sequence
             const wrap34 = document.getElementById('section-3-4-wrap');
             if (wrap34) {
                 const wrapTop = wrap34.offsetTop;
-                const wrapHeight = wrap34.offsetHeight;
-                const scrollRange = wrapHeight - viewHeight;
-                let horizontalProgress = 0;
                 
+                // Stage 1: Horizontal slide takes 150vh
+                const horizontalScrollRange = 1.5 * viewHeight;
+                let horizontalProgress = 0;
                 if (scrollY > wrapTop) {
-                    horizontalProgress = Math.min((scrollY - wrapTop) / scrollRange, 1.0);
+                    horizontalProgress = Math.min((scrollY - wrapTop) / horizontalScrollRange, 1.0);
                 }
                 
                 targetPhase3Progress = horizontalProgress;
@@ -2950,34 +2932,48 @@
 
                 const bCanvas = document.getElementById('bubbleCanvas');
                 if (bCanvas) {
-                    // Keep bubbleCanvas stationary so 3D assets span across Section 3 & 4
+                    // Keep bubbleCanvas stationary
                     bCanvas.style.transform = 'none';
                 }
-            }
 
-            // Section 5 3D Door Closing
-            const wrap5 = document.getElementById('section-5-wrap');
-            if (wrap5) {
-                const wrapTop = wrap5.offsetTop;
-                const wrapHeight = wrap5.offsetHeight;
-                const scrollRange = wrapHeight - viewHeight;
+                // Stage 2: Section 5 Animations trigger AFTER horizontal slide
+                let s5Scroll = scrollY - (wrapTop + horizontalScrollRange);
                 let doorProgress = 0;
-                
-                if (scrollY > wrapTop) {
-                    doorProgress = Math.min((scrollY - wrapTop) / scrollRange, 1.0);
-                } else if (scrollY <= wrapTop) {
-                    doorProgress = 0;
+                let textProgress = 0;
+                let lineProgress = 0;
+
+                if (s5Scroll > 0) {
+                    // Phase 1 (0-50vh): Doors close
+                    doorProgress = Math.min(s5Scroll / (0.5 * viewHeight), 1.0);
+                    // Phase 2 (50-100vh): Stuck time (50vh delay where nothing happens)
+                    // Phase 3 (100-150vh): Text moves to center and fades
+                    textProgress = Math.max(0, Math.min((s5Scroll - 1.0 * viewHeight) / (0.5 * viewHeight), 1.0));
+                    // Phase 4 (150-200vh): Black vertical line expands
+                    lineProgress = Math.max(0, Math.min((s5Scroll - 1.5 * viewHeight) / (0.5 * viewHeight), 1.0));
                 }
                 
                 const leftDoor = document.getElementById('s5-door-left');
                 const rightDoor = document.getElementById('s5-door-right');
+                const textLeft = document.getElementById('s5-text-left');
+                const textRight = document.getElementById('s5-text-right');
+                const blackLine = document.getElementById('s5-black-line');
 
                 if (leftDoor && rightDoor) {
-                    // Doors start at -90deg and 90deg, and close to 0deg
                     const leftAngle = -90 + (doorProgress * 90);
                     const rightAngle = 90 - (doorProgress * 90);
                     leftDoor.style.transform = `rotateY(${leftAngle}deg)`;
                     rightDoor.style.transform = `rotateY(${rightAngle}deg)`;
+                }
+
+                if (textLeft && textRight) {
+                    textLeft.style.transform = `translateY(-50%) translateX(${textProgress * 30}vw)`;
+                    textRight.style.transform = `translateY(-50%) translateX(${-textProgress * 30}vw)`;
+                    textLeft.style.opacity = 1 - textProgress;
+                    textRight.style.opacity = 1 - textProgress;
+                }
+
+                if (blackLine) {
+                    blackLine.style.width = `${lineProgress * 2}vw`;
                 }
             }
         }
