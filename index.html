@@ -1579,17 +1579,17 @@
         <!-- Section 5: 3D Door Transition (Overlay) -->
         <div id="section-5-overlay" style="position: sticky; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; perspective: 1500px; z-index: 10; pointer-events: none;">
             <!-- Left Door -->
-            <div id="s5-door-left" style="position: absolute; top: 0; left: 0; width: 50vw; height: 100vh; background: var(--accent); transform-origin: left; transform: rotateY(-90deg); overflow: hidden; border-right: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
-                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Experiences</h2>
+            <div id="s5-door-left" style="opacity: 0.999; position: absolute; top: 0; left: 0; width: 50vw; height: 100vh; background: var(--accent); transform-origin: left; transform: rotateY(-90deg); overflow: hidden; border-right: 1px solid rgba(0,0,0,0.2); pointer-events: none; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;">
+                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
             </div>
             
             <!-- Right Door -->
-            <div id="s5-door-right" style="position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
-                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Experiences</h2>
+            <div id="s5-door-right" style="opacity: 0.999; position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: none; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;">
+                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
             </div>
             
             <!-- Black Vertical Line -->
-            <div id="s5-black-line" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 0px; height: 100vh; background: #000; pointer-events: none; z-index: 10;"></div>
+            <div id="s5-black-line" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleX(0); transform-origin: center; width: 2vw; height: 100vh; background: #000; pointer-events: none; z-index: 10; will-change: transform;"></div>
         </div>
         
     </div>
@@ -2767,13 +2767,22 @@
                 let lineProgress = 0;
 
                 if (s5Scroll > 0) {
-                    // Phase 1 (0-50vh): Doors close
-                    doorProgress = Math.min(s5Scroll / (0.5 * viewHeight), 1.0);
-                    // Phase 2 (50-100vh): Stuck time (50vh delay where nothing happens)
-                    // Phase 3 (100-150vh): Text moves to center and fades
-                    textProgress = Math.max(0, Math.min((s5Scroll - 1.0 * viewHeight) / (0.5 * viewHeight), 1.0));
-                    // Phase 4 (150-200vh): Black vertical line expands
-                    lineProgress = Math.max(0, Math.min((s5Scroll - 1.5 * viewHeight) / (0.5 * viewHeight), 1.0));
+                    const showcase = document.getElementById('projectShowcase');
+                    if (showcase && showcase.style.pointerEvents !== 'none') {
+                        showcase.style.pointerEvents = 'none';
+                    }
+                    
+                    // Phase 1 (0-100vh): Doors close
+                    doorProgress = Math.min(s5Scroll / (1.0 * viewHeight), 1.0);
+                    // Phase 2 (100-200vh): Text moves to center and fades
+                    textProgress = Math.max(0, Math.min((s5Scroll - 1.0 * viewHeight) / (1.0 * viewHeight), 1.0));
+                    // Phase 3 (200-300vh): Black vertical line expands
+                    lineProgress = Math.max(0, Math.min((s5Scroll - 2.0 * viewHeight) / (1.0 * viewHeight), 1.0));
+                } else {
+                    const showcase = document.getElementById('projectShowcase');
+                    if (showcase && showcase.style.pointerEvents === 'none') {
+                        showcase.style.pointerEvents = '';
+                    }
                 }
                 
                 const leftDoor = document.getElementById('s5-door-left');
@@ -2797,7 +2806,7 @@
                 }
 
                 if (blackLine) {
-                    blackLine.style.width = `${lineProgress * 2}vw`;
+                    blackLine.style.transform = `translateX(-50%) scaleX(${lineProgress})`;
                 }
             }
         }
@@ -3682,9 +3691,18 @@
                 cardTiltCurrent.x = easeLerp(cardTiltCurrent.x, cardTiltTarget.x, t);
                 cardTiltCurrent.y = easeLerp(cardTiltCurrent.y, cardTiltTarget.y, t);
 
+                if (Math.abs(cardTiltCurrent.x - cardTiltTarget.x) < 0.001) cardTiltCurrent.x = cardTiltTarget.x;
+                if (Math.abs(cardTiltCurrent.y - cardTiltTarget.y) < 0.001) cardTiltCurrent.y = cardTiltTarget.y;
+
                 const activeCard = showcase.querySelector('.floating-project.active');
                 if (activeCard && Date.now() > cardEnteringUntil) {
-                    activeCard.style.transform = `translate3d(0, 0, 50px)`;
+                    // Only apply transform if it's changing (or not zero'd out completely without updating DOM)
+                    // If both are exactly 0, we can just clear it or set it to 0
+                    if (cardTiltCurrent.x === 0 && cardTiltCurrent.y === 0) {
+                        activeCard.style.transform = `translate3d(0, 0, 50px)`;
+                    } else {
+                        activeCard.style.transform = `rotateX(${cardTiltCurrent.x}deg) rotateY(${cardTiltCurrent.y}deg) translate3d(0, 0, 50px)`;
+                    }
                 }
             }
         })();
