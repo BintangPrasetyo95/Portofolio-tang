@@ -577,11 +577,10 @@
             bottom: -20%;
             left: 50%;
             transform: translateX(-50%);
-            width: 700px;
-            height: 340px;
-            background: radial-gradient(ellipse at center, rgba(252, 179, 45, 0.08) 0%, rgba(0,0,0,0) 70%);
+            width: 900px;
+            height: 500px;
+            background: radial-gradient(ellipse at center, rgba(252, 179, 45, 0.06) 0%, rgba(252, 179, 45, 0.02) 40%, rgba(0,0,0,0) 70%);
             pointer-events: none;
-            filter: blur(80px);
             z-index: 1;
         }
 
@@ -1094,6 +1093,7 @@
             pointer-events: none;
             z-index: 30;
             perspective: 2400px;
+            contain: layout style;
         }
 
         .book-3d {
@@ -1104,6 +1104,7 @@
             transform-style: preserve-3d;
             transform: rotateX(42deg) rotateY(0deg) rotateZ(0deg) translateY(40px);
             transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: transform;
         }
 
         /* Leather-textured covers - Bold Yellow Orange with antique/pirate style */
@@ -1114,9 +1115,8 @@
             background: linear-gradient(135deg, #e68a00 0%, #cc7a00 40%, #b36b00 70%, #804d00 100%);
             border: 3px solid #ffaa00;
             box-shadow:
-                0 12px 35px rgba(0, 0, 0, 0.9),
-                inset 0 2px 3px rgba(255, 255, 255, 0.25),
-                inset 0 -2px 10px rgba(0, 0, 0, 0.5);
+                0 8px 20px rgba(0, 0, 0, 0.7),
+                inset 0 1px 2px rgba(255, 255, 255, 0.2);
             transform-style: preserve-3d;
         }
 
@@ -1144,9 +1144,7 @@
             background:
                 radial-gradient(circle at 30% 40%, rgba(255, 215, 0, 0.15) 0%, transparent 60%),
                 radial-gradient(circle at 70% 60%, rgba(255, 215, 0, 0.1) 0%, transparent 60%);
-            box-shadow: 
-                inset 0 0 25px rgba(0, 0, 0, 0.4),
-                0 0 15px rgba(255, 170, 0, 0.1);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
         }
 
         /* Gold foil spine - updated to match bold orange-yellow cover */
@@ -1175,22 +1173,12 @@
             width: calc(50% - 8px);
             height: calc(100% - 16px);
             top: 8px;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(139, 105, 20, 0.05) 0%, transparent 60%),
-                radial-gradient(circle at 80% 70%, rgba(90, 69, 32, 0.08) 0%, transparent 60%),
-                linear-gradient(135deg, #f2e5c4 0%, #eddcae 35%, #e3ce94 75%, #d1ba7b 100%);
+            background: linear-gradient(135deg, #f2e5c4 0%, #eddcae 35%, #e3ce94 75%, #d1ba7b 100%);
             overflow: hidden;
             border: 1px solid rgba(139, 105, 20, 0.45);
             transform-style: preserve-3d;
-            box-shadow:
-                0 3px 12px rgba(80, 60, 20, 0.25),
-                inset 0 0 50px rgba(90, 69, 32, 0.22);
-            /* chipped/weathered page corner outline simulator */
-            clip-path: polygon(
-                0% 2%, 2% 0%, 98% 0%, 100% 2%, 
-                100% 95%, 99% 96%, 98% 95%, 97% 98%, 95% 97%, 
-                93% 100%, 7% 100%, 5% 98%, 3% 97%, 1% 99%, 0% 98%
-            );
+            box-shadow: 0 2px 8px rgba(80, 60, 20, 0.2);
+            border-radius: 4px;
         }
 
         .page-sheet-3d.left-static {
@@ -1198,11 +1186,9 @@
             border-radius: 8px 0 0 8px;
             transform-origin: right center;
             transform: rotateY(-2deg) translateZ(1px);
-            /* Subtle inner shadow on binding edge */
             box-shadow:
-                0 3px 12px rgba(80, 60, 20, 0.25),
-                inset -20px 0 25px -10px rgba(90, 69, 32, 0.35),
-                inset 0 0 50px rgba(90, 69, 32, 0.22);
+                0 2px 8px rgba(80, 60, 20, 0.2),
+                inset -15px 0 20px -10px rgba(90, 69, 32, 0.25);
         }
 
         .page-sheet-3d.right-static {
@@ -1211,9 +1197,8 @@
             transform-origin: left center;
             transform: rotateY(2deg) translateZ(1px);
             box-shadow:
-                0 3px 12px rgba(80, 60, 20, 0.25),
-                inset 20px 0 25px -10px rgba(90, 69, 32, 0.35),
-                inset 0 0 50px rgba(90, 69, 32, 0.22);
+                0 2px 8px rgba(80, 60, 20, 0.2),
+                inset 15px 0 20px -10px rgba(90, 69, 32, 0.25);
         }
 
         /* ═══ Realistic page-flip element ═══ */
@@ -1289,16 +1274,10 @@
             opacity: 0.65;
             pointer-events: none;
             stroke-dasharray: 4;
-            animation: blueprintGlow 3s ease-in-out infinite alternate;
         }
 
         .page-blueprint * {
             stroke: #a0781b !important;
-        }
-
-        @keyframes blueprintGlow {
-            0% { opacity: 0.50; }
-            100% { opacity: 0.80; }
         }
 
         .page-header {
