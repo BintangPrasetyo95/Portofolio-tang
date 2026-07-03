@@ -1502,7 +1502,7 @@
     </div>
 
     <!-- Section 3, 4 & 5 Wrapper (provides height for sticky horizontal transition + S5 doors) -->
-    <div id="section-3-4-wrap" style="height: 450vh; position: relative; background: #000000;">
+    <div id="section-3-4-wrap" style="height: 600vh; position: relative; background: #000000;">
         <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: visible; z-index: 3;">
             <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh; transition: transform 0.1s ease-out;">
 
@@ -2740,11 +2740,16 @@
             if (wrap34) {
                 const wrapTop = wrap34.offsetTop;
                 
-                // Stage 1: Horizontal slide takes 150vh
-                const horizontalScrollRange = 1.5 * viewHeight;
+                let localScroll = scrollY - wrapTop;
+                
+                // Stage 1: Horizontal slide with pauses
+                const pause3 = 0.5 * viewHeight;
+                const slide34 = 1.5 * viewHeight;
+                const pause4 = 0.5 * viewHeight;
+                
                 let horizontalProgress = 0;
-                if (scrollY > wrapTop) {
-                    horizontalProgress = Math.min((scrollY - wrapTop) / horizontalScrollRange, 1.0);
+                if (localScroll > pause3) {
+                    horizontalProgress = Math.min((localScroll - pause3) / slide34, 1.0);
                 }
                 
                 targetPhase3Progress = horizontalProgress;
@@ -2760,8 +2765,10 @@
                     bCanvas.style.transform = 'none';
                 }
 
-                // Stage 2: Section 5 Animations trigger AFTER horizontal slide
-                let s5Scroll = scrollY - (wrapTop + horizontalScrollRange);
+                // Stage 2: Section 5 Animations trigger AFTER horizontal slide and Section 4 pause
+                const s5Start = pause3 + slide34 + pause4;
+                let s5Scroll = localScroll - s5Start;
+                
                 let doorProgress = 0;
                 let textProgress = 0;
                 let lineProgress = 0;
@@ -2774,10 +2781,18 @@
                     
                     // Phase 1 (0-100vh): Doors close
                     doorProgress = Math.min(s5Scroll / (1.0 * viewHeight), 1.0);
-                    // Phase 2 (100-200vh): Text moves to center and fades
-                    textProgress = Math.max(0, Math.min((s5Scroll - 1.0 * viewHeight) / (1.0 * viewHeight), 1.0));
-                    // Phase 3 (200-300vh): Black vertical line expands
-                    lineProgress = Math.max(0, Math.min((s5Scroll - 2.0 * viewHeight) / (1.0 * viewHeight), 1.0));
+                    
+                    // Phase 2 (100-150vh): Stuck time at "Experiences" title
+                    const pause5Start = 1.0 * viewHeight;
+                    const pause5 = 0.5 * viewHeight;
+                    
+                    // Phase 3 (150-250vh): Text moves to center and fades
+                    const textStart = pause5Start + pause5;
+                    textProgress = Math.max(0, Math.min((s5Scroll - textStart) / (1.0 * viewHeight), 1.0));
+                    
+                    // Phase 4 (250-350vh): Black vertical line expands
+                    const lineStart = textStart + 1.0 * viewHeight;
+                    lineProgress = Math.max(0, Math.min((s5Scroll - lineStart) / (1.0 * viewHeight), 1.0));
                 } else {
                     const showcase = document.getElementById('projectShowcase');
                     if (showcase && showcase.style.pointerEvents === 'none') {
