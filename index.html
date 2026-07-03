@@ -698,6 +698,11 @@
             pointer-events: auto;
         }
 
+        /* Override when Section 5 doors are closing */
+        #projectShowcase.s5-active .floating-project {
+            pointer-events: none !important;
+        }
+
         /* Exit: next → old card sinks toward left page */
         .floating-project.exiting-next {
             animation: projectSinkLeft 0.62s cubic-bezier(0.4, 0, 0.8, 0.6) forwards;
@@ -1028,39 +1033,70 @@
             transform: translateY(-1px);
         }
 
-        .subproject-scroll-wrapper {
+        .subproject-dropdown {
             margin: 1rem 0 0;
             width: 100%;
-            max-height: 90px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: #fcb32d transparent;
-            pointer-events: auto;
             position: relative;
             z-index: 100;
         }
         
-        .subproject-scroll-wrapper::-webkit-scrollbar {
-            width: 6px;
-        }
-        .subproject-scroll-wrapper::-webkit-scrollbar-thumb {
-            background-color: #fcb32d;
-            border-radius: 4px;
-        }
-        .subproject-scroll-wrapper::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
+        .subproject-dropdown-btn {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: rgba(252, 179, 45, 0.12);
+            border: 1px solid rgba(252, 179, 45, 0.24);
+            color: #fcd67e;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
         }
 
-        .subproject-list {
-            padding: 0;
+        .subproject-dropdown-btn:hover {
+            background: rgba(252, 179, 45, 0.22);
+        }
+
+        .subproject-dropdown-btn svg {
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .subproject-dropdown.open .subproject-dropdown-btn svg {
+            transform: rotate(180deg);
+        }
+
+        .subproject-dropdown .subproject-list {
+            position: absolute;
+            bottom: calc(100% + 0.5rem);
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(252, 179, 45, 0.24);
+            border-radius: 8px;
+            padding: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: left;
             margin: 0;
             list-style: none;
-            opacity: 1;
-            padding-right: 0.5rem;
         }
 
+        .subproject-dropdown.open .subproject-list {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
 
         .subproject-list li {
             margin-bottom: 0.75rem;
@@ -1070,6 +1106,7 @@
             color: #fcd67e;
             text-decoration: none;
             font-weight: 700;
+            display: block;
         }
 
         .subproject-list li a:hover,
@@ -2775,8 +2812,8 @@
 
                 if (s5Scroll > 0) {
                     const showcase = document.getElementById('projectShowcase');
-                    if (showcase && showcase.style.pointerEvents !== 'none') {
-                        showcase.style.pointerEvents = 'none';
+                    if (showcase && !showcase.classList.contains('s5-active')) {
+                        showcase.classList.add('s5-active');
                     }
                     
                     // Phase 1 (0-100vh): Doors close
@@ -2795,8 +2832,8 @@
                     lineProgress = Math.max(0, Math.min((s5Scroll - lineStart) / (1.0 * viewHeight), 1.0));
                 } else {
                     const showcase = document.getElementById('projectShowcase');
-                    if (showcase && showcase.style.pointerEvents === 'none') {
-                        showcase.style.pointerEvents = '';
+                    if (showcase && showcase.classList.contains('s5-active')) {
+                        showcase.classList.remove('s5-active');
                     }
                 }
                 
@@ -3393,8 +3430,14 @@
                         : `<a href="${proj.url}" target="_blank" rel="noreferrer noopener" class="see-now-btn active">See Now</a>`;
 
                 const subProjectHtml = hasSubProjects
-                    ? `<div class="subproject-scroll-wrapper" data-lenis-prevent>
-                            <ul class="subproject-list open" aria-hidden="false">
+                    ? `<div class="subproject-dropdown">
+                            <button class="subproject-dropdown-btn" onclick="this.parentElement.classList.toggle('open')">
+                                View Subprojects
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </button>
+                            <ul class="subproject-list">
                                 ${proj.subProjects.map(sub => `<li><a href="${sub.url}" target="_blank" rel="noreferrer noopener">${sub.title}</a></li>`).join('')}
                             </ul>
                         </div>`
@@ -3486,6 +3529,8 @@
                 });
                 pagination.appendChild(dot);
             });
+
+
 
             // updateBookPages removed
             cardEnteringUntil = Date.now() + 1100; // let first card's entry animation play uninterrupted
