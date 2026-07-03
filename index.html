@@ -2455,6 +2455,11 @@
             bubblePhase3Progress = THREE.MathUtils.lerp(bubblePhase3Progress, targetPhase3Progress, 0.14);
             bubbleStickyProgress = THREE.MathUtils.lerp(bubbleStickyProgress, targetStickyProgress, 0.14);
 
+            if (bubblePhase1Progress < 0.001) bubblePhase1Progress = 0;
+            if (bubblePhase2Progress < 0.001) bubblePhase2Progress = 0;
+            if (bubblePhase3Progress < 0.001) bubblePhase3Progress = 0;
+            if (bubbleStickyProgress < 0.001) bubbleStickyProgress = 0;
+
             // Restore constant transmission defaults
             clearGlassMaterial.transmission = 0.9;
             peachGlassMaterial.transmission = 0.88;
