@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bintang Prastyo</title>
     <meta name="description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing projects and skills.">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23000000%22 stroke=%22%23fcb32d%22 stroke-width=%226%22/><text x=%2250%25%22 y=%2267%25%22 font-family=%22Outfit,sans-serif%22 font-size=%2250%22 font-weight=%22800%22 fill=%22%23fcb32d%22 text-anchor=%22middle%22>B</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="./Unused/Star.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -267,6 +267,27 @@
             text-align: left;
             position: relative;
             z-index: 2;
+        }
+
+        /* Star icon beside name */
+        .hero-title-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+        }
+
+        .hero-star-icon {
+            width: clamp(4.4rem, 14vw, 11rem);
+            height: clamp(4.4rem, 14vw, 11rem);
+            flex-shrink: 0;
+            filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(600%) hue-rotate(5deg) brightness(105%) contrast(95%);
+            margin-bottom: clamp(0.2rem, 0.5vw, 0.5rem);
+            animation: starPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes starPulse {
+            0%, 100% { filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(600%) hue-rotate(5deg) brightness(105%) contrast(95%) drop-shadow(0 0 8px rgba(252, 179, 45, 0.3)); }
+            50% { filter: brightness(0) saturate(100%) invert(73%) sepia(60%) saturate(600%) hue-rotate(5deg) brightness(115%) contrast(95%) drop-shadow(0 0 20px rgba(252, 179, 45, 0.6)); }
         }
 
         .hero-title .line {
@@ -1680,10 +1701,13 @@
 
             <!-- Overlay text -->
             <div class="hero-overlay" id="heroOverlay">
-                <h1 class="hero-title" id="heroTitle">
-                    <span class="line"><span>Bintang</span></span>
-                    <span class="line"><span>Prastyo</span></span>
-                </h1>
+                <div class="hero-title-wrapper">
+                    <img src="./images/Star.svg" alt="Star" class="hero-star-icon" aria-hidden="true">
+                    <h1 class="hero-title" id="heroTitle">
+                        <span class="line"><span>Bintang</span></span>
+                        <span class="line"><span>Prastyo</span></span>
+                    </h1>
+                </div>
             </div>
 
             <!-- Corner label -->
@@ -1761,12 +1785,12 @@
         <div id="section-5-overlay" style="position: sticky; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; perspective: 1500px; z-index: 10; pointer-events: none;">
             <!-- Left Door -->
             <div id="s5-door-left" style="position: absolute; top: 0; left: 0; width: 50vw; height: 100vh; background: var(--accent); transform-origin: left; transform: rotateY(-90deg); overflow: hidden; border-right: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
-                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Things i did</h2>
+                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Experiences</h2>
             </div>
             
             <!-- Right Door -->
             <div id="s5-door-right" style="position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: auto;">
-                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Things i did</h2>
+                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap;">Experiences</h2>
             </div>
             
             <!-- Black Vertical Line -->
