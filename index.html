@@ -1539,7 +1539,7 @@
     </div>
 
     <!-- Section 3, 4 & 5 Wrapper (provides height for sticky horizontal transition + S5 doors) -->
-    <div id="section-3-4-wrap" style="height: 600vh; position: relative; background: #000000;">
+    <div id="section-3-4-wrap" style="height: 900vh; position: relative; background: #000000;">
         <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: visible; z-index: 3;">
             <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh; transition: transform 0.1s ease-out;">
 
@@ -1624,9 +1624,19 @@
             <div id="s5-door-right" style="opacity: 0.999; position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: none; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;">
                 <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
             </div>
+            <!-- Clipping container for the left side -->
+            <div id="s5-logo-clip" style="position: absolute; top: 0; left: 0; width: 50%; height: 100vh; overflow: hidden; pointer-events: none; z-index: 9;">
+                <!-- Static SVG Logo -->
+                <img src="./images/star.svg" id="s5-logo-image" style="position: absolute; top: 50%; left: 50%; transform: translate(calc(-50% + 25vw), -50%); opacity: 0; width: clamp(250px, 35vw, 500px); will-change: transform, opacity;" alt="Star Logo" />
+            </div>
             
             <!-- Black Vertical Line -->
             <div id="s5-black-line" style="position: absolute; top: 0; left: 50%; transform: translateX(-50%) scaleX(0); transform-origin: center; width: 2vw; height: 100vh; background: #000; pointer-events: none; z-index: 10; will-change: transform;"></div>
+            
+            <!-- Achievements & Experiences on Right Side -->
+            <div id="s5-content-right" style="position: absolute; top: 0; left: 50%; width: 50%; height: 100vh; overflow: hidden; pointer-events: none; z-index: 9; display: flex; flex-direction: column; justify-content: center; padding: 0 4vw;">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
         </div>
         
     </div>
@@ -2809,6 +2819,7 @@
                 let doorProgress = 0;
                 let textProgress = 0;
                 let lineProgress = 0;
+                let logoProgress = 0;
 
                 if (s5Scroll > 0) {
                     const showcase = document.getElementById('projectShowcase');
@@ -2830,6 +2841,10 @@
                     // Phase 4 (250-350vh): Black vertical line expands
                     const lineStart = textStart + 1.0 * viewHeight;
                     lineProgress = Math.max(0, Math.min((s5Scroll - lineStart) / (1.0 * viewHeight), 1.0));
+                    
+                    // Phase 5 (350-470vh): Logo appears
+                    const logoStart = lineStart + 0.6 * viewHeight; // Overlap with line expansion
+                    logoProgress = Math.max(0, Math.min((s5Scroll - logoStart) / (1.2 * viewHeight), 1.0));
                 } else {
                     const showcase = document.getElementById('projectShowcase');
                     if (showcase && showcase.classList.contains('s5-active')) {
@@ -2858,7 +2873,38 @@
                 }
 
                 if (blackLine) {
-                    blackLine.style.transform = `translateX(-50%) scaleX(${lineProgress})`;
+                    // Cubic ease-out for a smooth line expansion
+                    const easeLine = 1 - Math.pow(1 - lineProgress, 3);
+                    blackLine.style.transform = `translateX(-50%) scaleX(${easeLine})`;
+                }
+                
+                const logoImg = document.getElementById('s5-logo-image');
+                if (logoImg) {
+                    // Cubic ease-out for a buttery smooth deceleration
+                    const easeProgress = 1 - Math.pow(1 - logoProgress, 3);
+                    // Start offset at 25vw (which pushes it exactly behind the center line)
+                    // End offset at 0 (centered in the 50vw left half, i.e., 25vw from screen edge)
+                    logoImg.style.transform = `translate(calc(-50% + ${(1.0 - easeProgress) * 25}vw), -50%)`;
+                    logoImg.style.opacity = easeProgress;
+                }
+                
+                // Animate Right Side List Items
+                const listItems = document.querySelectorAll('.s5-list-item');
+                if (listItems.length > 0) {
+                    listItems.forEach((item, index) => {
+                        // For 6 items, a tighter stagger delay ensures smooth completion
+                        const delay = index * 0.08;
+                        const totalDuration = 1.0 - (listItems.length - 1) * 0.08;
+                        let itemProgress = (logoProgress - delay) / totalDuration;
+                        itemProgress = Math.max(0, Math.min(itemProgress, 1.0));
+                        
+                        // Cubic ease-out
+                        const easeItem = 1 - Math.pow(1 - itemProgress, 3);
+                        
+                        // Swing open like a 3D door from the center line
+                        item.style.transform = `perspective(1000px) rotateY(${(1.0 - easeItem) * 90}deg) translateX(${(1.0 - easeItem) * -5}vw)`;
+                        item.style.opacity = easeItem;
+                    });
                 }
             }
         }
@@ -3248,6 +3294,44 @@
     (function() {
         'use strict';
 
+        const achievements = [
+            {
+                year: "2022 — 2024",
+                title: "SMKN 3 Metro",
+                description: "Earned a Vocational High School Diploma in Software Engineering, highlighted by a Garuda Certification and a top-3 finish for the final web development capstone project."
+            },
+            {
+                year: "2024 — Present",
+                title: "Undergraduate Student in Informatics Engineering",
+                description: "University of Lampung"
+            },
+            {
+                year: "Feb 2025 — Current",
+                title: "Staff of Research & Development Division",
+                description: "Himatro (Electrical Engineering Student Association), University of Lampung"
+            },
+            {
+                year: "Feb 2025 — Dec 2025",
+                title: "Staff of Talent Division",
+                description: "UKM Gradien, University of Lampung"
+            },
+            {
+                year: "Feb 2026 — Current",
+                title: "President of the Student Activity Unit",
+                description: "UKM Gradien, University of Lampung"
+            },
+            {
+                year: "Jul 2023",
+                title: "2nd Place",
+                description: "Provincial Student Competency Competition (LKS) XXXI (Cyber Security) by Kemendikbudristek"
+            },
+            {
+                year: "Jul 2025 — Nov 2025",
+                title: "Most Inspiring Team in IPDP Division",
+                description: "National Student Digital Innovation Competition (LIDM) by Kemendikti Saintek"
+            }
+        ];
+
         const projects = [
             {
                 title: "Diva AC",
@@ -3402,6 +3486,27 @@
 
         // Setup layouts
         function initShowcase() {
+            // Render Achievements
+            const rightContent = document.getElementById('s5-content-right');
+            if (rightContent) {
+                achievements.forEach((ach, index) => {
+                    const isLast = index === achievements.length - 1;
+                    const el = document.createElement('div');
+                    el.className = 's5-list-item';
+                    el.style.opacity = '0';
+                    el.style.transformOrigin = 'left center';
+                    el.style.transform = 'perspective(1000px) rotateY(90deg)';
+                    el.style.willChange = 'transform, opacity';
+                    if (!isLast) el.style.marginBottom = '2.5vh';
+
+                    el.innerHTML = `
+                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.7rem, 0.9vw, 1rem); color: rgba(0,0,0,0.6); letter-spacing: 2px; text-transform: uppercase;">${ach.year}</span>
+                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.2rem, 2.2vw, 2.5rem); margin: 0.2vh 0; background: linear-gradient(135deg, #000000 20%, #555555 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${ach.title}</h3>
+                        <p style="font-family: 'Inter', sans-serif; font-size: clamp(0.8rem, 1vw, 1.1rem); color: rgba(0,0,0,0.8); margin: 0; max-width: 90%; line-height: 1.4;">${ach.description}</p>
+                    `;
+                    rightContent.appendChild(el);
+                });
+            }
             showcase.innerHTML = '';
             pagination.innerHTML = '';
             
