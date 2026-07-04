@@ -3294,41 +3294,56 @@
     (function() {
         'use strict';
 
-        const achievements = [
+        const groupedAchievements = [
             {
-                year: "2022 — 2024",
-                title: "SMKN 3 Metro",
-                description: "Earned a Vocational High School Diploma in Software Engineering, highlighted by a Garuda Certification and a top-3 finish for the final web development capstone project."
+                category: "Educations",
+                items: [
+                    {
+                        year: "2022 — 2024",
+                        title: "SMKN 3 Metro",
+                        description: "Earned a Vocational High School Diploma in Software Engineering, highlighted by a Garuda Certification and a top-3 finish for the final web development capstone project."
+                    },
+                    {
+                        year: "2024 — Present",
+                        title: "Undergraduate Student in Informatics Engineering",
+                        description: "University of Lampung"
+                    }
+                ]
             },
             {
-                year: "2024 — Present",
-                title: "Undergraduate Student in Informatics Engineering",
-                description: "University of Lampung"
+                category: "Organizations",
+                items: [
+                    {
+                        year: "Feb 2025 — Current",
+                        title: "Staff of Research & Development Division",
+                        description: "Himatro (Electrical Engineering Student Association), University of Lampung"
+                    },
+                    {
+                        year: "Feb 2025 — Dec 2025",
+                        title: "Staff of Talent Division",
+                        description: "UKM Gradien, University of Lampung"
+                    },
+                    {
+                        year: "Feb 2026 — Current",
+                        title: "President of the Student Activity Unit",
+                        description: "UKM Gradien, University of Lampung"
+                    }
+                ]
             },
             {
-                year: "Feb 2025 — Current",
-                title: "Staff of Research & Development Division",
-                description: "Himatro (Electrical Engineering Student Association), University of Lampung"
-            },
-            {
-                year: "Feb 2025 — Dec 2025",
-                title: "Staff of Talent Division",
-                description: "UKM Gradien, University of Lampung"
-            },
-            {
-                year: "Feb 2026 — Current",
-                title: "President of the Student Activity Unit",
-                description: "UKM Gradien, University of Lampung"
-            },
-            {
-                year: "Jul 2023",
-                title: "2nd Place",
-                description: "Provincial Student Competency Competition (LKS) XXXI (Cyber Security) by Kemendikbudristek"
-            },
-            {
-                year: "Jul 2025 — Nov 2025",
-                title: "Most Inspiring Team in IPDP Division",
-                description: "National Student Digital Innovation Competition (LIDM) by Kemendikti Saintek"
+                category: "Achievements",
+                items: [
+                    {
+                        year: "Jul 2023",
+                        title: "2nd Place",
+                        description: "Provincial Student Competency Competition (LKS) XXXI (Cyber Security) by Kemendikbudristek"
+                    },
+                    {
+                        year: "Jul 2025 — Nov 2025",
+                        title: "Most Inspiring Team in IPDP Division",
+                        description: "National Student Digital Innovation Competition (LIDM) by Kemendikti Saintek"
+                    }
+                ]
             }
         ];
 
@@ -3489,21 +3504,39 @@
             // Render Achievements
             const rightContent = document.getElementById('s5-content-right');
             if (rightContent) {
-                achievements.forEach((ach, index) => {
-                    const isLast = index === achievements.length - 1;
+                groupedAchievements.forEach((group, gIndex) => {
+                    const isLastGroup = gIndex === groupedAchievements.length - 1;
                     const el = document.createElement('div');
                     el.className = 's5-list-item';
                     el.style.opacity = '0';
                     el.style.transformOrigin = 'left center';
                     el.style.transform = 'perspective(1000px) rotateY(90deg)';
                     el.style.willChange = 'transform, opacity';
-                    if (!isLast) el.style.marginBottom = '2.5vh';
+                    if (!isLastGroup) el.style.marginBottom = '2vh';
 
-                    el.innerHTML = `
-                        <span style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.7rem, 0.9vw, 1rem); color: rgba(0,0,0,0.6); letter-spacing: 2px; text-transform: uppercase;">${ach.year}</span>
-                        <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.2rem, 2.2vw, 2.5rem); margin: 0.2vh 0; background: linear-gradient(135deg, #000000 20%, #555555 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${ach.title}</h3>
-                        <p style="font-family: 'Inter', sans-serif; font-size: clamp(0.8rem, 1vw, 1.1rem); color: rgba(0,0,0,0.8); margin: 0; max-width: 90%; line-height: 1.4;">${ach.description}</p>
+                    let html = '';
+                    
+                    if (gIndex > 0) {
+                        html += `<div style="width: 50vw; margin-left: -4vw; height: 3px; background: rgba(0,0,0,0.3); margin-bottom: 2vh;"></div>`;
+                    }
+
+                    html += `
+                        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.9rem, 1.2vw, 1.4rem); margin: 0 0 1.2vh 0; color: #000; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">${group.category}</h2>
                     `;
+                    
+                    group.items.forEach((ach, index) => {
+                        const isLastItem = index === group.items.length - 1;
+                        html += `
+                            <div style="margin-bottom: ${isLastItem ? '0' : '1.2vh'}; padding-left: 1vw; border-left: 2px solid rgba(0,0,0,0.15); position: relative;">
+                                <div style="position: absolute; left: -4px; top: 6px; width: 6px; height: 6px; border-radius: 50%; background: #000;"></div>
+                                <span style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.55rem, 0.65vw, 0.75rem); color: rgba(0,0,0,0.6); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 0.2vh;">${ach.year}</span>
+                                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.85rem, 1vw, 1.2rem); margin: 0 0 0.2vh 0; color: rgba(0,0,0,0.9); font-weight: 600;">${ach.title}</h3>
+                                <p style="font-family: 'Inter', sans-serif; font-size: clamp(0.65rem, 0.75vw, 0.85rem); color: rgba(0,0,0,0.8); margin: 0; max-width: 98%; line-height: 1.3;">${ach.description}</p>
+                            </div>
+                        `;
+                    });
+
+                    el.innerHTML = html;
                     rightContent.appendChild(el);
                 });
             }
