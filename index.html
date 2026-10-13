@@ -8,6 +8,30 @@
     <title>Bintang Prastyo</title>
     <link rel="canonical" href="https://bintangprasetyo95.github.io/Portofolio-tang/">
     <meta name="description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing projects and skills.">
+    <meta name="author" content="Bintang Prastyo">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#000000">
+
+    <!-- Extensive SEO Keywords -->
+    <meta name="keywords" content="Bintang Prastyo, Bintang Prasetyo, BintangPrasetyo95, IT Enthusiast, Creative Developer, Web Developer, Frontend Developer, Fullstack Developer, Software Engineer, UI UX Designer, Portfolio Developer, Web Developer Lampung, Web Developer Indonesia, Three.js Developer, Creative Coding, 3D Web Development, Interactive Portfolio, WebGL Developer, JavaScript Developer, TypeScript, React Developer, Laravel Developer, PHP Developer, Bootstrap, Tailwind CSS, HTML5, CSS3, Edulab NeoEngineer, Diva AC Bengkel, Project Sayuri AI, Kotlin Developer, Gemini AI Assistant, UKK Perpustakaan, Cyber Security LKS, UKM Gradien Unila, Universitas Lampung, Programmer Lampung, Portofolio Mahasiswa Unila, Web Designer Indonesia, Jasa Pembuatan Website, Creative Portfolio 3D, Unila, Universitas Lampung, Teknik Informatika, Angkatan 24, 2024">
+
+    <!-- Open Graph / Facebook / WhatsApp / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bintangprasetyo95.github.io/Portofolio-tang/">
+    <meta property="og:title" content="Bintang Prastyo — IT Enthusiast &amp; Creative Developer Portfolio">
+    <meta property="og:description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing interactive 3D web experiences, projects, and skills.">
+    <meta property="og:image" content="https://bintangprasetyo95.github.io/Portofolio-tang/images/project1.jpg">
+    <meta property="og:site_name" content="Bintang Prastyo Portfolio">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://bintangprasetyo95.github.io/Portofolio-tang/">
+    <meta name="twitter:title" content="Bintang Prastyo — IT Enthusiast &amp; Creative Developer Portfolio">
+    <meta name="twitter:description" content="Bintang Prastyo — IT Enthusiast. Creative developer portfolio showcasing interactive 3D web experiences, projects, and skills.">
+    <meta name="twitter:image" content="https://bintangprasetyo95.github.io/Portofolio-tang/images/project1.jpg">
+
     <link rel="icon" type="image/svg+xml" href="./images/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,6 +78,11 @@
             --badge-oblique-border: rgba(100, 255, 180, 0.25);
         }
 
+        html, body {
+            max-width: 100vw;
+            overflow-x: clip;
+        }
+
         body {
             background: var(--color-bg);
             width: 100vw;
@@ -61,6 +90,7 @@
             overflow: hidden;
             color: var(--color-white);
             font-family: 'Outfit', 'Space Grotesk', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
         html {
@@ -369,9 +399,12 @@
 
         @media (max-width: 576px) {
             .hello-bubble {
-                top: 20%;
-                left: 12%;
-                border-bottom-left-radius: 20px;
+                top: 18%;
+                left: auto;
+                right: 1.25rem;
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+                border-radius: 18px;
                 border-bottom-right-radius: 4px;
             }
         }
@@ -470,11 +503,25 @@
 
         @media (max-width: 768px) {
             .social-sidebar {
-                left: 1.75rem;
+                top: 1.25rem;
+                left: 1.25rem;
+                transform: none;
+                flex-direction: row;
+                gap: 0.5rem;
             }
 
             .social-sidebar::after {
-                height: 4rem;
+                display: none;
+            }
+
+            .social-link {
+                width: 38px;
+                height: 38px;
+            }
+
+            .social-link svg {
+                width: 18px;
+                height: 18px;
             }
         }
 
@@ -553,17 +600,42 @@
 
         @media (max-width: 768px) {
             .hero-overlay {
-                padding: 1.5rem;
+                padding: clamp(1rem, 4vw, 1.75rem);
+                padding-bottom: clamp(1.8rem, 5vh, 2.5rem);
+            }
+            .hero-title-wrapper {
+                gap: clamp(0.5rem, 2vw, 0.85rem);
+            }
+            .hero-title {
+                font-size: clamp(2rem, 9vw, 3.8rem);
+            }
+            .hero-star-icon {
+                width: clamp(3rem, 12vw, 5rem);
+                height: clamp(3rem, 12vw, 5rem);
+                margin-bottom: 0.2rem;
             }
             .corner-label {
-                bottom: 1.5rem;
-                right: 1.5rem;
+                bottom: 1.25rem;
+                right: 1.25rem;
+                font-size: 0.7rem;
+                letter-spacing: 0.2em;
             }
             .decor-element {
-                opacity: 0.45 !important;
+                opacity: 0.3 !important;
+                transform: scale(0.7);
             }
-            .intro-container {
-                padding: 1.5rem;
+            .scroll-indicator {
+                bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: clamp(1.85rem, 8.5vw, 2.8rem);
+            }
+            .hero-star-icon {
+                width: clamp(2.6rem, 11vw, 3.8rem);
+                height: clamp(2.6rem, 11vw, 3.8rem);
             }
         }
 
@@ -1238,74 +1310,250 @@
             border-radius: 4px;
         }
 
-        /* Responsive styling for Section 4 */
-        @media (max-width: 900px) {
+        /* ─── Responsive styling for Section 4, 5, and Overlays ─── */
+        @media (max-width: 1080px) {
+            .showcase-container {
+                max-width: 95vw;
+                padding: 0 1rem;
+            }
+            .floating-project {
+                max-width: 960px;
+                gap: 2rem;
+            }
+            .project-image-box {
+                width: 46%;
+            }
+            .project-details-box {
+                width: 54%;
+                padding: 2rem 1.5rem;
+            }
+            .project-title {
+                font-size: clamp(2rem, 3.5vw, 2.8rem);
+            }
+        }
+
+        @media (max-width: 860px) {
             .showcase-container {
                 height: auto;
-                top: 8%;
+                top: 3%;
+                padding: 0 1rem;
             }
 
             .floating-project {
                 flex-direction: column;
-                height: 520px;
-                max-width: 450px;
+                width: 100%;
+                max-width: 420px;
+                height: clamp(420px, 66vh, 520px);
+                gap: 0;
+                background: rgba(14, 14, 18, 0.95);
+                border: 1px solid rgba(252, 179, 45, 0.25);
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+                border-radius: 20px;
             }
 
             .project-image-box {
                 width: 100%;
-                height: 40%;
-                border-right: none;
+                height: 38%;
+                border-radius: 20px 20px 0 0;
+                border: none;
                 border-bottom: 1px solid rgba(252, 179, 45, 0.2);
             }
 
             .project-image-overlay {
-                background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 15%, rgba(0,0,0,0));
+                background: linear-gradient(to top, rgba(14, 14, 18, 0.8) 10%, rgba(0,0,0,0));
             }
 
             .project-details-box {
                 width: 100%;
-                height: 60%;
-                padding: 1.5rem;
+                height: 62%;
+                padding: 1rem 1.15rem;
+                border-radius: 0 0 20px 20px;
+                border: none;
+                background: transparent;
+                box-shadow: none;
+                align-items: flex-start;
+                text-align: left;
+                justify-content: flex-start;
+                gap: 0.4rem;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .project-tech-list {
+                justify-content: flex-start;
+                margin-bottom: 0.35rem;
+                gap: 6px;
+            }
+
+            .tech-tag {
+                padding: 0.35rem 0.65rem;
+                gap: 0.4rem;
+            }
+
+            .tech-icon {
+                width: 16px;
+                height: 16px;
+            }
+
+            .tech-label {
+                font-size: 0.68rem;
             }
 
             .project-title {
-                font-size: 1.5rem;
-                margin-bottom: 0.5rem;
+                font-size: clamp(1.25rem, 4vw, 1.6rem);
+                margin-bottom: 0.25rem;
+                text-align: left;
             }
 
             .project-description {
-                font-size: 0.85rem;
-                margin-bottom: 1.2rem;
+                font-size: clamp(0.78rem, 2.3vw, 0.88rem);
+                line-height: 1.45;
+                margin-bottom: 0.75rem;
+                max-width: 100%;
+                text-align: left;
+            }
+
+            .project-actions {
+                justify-content: flex-start;
+                gap: 10px;
+            }
+
+            .see-now-btn, .see-more-btn {
+                padding: 8px 18px;
+                font-size: 11px;
+            }
+
+            .subproject-dropdown {
+                margin: 0.5rem 0 0;
+            }
+
+            .subproject-dropdown-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.82rem;
             }
 
             .circle-viewport {
-                height: 260px;
+                height: 220px;
+                bottom: -70px;
             }
 
             .summoning-circle {
-                width: 380px;
-                height: 380px;
+                width: clamp(280px, 75vw, 420px);
+                height: clamp(280px, 75vw, 420px);
             }
             
             .nav-btn {
                 width: 44px;
                 height: 44px;
             }
+
+            .circle-navigation {
+                bottom: 14px;
+                gap: 24px;
+                z-index: 50;
+            }
+
+            .project-pagination {
+                bottom: 68px;
+                gap: 8px;
+                z-index: 50;
+            }
+
+            .dot {
+                width: 6px;
+                height: 6px;
+            }
+
+            .dot.active {
+                width: 18px;
+            }
+
+            /* Section 5 responsive overrides */
+            #s5-door-left, #s5-door-right {
+                width: 50vw !important;
+            }
+            #s5-text-left, #s5-text-right {
+                font-size: clamp(1.8rem, 7vw, 4rem) !important;
+            }
+            #s5-logo-clip {
+                width: 100% !important;
+                height: 100vh !important;
+                pointer-events: none !important;
+                z-index: 1 !important;
+            }
+            #s5-logo-image {
+                width: clamp(240px, 60vw, 400px) !important;
+                filter: drop-shadow(0 0 25px rgba(252, 179, 45, 0.4));
+            }
+            #s5-black-line {
+                display: none !important;
+            }
+            #s5-content-right {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                padding: clamp(2rem, 6vh, 3.5rem) clamp(1.2rem, 5vw, 2.5rem) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                pointer-events: auto !important;
+                justify-content: flex-start !important;
+                z-index: 10 !important;
+            }
+            #section-5-overlay {
+                pointer-events: auto !important;
+            }
+            .s5-list-item {
+                margin-bottom: 2rem !important;
+            }
+            .s5-divider {
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin: 1.5rem 0 !important;
+            }
+            .s5-category-title {
+                font-size: clamp(1rem, 3.5vw, 1.25rem) !important;
+                margin-bottom: 1rem !important;
+            }
+            .s5-item-card {
+                padding-left: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            .s5-year {
+                font-size: 0.72rem !important;
+            }
+            .s5-item-title {
+                font-size: clamp(0.88rem, 2.8vw, 1.1rem) !important;
+            }
+            .s5-item-desc {
+                font-size: clamp(0.75rem, 2.4vw, 0.88rem) !important;
+                line-height: 1.4 !important;
+            }
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 480px) {
             .floating-project {
-                height: 480px;
+                max-width: 340px;
+                height: clamp(390px, 63vh, 460px);
+            }
+            .project-image-box {
+                height: 36%;
+            }
+            .project-details-box {
+                height: 64%;
+                padding: 0.75rem 0.9rem;
             }
             .summoning-circle {
-                width: 280px;
-                height: 280px;
-            }
-            .project-pagination {
-                bottom: 85px;
+                width: 260px;
+                height: 260px;
             }
             .circle-navigation {
-                bottom: 15px;
+                bottom: 10px;
+                gap: 16px;
+            }
+            .project-pagination {
+                bottom: 60px;
             }
         }
 
@@ -1455,9 +1703,31 @@
             to { transform: scale(1); }
         }
         
-        @keyframes modalScaleOut {
-            from { transform: scale(1); }
-            to { transform: scale(0.9); }
+        @media (max-width: 768px) {
+            .modal-content-container {
+                width: 95vw;
+                max-height: 90vh;
+                padding: 16px 12px;
+                border-radius: 12px;
+            }
+            .modal-header h3 {
+                font-size: 1.15rem;
+            }
+            .modal-close-btn {
+                top: 10px;
+                right: 10px;
+                width: 32px;
+                height: 32px;
+                font-size: 20px;
+            }
+            .modal-grid {
+                gap: 12px;
+                padding: 4px;
+            }
+            .modal-image-wrapper {
+                flex: 1 1 100%;
+                max-height: 38vh;
+            }
         }
     </style>
 </head>
@@ -1608,12 +1878,12 @@
         <div id="section-5-overlay" style="position: sticky; top: 0; left: 0; width: 100vw; height: 100vh; overflow: hidden; perspective: 1500px; z-index: 10; pointer-events: none;">
             <!-- Left Door -->
             <div id="s5-door-left" style="opacity: 0.999; position: absolute; top: 0; left: 0; width: 50vw; height: 100vh; background: var(--accent); transform-origin: left; transform: rotateY(-90deg); overflow: hidden; border-right: 1px solid rgba(0,0,0,0.2); pointer-events: none; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;">
-                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
+                <h2 id="s5-text-left" style="position: absolute; width: 100vw; left: 0; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 7vw, 5rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
             </div>
             
             <!-- Right Door -->
             <div id="s5-door-right" style="opacity: 0.999; position: absolute; top: 0; left: 50vw; width: 50vw; height: 100vh; background: var(--accent); transform-origin: right; transform: rotateY(90deg); overflow: hidden; border-left: 1px solid rgba(0,0,0,0.2); pointer-events: none; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden;">
-                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 6rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
+                <h2 id="s5-text-right" style="position: absolute; width: 100vw; left: -50vw; top: 50%; transform: translateY(-50%); text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.8rem, 7vw, 5rem); color: #000; text-transform: uppercase; margin: 0; white-space: nowrap; will-change: transform, opacity;">Experiences</h2>
             </div>
             <!-- Clipping container for the left side -->
             <div id="s5-logo-clip" style="position: absolute; top: 0; left: 0; width: 50%; height: 100vh; overflow: hidden; pointer-events: none; z-index: 9;">
@@ -2853,21 +3123,27 @@
                     blackLine.style.transform = `translateX(-50%) scaleX(${easeLine})`;
                 }
                 
+                const isSmallScreen = window.innerWidth <= 860;
                 const logoImg = document.getElementById('s5-logo-image');
                 if (logoImg) {
                     // Cubic ease-out for a buttery smooth deceleration
                     const easeProgress = 1 - Math.pow(1 - logoProgress, 3);
-                    // Start offset at 25vw (which pushes it exactly behind the center line)
-                    // End offset at 0 (centered in the 50vw left half, i.e., 25vw from screen edge)
-                    logoImg.style.transform = `translate(calc(-50% + ${(1.0 - easeProgress) * 25}vw), -50%)`;
-                    logoImg.style.opacity = easeProgress;
+                    if (isSmallScreen) {
+                        logoImg.style.transform = `translate(-50%, -50%) scale(${0.85 + easeProgress * 0.15})`;
+                        logoImg.style.opacity = (easeProgress * 0.18).toFixed(3);
+                    } else {
+                        // Start offset at 25vw (which pushes it exactly behind the center line)
+                        // End offset at 0 (centered in the 50vw left half, i.e., 25vw from screen edge)
+                        logoImg.style.transform = `translate(calc(-50% + ${(1.0 - easeProgress) * 25}vw), -50%)`;
+                        logoImg.style.opacity = easeProgress;
+                    }
                 }
                 
                 // Animate Right Side List Items
                 const listItems = document.querySelectorAll('.s5-list-item');
                 if (listItems.length > 0) {
                     listItems.forEach((item, index) => {
-                        // For 6 items, a tighter stagger delay ensures smooth completion
+                        // For items, a tighter stagger delay ensures smooth completion
                         const delay = index * 0.08;
                         const totalDuration = 1.0 - (listItems.length - 1) * 0.08;
                         let itemProgress = (logoProgress - delay) / totalDuration;
@@ -2876,9 +3152,14 @@
                         // Cubic ease-out
                         const easeItem = 1 - Math.pow(1 - itemProgress, 3);
                         
-                        // Swing open like a 3D door from the center line
-                        item.style.transform = `perspective(1000px) rotateY(${(1.0 - easeItem) * 90}deg) translateX(${(1.0 - easeItem) * -5}vw)`;
-                        item.style.opacity = easeItem;
+                        if (isSmallScreen) {
+                            item.style.transform = `perspective(1000px) translateY(${(1.0 - easeItem) * 20}px)`;
+                            item.style.opacity = easeItem;
+                        } else {
+                            // Swing open like a 3D door from the center line
+                            item.style.transform = `perspective(1000px) rotateY(${(1.0 - easeItem) * 90}deg) translateX(${(1.0 - easeItem) * -5}vw)`;
+                            item.style.opacity = easeItem;
+                        }
                     });
                 }
             }
@@ -3499,21 +3780,21 @@
                     let html = '';
                     
                     if (gIndex > 0) {
-                        html += `<div style="width: 50vw; margin-left: -4vw; height: 3px; background: rgba(0,0,0,0.3); margin-bottom: 2vh;"></div>`;
+                        html += `<div class="s5-divider" style="width: 50vw; margin-left: -4vw; height: 3px; background: rgba(0,0,0,0.3); margin-bottom: 2vh;"></div>`;
                     }
 
                     html += `
-                        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.9rem, 1.2vw, 1.4rem); margin: 0 0 1.2vh 0; color: #000; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">${group.category}</h2>
+                        <h2 class="s5-category-title" style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.95rem, 1.2vw, 1.4rem); margin: 0 0 1.2vh 0; color: #000; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700;">${group.category}</h2>
                     `;
                     
                     group.items.forEach((ach, index) => {
                         const isLastItem = index === group.items.length - 1;
                         html += `
-                            <div style="margin-bottom: ${isLastItem ? '0' : '1.2vh'}; padding-left: 1vw; border-left: 2px solid rgba(0,0,0,0.15); position: relative;">
+                            <div class="s5-item-card" style="margin-bottom: ${isLastItem ? '0' : '1.2vh'}; padding-left: clamp(0.75rem, 1vw, 1.25rem); border-left: 2px solid rgba(0,0,0,0.15); position: relative;">
                                 <div style="position: absolute; left: -4px; top: 6px; width: 6px; height: 6px; border-radius: 50%; background: #000;"></div>
-                                <span style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.55rem, 0.65vw, 0.75rem); color: rgba(0,0,0,0.6); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 0.2vh;">${ach.year}</span>
-                                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.85rem, 1vw, 1.2rem); margin: 0 0 0.2vh 0; color: rgba(0,0,0,0.9); font-weight: 600;">${ach.title}</h3>
-                                <p style="font-family: 'Inter', sans-serif; font-size: clamp(0.65rem, 0.75vw, 0.85rem); color: rgba(0,0,0,0.8); margin: 0; max-width: 98%; line-height: 1.3;">${ach.description}</p>
+                                <span class="s5-year" style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.65rem, 0.75vw, 0.8rem); color: rgba(0,0,0,0.6); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 0.2vh;">${ach.year}</span>
+                                <h3 class="s5-item-title" style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(0.85rem, 1.1vw, 1.2rem); margin: 0 0 0.2vh 0; color: rgba(0,0,0,0.9); font-weight: 600;">${ach.title}</h3>
+                                <p class="s5-item-desc" style="font-family: 'Inter', sans-serif; font-size: clamp(0.72rem, 0.85vw, 0.9rem); color: rgba(0,0,0,0.8); margin: 0; max-width: 98%; line-height: 1.35;">${ach.description}</p>
                             </div>
                         `;
                     });
@@ -3714,6 +3995,38 @@
             let targetIdx = (currentIndex + 1) % projects.length;
             goToProject(targetIdx, 'next');
         });
+
+        // Mobile Touch Swipe Gestures for Project Showcase
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        showcase.addEventListener('touchstart', (e) => {
+            if (!e.changedTouches || e.changedTouches.length === 0) return;
+            touchStartX = e.changedTouches[0].clientX;
+            touchStartY = e.changedTouches[0].clientY;
+        }, { passive: true });
+
+        showcase.addEventListener('touchend', (e) => {
+            if (!e.changedTouches || e.changedTouches.length === 0 || isTransitioning) return;
+            touchEndX = e.changedTouches[0].clientX;
+            touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            
+            // Only trigger if horizontal swipe is dominant and > 45px
+            if (Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+                if (diffX < 0) {
+                    let targetIdx = (currentIndex + 1) % projects.length;
+                    goToProject(targetIdx, 'next');
+                } else {
+                    let targetIdx = currentIndex - 1;
+                    if (targetIdx < 0) targetIdx = projects.length - 1;
+                    goToProject(targetIdx, 'prev');
+                }
+            }
+        }, { passive: true });
 
         // Mouse Parallax & Particles in Section 4 (throttled via RAF loop)
         const s4 = document.getElementById('section-4');
