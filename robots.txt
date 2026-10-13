@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /Unused/
+
+Sitemap: https://bintangprasetyo95.github.io/Portofolio-tang/sitemap.xml
