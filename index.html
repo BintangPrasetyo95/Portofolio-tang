@@ -604,21 +604,18 @@
             0%   {
                 opacity: 0;
                 transform: translate3d(210px, 188px, -230px) scale(0.2) rotateX(54deg) rotateZ(-16deg);
-                filter: blur(14px);
             }
             8%   { opacity: 0.3; }
             40%  {
                 opacity: 0.85;
                 transform: translate3d(65px, 32px, 5px) scale(0.76) rotateX(13deg) rotateZ(-4deg);
-                filter: blur(3px);
             }
             70%  {
                 opacity: 1;
                 transform: translate3d(-10px, -14px, 68px) scale(1.028) rotateX(-2.5deg) rotateZ(0.5deg);
-                filter: blur(0);
             }
             85%  { transform: translate3d(4px, 5px, 44px) scale(0.986) rotateX(1.2deg) rotateZ(0deg); }
-            100% { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+            100% { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); }
         }
 
         /* Card rises from the LEFT page (triggered by "prev") */
@@ -626,35 +623,32 @@
             0%   {
                 opacity: 0;
                 transform: translate3d(-210px, 188px, -230px) scale(0.2) rotateX(54deg) rotateZ(16deg);
-                filter: blur(14px);
             }
             8%   { opacity: 0.3; }
             40%  {
                 opacity: 0.85;
                 transform: translate3d(-65px, 32px, 5px) scale(0.76) rotateX(13deg) rotateZ(4deg);
-                filter: blur(3px);
             }
             70%  {
                 opacity: 1;
                 transform: translate3d(10px, -14px, 68px) scale(1.028) rotateX(-2.5deg) rotateZ(-0.5deg);
-                filter: blur(0);
             }
             85%  { transform: translate3d(-4px, 5px, 44px) scale(0.986) rotateX(1.2deg) rotateZ(0deg); }
-            100% { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+            100% { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); }
         }
 
         /* Card sinks back into the LEFT page (exit on "next") */
         @keyframes projectSinkLeft {
-            0%   { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+            0%   { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); }
             25%  { transform: translate3d(-25px, 20px, 15px) scale(0.9) rotateX(12deg) rotateZ(-3deg); }
-            100% { opacity: 0; transform: translate3d(-180px, 172px, -215px) scale(0.18) rotateX(54deg) rotateZ(-12deg); filter: blur(14px); }
+            100% { opacity: 0; transform: translate3d(-180px, 172px, -215px) scale(0.18) rotateX(54deg) rotateZ(-12deg); }
         }
 
         /* Card sinks back into the RIGHT page (exit on "prev") */
         @keyframes projectSinkRight {
-            0%   { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); filter: blur(0); }
+            0%   { opacity: 1; transform: translate3d(0, 0, 50px) scale(1) rotateX(0deg) rotateZ(0deg); }
             25%  { transform: translate3d(25px, 20px, 15px) scale(0.9) rotateX(12deg) rotateZ(3deg); }
-            100% { opacity: 0; transform: translate3d(180px, 172px, -215px) scale(0.18) rotateX(54deg) rotateZ(12deg); filter: blur(14px); }
+            100% { opacity: 0; transform: translate3d(180px, 172px, -215px) scale(0.18) rotateX(54deg) rotateZ(12deg); }
         }
 
         /* Children rise from the page surface with a slight stagger */
@@ -877,9 +871,7 @@
             align-items: flex-end;
             text-align: right;
             gap: 1rem;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(12, 12, 12, 0.85);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
@@ -899,11 +891,9 @@
             gap: 0.65rem;
             padding: 0.65rem 0.9rem;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(40, 40, 40, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--color-white);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
         }
 
@@ -1169,14 +1159,13 @@
             to { transform: rotate(360deg); }
         }
 
-        .summoning-circle.pulse .circle-ring-outer,
-        .summoning-circle.pulse .circle-ring-inner {
-            animation-duration: 2s;
+        .summoning-circle.pulse svg {
+            animation: circlePulse 1.2s ease-out;
         }
 
-        .summoning-circle.pulse svg {
-            filter: drop-shadow(0 0 15px rgba(252, 179, 45, 0.4));
-            transition: filter 0.5s ease;
+        @keyframes circlePulse {
+            0%   { transform: scale(1.04); }
+            100% { transform: scale(1); }
         }
 
         .circle-navigation {
@@ -1541,7 +1530,7 @@
     <!-- Section 3, 4 & 5 Wrapper (provides height for sticky horizontal transition + S5 doors) -->
     <div id="section-3-4-wrap" style="height: 900vh; position: relative; background: #000000;">
         <div id="section-3-4-sticky" style="position: sticky; top: 0; height: 100vh; width: 100vw; overflow: visible; z-index: 3;">
-            <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh; transition: transform 0.1s ease-out;">
+            <div id="horizontal-strip" style="display: flex; width: 200vw; height: 100vh;">
 
                 <!-- Section 3: Works & Details -->
                 <section class="section" id="section-3" style="width: 100vw; height: 100vh; background: #000000; display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; overflow: visible;">
@@ -1669,7 +1658,7 @@
         scene.background = new THREE.Color(THEME.bg);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        renderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1 : 1.5));
         renderer.setSize(innerWidth, innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -1678,7 +1667,7 @@
 
         const bubbleCanvas = document.getElementById('bubbleCanvas');
         const bubbleRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, canvas: bubbleCanvas });
-        bubbleRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+        bubbleRenderer.setPixelRatio(Math.min(devicePixelRatio, innerWidth < 768 ? 1 : 1.5));
         bubbleRenderer.setSize(innerWidth, innerHeight);
         bubbleRenderer.setClearColor(0x000000, 0);
         bubbleRenderer.domElement.style.position = 'fixed';
@@ -2119,6 +2108,7 @@
         const bluePentagon = new THREE.Mesh(bluePentagonGeom, blueGlassMaterial);
 
         // 10. Ribbon 1 (Starts center-top, loops down and out to bottom-left corner)
+        const RIBBON_TUBULAR = 128, RIBBON_RADIAL = 16;
         const ribbon1Points = [
             new THREE.Vector3(-1.5, 9, -4),
             new THREE.Vector3(-5, 5, 2),
@@ -2127,7 +2117,7 @@
             new THREE.Vector3(-12, -12, -4)
         ];
         const ribbon1Curve = new THREE.CatmullRomCurve3(ribbon1Points);
-        const ribbon1Geom = new THREE.TubeGeometry(ribbon1Curve, 64, 0.22, 12, false);
+        const ribbon1Geom = new THREE.TubeGeometry(ribbon1Curve, RIBBON_TUBULAR, 0.22, RIBBON_RADIAL, false);
         ribbon1 = new THREE.Mesh(ribbon1Geom, ribbonMaterial);
 
         // Ribbon 2 (Starts right side, arches up to top-right, swoops down to bottom-right, staying on the right segment)
@@ -2139,7 +2129,7 @@
             new THREE.Vector3(11, -12, -4)
         ];
         const ribbon2Curve = new THREE.CatmullRomCurve3(ribbon2Points);
-        const ribbon2Geom = new THREE.TubeGeometry(ribbon2Curve, 64, 0.22, 12, false);
+        const ribbon2Geom = new THREE.TubeGeometry(ribbon2Curve, RIBBON_TUBULAR, 0.22, RIBBON_RADIAL, false);
         ribbon2 = new THREE.Mesh(ribbon2Geom, ribbonMaterial);
 
         // Setup user data for animation and position mapping
@@ -2264,27 +2254,12 @@
         ribbon1.visible = false;
         ribbon2.visible = false;
 
-        // Helper to generate a partially extended tube geometry along the ribbon path points
-        function getSubCurveGeom(points, progress, radius) {
-            if (progress <= 0.01) {
-                // Return a tiny cube if progress is basically 0 to prevent WebGL compilation warnings
-                return new THREE.BoxGeometry(0.001, 0.001, 0.001);
-            }
-            const divisions = 40;
-            const subPoints = [];
-            const curve = new THREE.CatmullRomCurve3(points);
-            const limit = Math.floor(divisions * progress);
-            for (let i = 0; i <= limit; i++) {
-                subPoints.push(curve.getPointAt(i / divisions));
-            }
-            if (limit < divisions) {
-                subPoints.push(curve.getPointAt(progress));
-            }
-            const subCurve = new THREE.CatmullRomCurve3(subPoints);
-            // Increased radial segments to 24 (was 8) for a round, block-free surface
-            const geom = new THREE.TubeGeometry(subCurve, Math.max(2, Math.floor(64 * progress)), radius, 24, false);
-            geom.computeVertexNormals(); // Ensure smooth lighting shading across the geometry normal vectors
-            return geom;
+        // Ribbons are built once; progress just changes how much of the index buffer is drawn
+        function setRibbonProgress(mesh, p) {
+            mesh.visible = p > 0.01;
+            if (!mesh.visible) return;
+            const segs = Math.max(1, Math.floor(RIBBON_TUBULAR * p));
+            mesh.geometry.setDrawRange(0, segs * RIBBON_RADIAL * 6);
         }
 
         // Per-frame update for bubbles
@@ -2331,13 +2306,11 @@
             }
 
             // Dynamically redraw ribbon geometries to make them grow along their paths
-            ribbon1.geometry.dispose();
-            ribbon1.geometry = getSubCurveGeom(ribbon1Points, ribbonProgress, 0.22);
+            setRibbonProgress(ribbon1, ribbonProgress);
             ribbon1.rotation.y = Math.sin(now * 0.05) * 0.05;
             ribbon1.rotation.z = Math.cos(now * 0.04) * 0.05;
             
-            ribbon2.geometry.dispose();
-            ribbon2.geometry = getSubCurveGeom(ribbon2Points, ribbonProgress, 0.22);
+            setRibbonProgress(ribbon2, ribbonProgress);
             ribbon2.rotation.y = Math.cos(now * 0.06) * 0.05;
 
             shapesList.forEach((mesh, idx) => {
@@ -2908,7 +2881,6 @@
                 }
             }
         }
-        window.addEventListener('scroll', onScroll, { passive: true });
         lenis.on('scroll', onScroll);
 
         // RESIZE
@@ -2921,9 +2893,11 @@
             bubbleRenderer.setSize(innerWidth, innerHeight);
             updateResponsiveCamera();
             updateScrollThresholds();
+            renderer.shadowMap.needsUpdate = true; // wall/light positions depend on viewport
         });
 
         // ANIMATION LOOP
+        let bubbleWasActive = true;
         (function animate(time) {
             requestAnimationFrame(animate);
             lenis.raf(time);
@@ -3021,6 +2995,8 @@
                             loadingDone = true;
                             onScroll();
                             scene.remove(loadingGroup);
+                            renderer.shadowMap.autoUpdate = false;
+                            renderer.shadowMap.needsUpdate = true;
 
                             loadingGroup.traverse(child => {
                                 if (child.geometry) child.geometry.dispose();
@@ -3126,8 +3102,12 @@
 
             // update 3D bubbles (position + vertex wobble)
             try { updateBubbles(now); } catch (e) { /* fail safe */ }
-            renderer.render(scene, camera);
-            bubbleRenderer.render(bubbleScene, bubbleCamera);
+            // mainCanvas is fully covered by the opaque sticky Section 2 after one viewport of scroll
+            if (!loadingDone || window.scrollY <= innerHeight) renderer.render(scene, camera);
+            // render the bubble layer while visible, plus one frame to clear it when it hides
+            const bubbleActive = bubblePhase1Progress > 0.005;
+            if (bubbleActive || bubbleWasActive) bubbleRenderer.render(bubbleScene, bubbleCamera);
+            bubbleWasActive = bubbleActive;
         })();
 
     })();
